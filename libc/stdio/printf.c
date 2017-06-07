@@ -13,7 +13,7 @@ static bool print(const char* data, size_t length) {
 	return true;
 }
 
-char dec2hex(int x, bool lowercase) {
+char int2hex(int x, bool lowercase) {
 	if (x >= 0 && x <= 9){
 		return (char)(48 + x);
 	}
@@ -24,6 +24,13 @@ char dec2hex(int x, bool lowercase) {
 		else{
 			return (char)(65 + x - 10);
 		}
+	}
+	return 'x';
+}
+
+char int2dec(int x) {
+	if (x >= 0 && x <= 9){
+		return (char)(48 + x);
 	}
 	return 'x';
 }
@@ -87,10 +94,27 @@ int printf(const char* restrict format, ...) {
 			}
 			char str[len];
 			for (int i = len-1; i >= 0;--i){
-				str[i] = dec2hex(ptr%16,false);
+				str[i] = int2hex(ptr%16,false);
 				ptr = ptr >> 4;
 			}
 			if (!print(str, len))
+				return -1;
+			written += len;
+		} else if (*format == 'd') { //TODO: 64bit incompatible
+			format++;
+			uintptr_t num = va_arg(parameters, const uint32_t);
+			size_t len = 0;
+			char str[10];
+			while (num != 0){
+				str[9-len] = int2dec(num%10);
+				num = num/10;
+				++len;
+			}
+			if (maxrem < len) {
+				// TODO: Set errno to EOVERFLOW.
+				return -1;
+			}
+			if (!print((str + 10 - len), len))
 				return -1;
 			written += len;
 		} else {
