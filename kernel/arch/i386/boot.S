@@ -30,6 +30,7 @@ _start:
 	call _init
 
 	# Transfer control to the main kernel.
+	pushl %ebx
 	call kernel_main
 
 	# Hang if kernel_main unexpectedly returns.

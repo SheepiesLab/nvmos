@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
 static bool print(const char* data, size_t length) {
@@ -10,6 +11,21 @@ static bool print(const char* data, size_t length) {
 		if (putchar(bytes[i]) == EOF)
 			return false;
 	return true;
+}
+
+char dec2hex(int x, bool lowercase) {
+	if (x >= 0 && x <= 9){
+		return (char)(48 + x);
+	}
+	else if (x >= 10 && x <= 15){
+		if (lowercase){
+			return (char)(97 + x - 10);
+		}
+		else{
+			return (char)(65 + x - 10);
+		}
+	}
+	return 'x';
 }
 
 int printf(const char* restrict format, ...) {
@@ -57,6 +73,22 @@ int printf(const char* restrict format, ...) {
 			if (maxrem < len) {
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
+			}
+			if (!print(str, len))
+				return -1;
+			written += len;
+		} else if (*format == 'p') {
+			format++;
+			uintptr_t ptr = va_arg(parameters, const uintptr_t);
+			size_t len = sizeof(ptr)*2;
+			if (maxrem < len) {
+				// TODO: Set errno to EOVERFLOW.
+				return -1;
+			}
+			char str[len];
+			for (int i = len-1; i >= 0;--i){
+				str[i] = dec2hex(ptr%16,false);
+				ptr = ptr >> 4;
 			}
 			if (!print(str, len))
 				return -1;
