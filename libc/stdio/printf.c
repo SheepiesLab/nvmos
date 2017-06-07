@@ -86,7 +86,7 @@ int printf(const char* restrict format, ...) {
 			written += len;
 		} else if (*format == 'p') {
 			format++;
-			uintptr_t ptr = va_arg(parameters, const uintptr_t);
+			uint64_t ptr = va_arg(parameters, const uint64_t);
 			size_t len = sizeof(ptr)*2;
 			if (maxrem < len) {
 				// TODO: Set errno to EOVERFLOW.
@@ -102,11 +102,11 @@ int printf(const char* restrict format, ...) {
 			written += len;
 		} else if (*format == 'd') { //TODO: 64bit incompatible
 			format++;
-			uintptr_t num = va_arg(parameters, const uint32_t);
+			uint64_t num = va_arg(parameters, const uint64_t);
 			size_t len = 0;
-			char str[10];
+			char str[19];
 			while (num != 0){
-				str[9-len] = int2dec(num%10);
+				str[18-len] = int2dec(num%10);
 				num = num/10;
 				++len;
 			}
@@ -114,7 +114,7 @@ int printf(const char* restrict format, ...) {
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
 			}
-			if (!print((str + 10 - len), len))
+			if (!print((str + 19 - len), len))
 				return -1;
 			written += len;
 		} else {
