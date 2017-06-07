@@ -39,6 +39,10 @@ void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y) {
 }
 
 void terminal_newline() {
+	while (terminal_column != VGA_WIDTH){
+		terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+		++terminal_column;
+	}
 	terminal_column = 0;
 	if (++terminal_row == VGA_HEIGHT)
 		terminal_row = 0;
