@@ -15,10 +15,12 @@ static size_t terminal_row;
 static size_t terminal_column;
 static uint8_t terminal_color;
 static uint16_t* terminal_buffer;
+static uint8_t terminal_tabstop;
 
 void terminal_initialize(void) {
 	terminal_row = 0;
 	terminal_column = 0;
+	terminal_tabstop = 2;
 	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 	terminal_buffer = VGA_MEMORY;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
@@ -48,9 +50,21 @@ void terminal_newline() {
 		terminal_row = 0;
 }
 
+void terminal_tab() {
+	if ((terminal_column % terminal_tabstop) != 0){
+		terminal_column += 4 - (terminal_column % terminal_tabstop);
+		if (terminal_column >= VGA_WIDTH) {
+			terminal_newline();
+		}
+	}
+}
+
 void terminal_putchar(char c) {
 	if (c == '\n'){
 		terminal_newline();
+	}
+	else if (c == '\t'){
+		terminal_tab();
 	}
 	else {
 		unsigned char uc = c;
