@@ -84,9 +84,9 @@ void terminal_writestring(const char* data) {
 }
 
 void terminal_shiftup(){
-	for (size_t i = 1; i < VGA_HEIGHT; ++i){
-		for (size_t j = 0; i < VGA_WIDTH; ++i){
-			terminal_buffer[i-1+j] = terminal_buffer[i+j];
+	for (size_t y = 1; y < VGA_HEIGHT; ++y){
+		for (size_t x = 0; x < VGA_WIDTH; ++x){
+			terminal_buffer[(y-1)*VGA_WIDTH+x] = terminal_buffer[y*VGA_WIDTH+x];
 		}
 	}
 	--terminal_row;
