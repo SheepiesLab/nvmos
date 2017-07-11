@@ -16,14 +16,16 @@
 #define GDT_GD_FLAG_SZ 0x40
 
 
-struct GD{
-  uint32_t base;
-  uint32_t limit; //Limit only has 20bits. Check for it.
-  uint8_t type;
+struct GD {
+    uint32_t base;
+    uint32_t limit; //Limit only has 20bits. Check for it.
+    uint8_t type;
 };
 
 typedef struct GD GlobalDescriptor;
 
 int commitGDT(uint8_t *buffer, GlobalDescriptor *GDT, size_t GDTSize);
+
 int encodeGD(uint8_t *buffer, GlobalDescriptor GD);
+
 extern void setGDT(uint32_t base, uint16_t size);
