@@ -46,8 +46,9 @@ void terminal_newline() {
 		++terminal_column;
 	}
 	terminal_column = 0;
-	if (++terminal_row == VGA_HEIGHT)
-		terminal_row = 0;
+	if (++terminal_row == VGA_HEIGHT){
+		terminal_shiftup();
+	}
 }
 
 void terminal_tab(){
@@ -80,4 +81,13 @@ void terminal_write(const char* data, size_t size) {
 
 void terminal_writestring(const char* data) {
 	terminal_write(data, strlen(data));
+}
+
+void terminal_shiftup(){
+	for (size_t i = 1; i < VGA_HEIGHT; ++i){
+		for (size_t j = 0; i < VGA_WIDTH; ++i){
+			terminal_buffer[i-1+j] = terminal_buffer[i+j];
+		}
+	}
+	--terminal_row;
 }
