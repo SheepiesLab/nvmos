@@ -41,7 +41,15 @@ SECTIONS
 		*(.data)
     __end_data = .;
     PROVIDE(__end_data = .);
+
+    __start_tss = .;
+    PROVIDE(__start_tss = .);
+		*(.tss)
+    __end_tss = .;
+    PROVIDE(__end_tss = .);
 	}
+
+
 
 	/* Read-write data (uninitialized) and stack */
 	.bss BLOCK(4K) : ALIGN(4K)

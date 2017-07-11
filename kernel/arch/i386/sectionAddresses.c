@@ -9,6 +9,8 @@ uint64_t getSectionAddress(int section, int pos){
         return (uint64_t)&__start_rodata;
       case SECTION_DATA:
         return (uint64_t)&__start_data;
+      case SECTION_TSS:
+        return (uint64_t)&__start_tss;
       case SECTION_BSS:
         return (uint64_t)&__start_bss;
       default:
@@ -23,6 +25,8 @@ uint64_t getSectionAddress(int section, int pos){
         return (uint64_t)&__end_rodata;
       case SECTION_DATA:
         return (uint64_t)&__end_data;
+      case SECTION_TSS:
+        return (uint64_t)&__end_tss;
       case SECTION_BSS:
         return (uint64_t)&__end_bss;
       default:
