@@ -4,8 +4,7 @@
 #include <string.h>
 
 #include <kernel/tty.h>
-
-#include "vga.h"
+#include <kernel/vga.h>
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
@@ -88,4 +87,8 @@ void terminal_shiftup() {
         }
     }
     --terminal_row;
+}
+
+void terminal_setcolor(enum tty_color fg, enum tty_color bg) {
+    terminal_color = vga_entry_color(fg, bg);
 }
