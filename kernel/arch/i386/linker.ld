@@ -62,6 +62,17 @@ SECTIONS
     PROVIDE(__end_bss = .);
 	}
 
+
+	/* Heap */
+    	.heap BLOCK(4K) : ALIGN(4K)
+    	{
+        __start_heap = .;
+        PROVIDE(__start_heap = .);
+    		*(.heap)
+        __end_heap = .;
+        PROVIDE(__end_heap = .);
+    	}
+
 	/* The compiler may produce other sections, put them in the proper place in
 	   in this file, if you'd like to include them in the final kernel. */
 }
