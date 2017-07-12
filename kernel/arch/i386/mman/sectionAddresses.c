@@ -13,6 +13,8 @@ uint64_t getSectionAddress(int section, int pos) {
                 return (uint64_t) &__start_tss;
             case SECTION_BSS:
                 return (uint64_t) &__start_bss;
+            case SECTION_HEAP:
+                return (uint64_t) &__start_heap;
             default:
                 return NULL;
         }
@@ -28,6 +30,8 @@ uint64_t getSectionAddress(int section, int pos) {
                 return (uint64_t) &__end_tss;
             case SECTION_BSS:
                 return (uint64_t) &__end_bss;
+            case SECTION_HEAP:
+                return (uint64_t) &__end_heap;
             default:
                 return NULL;
         }
