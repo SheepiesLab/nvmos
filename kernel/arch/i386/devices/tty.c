@@ -88,7 +88,3 @@ void terminal_shiftup() {
     }
     --terminal_row;
 }
-
-void terminal_setcolor(enum tty_color fg, enum tty_color bg) {
-    terminal_color = vga_entry_color(fg, bg);
-}

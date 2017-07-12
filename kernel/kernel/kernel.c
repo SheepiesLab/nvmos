@@ -5,6 +5,9 @@
 #include <kernel/multiboot.h>
 #include <kernel/sectionAddresses.h>
 #include <kernel/gdt.h>
+#include <kernel/file.h>
+#include <kernel/stdout.h>
+#include <kernel/stderr.h>
 
 void kernel_main(multiboot_info_t *mbt) {
     bool PRINT_SECTION_ADDR = true;
@@ -13,6 +16,10 @@ void kernel_main(multiboot_info_t *mbt) {
     size_t GdtSize = 7;
     uint8_t GDT[GdtSize * 8];
 
+    FILE _stdout;
+    FILE _stderr;
+    stdout_init(&_stdout);
+    stderr_init(&_stderr);
     terminal_initialize();
     printf("Hello, kernel World!\n\n");
 
@@ -46,18 +53,22 @@ void kernel_main(multiboot_info_t *mbt) {
     uint64_t sectionTssEndAddr = getSectionAddress(SECTION_TSS, SECTION_END);
     uint64_t sectionBssStartAddr = getSectionAddress(SECTION_BSS, SECTION_START);
     uint64_t sectionBssEndAddr = getSectionAddress(SECTION_BSS, SECTION_END);
+    uint64_t sectionHeapStartAddr = getSectionAddress(SECTION_HEAP, SECTION_START);
+    uint64_t sectionHeapEndAddr = getSectionAddress(SECTION_HEAP, SECTION_END);
 
     if (PRINT_SECTION_ADDR) {
-        printf("Text start: 	0x%p\n", sectionTextStartAddr);
-        printf("Text end: 		0x%p\n\n", sectionTextEndAddr);
-        printf("RODATA start: 0x%p\n", sectionRodataStartAddr);
-        printf("RODATA end: 	0x%p\n\n", sectionRodataEndAddr);
-        printf("DATA start: 	0x%p\n", sectionDataStartAddr);
-        printf("DATA end: 		0x%p\n\n", sectionDataEndAddr);
-        printf("TSS start: 		0x%p\n", sectionTssStartAddr);
-        printf("TSS end: 			0x%p\n\n", sectionTssEndAddr);
-        printf("BSS start: 		0x%p\n", sectionBssStartAddr);
-        printf("BSS end: 			0x%p\n\n", sectionBssEndAddr);
+        printf("Text start:     0x%p\t", sectionTextStartAddr);
+        printf("Text end:       0x%p\n", sectionTextEndAddr);
+        printf("RODATA start:   0x%p\t", sectionRodataStartAddr);
+        printf("RODATA end:     0x%p\n", sectionRodataEndAddr);
+        printf("DATA start:     0x%p\t", sectionDataStartAddr);
+        printf("DATA end:       0x%p\n", sectionDataEndAddr);
+        printf("TSS start:      0x%p\t", sectionTssStartAddr);
+        printf("TSS end:        0x%p\n", sectionTssEndAddr);
+        printf("BSS start:      0x%p\t", sectionBssStartAddr);
+        printf("BSS end:        0x%p\n", sectionBssEndAddr);
+        printf("HEAP start:     0x%p\t", sectionHeapStartAddr);
+        printf("HEAP end:       0x%p\n", sectionHeapEndAddr);
     }
 
     GlobalDescriptor globalDescriptor[GdtSize];

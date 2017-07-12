@@ -7,8 +7,6 @@ int stderr_putchar(int c) {
 }
 
 void stderr_init(FILE *_stderr) {
-    _stderr->fno = 1;
-    _stderr->mode = "a";
     _stderr->fputchar_impl = stderr_putchar;
     stderr = _stderr;
 }

@@ -7,14 +7,16 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stddef.h>
 
 struct file {
-    uint32_t fno;
-    char mode[5];
-
-    int (*fgetchar_impl)(void);
+    void *file_impl;
 
     int (*fputchar_impl)(int character);
 };
+
+
+int file_putc(int character, struct file *stream);
+
 
 #endif //NVMOS_FILE_H

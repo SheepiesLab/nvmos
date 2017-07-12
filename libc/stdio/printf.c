@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <kernel/file.h>
 
 static bool print(const char *data, size_t length) {
     const unsigned char *bytes = (const unsigned char *) data;

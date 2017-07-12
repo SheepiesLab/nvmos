@@ -2,6 +2,7 @@
 #define _STDIO_H 1
 
 #include <sys/cdefs.h>
+#include <kernel/file.h>
 
 #define EOF (-1)
 
@@ -9,9 +10,17 @@
 extern "C" {
 #endif
 
-int printf(const char* __restrict, ...);
+typedef struct file FILE;
+
+FILE *stdin;
+FILE *stdout;
+FILE *stderr;
+
+int printf(const char *__restrict, ...);
+
 int putchar(int);
-int puts(const char*);
+
+int puts(const char *);
 
 #ifdef __cplusplus
 }
