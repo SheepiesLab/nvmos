@@ -1,5 +1,5 @@
 #include "kernel/stdout.h"
-#include <kernel/tty.h>
+#include <kernel/io/tty.h>
 
 int stdout_putchar(int c) {
     terminal_setcolor(TTY_COLOR_LIGHT_GREY);

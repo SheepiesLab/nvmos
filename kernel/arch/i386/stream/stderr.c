@@ -1,5 +1,5 @@
 #include "kernel/stderr.h"
-#include <kernel/tty.h>
+#include <kernel/io/tty.h>
 
 int stderr_putchar(int c) {
     terminal_setcolor(TTY_COLOR_LIGHT_RED, TTY_COLOR_BLACK);
