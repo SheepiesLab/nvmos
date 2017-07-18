@@ -1,3 +1,6 @@
+#ifndef NVMOS_GDT_H
+#define NVMOS_GDT_H
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -16,16 +19,21 @@
 #define GDT_GD_FLAG_SZ 0x40
 
 
-struct GD {
+typedef struct gd {
     uint32_t base;
     uint32_t limit; //Limit only has 20bits. Check for it.
     uint8_t type;
-};
+} GlobalDescriptor;
 
-typedef struct GD GlobalDescriptor;
+int gd_fillEntry(
+        GlobalDescriptor *gd,
+        uint32_t base,
+        uint32_t limit,
+        uint8_t type
+);
 
-int commitGDT(uint8_t *buffer, GlobalDescriptor *GDT, size_t GDTSize);
+int gdt_commit(uint8_t *buffer, GlobalDescriptor *gdt, size_t gdtLen);
 
-int encodeGD(uint8_t *buffer, GlobalDescriptor GD);
+int gd_encode(uint8_t *buffer, GlobalDescriptor gd);
 
-extern void setGDT(uint32_t base, uint16_t size);
+#endif

@@ -1,20 +1,21 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <kernel/tty.h>
+#include <kernel/io/tty.h>
 #include <kernel/multiboot.h>
-#include <kernel/sectionAddresses.h>
-#include <kernel/gdt.h>
+#include <kernel/mman/gdt.h>
 #include <kernel/file.h>
 #include <kernel/stdout.h>
 #include <kernel/stderr.h>
+#include <kernel/mman/MemoryManager.h>
+#include <kernel/mman/KernelSection.h>
 
 void kernel_main(multiboot_info_t *mbt) {
     bool PRINT_SECTION_ADDR = true;
     bool PRINT_MMAP = true;
 
-    size_t GdtSize = 7;
-    uint8_t GDT[GdtSize * 8];
+    size_t gdtLen = 4;
+    uint8_t gdtBuffer[gdtLen * 8];
 
     FILE _stdout;
     FILE _stderr;
@@ -23,77 +24,54 @@ void kernel_main(multiboot_info_t *mbt) {
     terminal_initialize();
     printf("Hello, kernel World!\n\n");
 
+    MemoryManager mman;
+    mman_construct(&mman, mbt);
+
+    KernelSection *ksects = ksection_getKsections();
+
     if (PRINT_MMAP) {
-        printf("Lower Memory: From 0x0, size %d kb\n", mbt->mem_lower);
-        printf("Upper Memory: From 0x100000, size %d kb\n\n", mbt->mem_upper);
+        printf("MMap Addr: %p\n", mman.mbt->mmap_addr);
 
-        if ((mbt->flags & MULTIBOOT_INFO_MEM_MAP) == MULTIBOOT_INFO_MEM_MAP) {
-            printf("MMap Buffer Length: %d\n", mbt->mmap_length);
+        size_t mmapLength = mman_getMemoryMapLength(&mman);
+        printf("MMap Length: %d\n", (int) mmapLength);
 
-            multiboot_memory_map_t *mmap = mbt->mmap_addr;
-            while (mmap < mbt->mmap_addr + mbt->mmap_length) {
-                printf("Entrysize: %d; ", mmap->size);
-                printf("Addr: %p; ", mmap->addr);
-                printf("Len: %p; ", mmap->len);
-                printf("Type: %d\n", mmap->type);
+        MemoryMap mmap[mmapLength];
+        mman_getMemoryMap(&mman, mmap, mmapLength);
+        for (int i = 0; i < mmapLength; ++i) {
+            printf("Addr: %p; ", mmap[i].addr);
+            printf("Len: %p; ", mmap[i].len);
+            printf("Type: %d\n", mmap[i].type);
+        }
+        printf("\n");
 
-                mmap = (multiboot_memory_map_t *) ((unsigned int) mmap + mmap->size + sizeof(mmap->size));
-            }
-            printf("\n");
+        if (PRINT_SECTION_ADDR) {
+            printf("Text start:     0x%p\t", ksects[KSECTION_SECTION_TEXT].addr);
+            printf("Text length:    0x%p\n", ksects[KSECTION_SECTION_TEXT].len);
+            printf("RODATA start:   0x%p\t", ksects[KSECTION_SECTION_RODATA].addr);
+            printf("RODATA length:  0x%p\n", ksects[KSECTION_SECTION_RODATA].len);
+            printf("DATA start:     0x%p\t", ksects[KSECTION_SECTION_DATA].addr);
+            printf("DATA length:    0x%p\n", ksects[KSECTION_SECTION_DATA].len);
+            printf("TSS start:      0x%p\t", ksects[KSECTION_SECTION_TSS].addr);
+            printf("TSS length:     0x%p\n", ksects[KSECTION_SECTION_TSS].len);
+            printf("BSS start:      0x%p\t", ksects[KSECTION_SECTION_BSS].addr);
+            printf("BSS length:     0x%p\n", ksects[KSECTION_SECTION_BSS].len);
+            printf("HEAP start:     0x%p\t", ksects[KSECTION_SECTION_HEAP].addr);
+            printf("HEAP length:    0x%p\n", ksects[KSECTION_SECTION_HEAP].len);
         }
     }
 
-    uint64_t sectionTextStartAddr = getSectionAddress(SECTION_TEXT, SECTION_START);
-    uint64_t sectionTextEndAddr = getSectionAddress(SECTION_TEXT, SECTION_END);
-    uint64_t sectionRodataStartAddr = getSectionAddress(SECTION_RODATA, SECTION_START);
-    uint64_t sectionRodataEndAddr = getSectionAddress(SECTION_RODATA, SECTION_END);
-    uint64_t sectionDataStartAddr = getSectionAddress(SECTION_DATA, SECTION_START);
-    uint64_t sectionDataEndAddr = getSectionAddress(SECTION_DATA, SECTION_END);
-    uint64_t sectionTssStartAddr = getSectionAddress(SECTION_TSS, SECTION_START);
-    uint64_t sectionTssEndAddr = getSectionAddress(SECTION_TSS, SECTION_END);
-    uint64_t sectionBssStartAddr = getSectionAddress(SECTION_BSS, SECTION_START);
-    uint64_t sectionBssEndAddr = getSectionAddress(SECTION_BSS, SECTION_END);
-    uint64_t sectionHeapStartAddr = getSectionAddress(SECTION_HEAP, SECTION_START);
-    uint64_t sectionHeapEndAddr = getSectionAddress(SECTION_HEAP, SECTION_END);
 
-    if (PRINT_SECTION_ADDR) {
-        printf("Text start:     0x%p\t", sectionTextStartAddr);
-        printf("Text end:       0x%p\n", sectionTextEndAddr);
-        printf("RODATA start:   0x%p\t", sectionRodataStartAddr);
-        printf("RODATA end:     0x%p\n", sectionRodataEndAddr);
-        printf("DATA start:     0x%p\t", sectionDataStartAddr);
-        printf("DATA end:       0x%p\n", sectionDataEndAddr);
-        printf("TSS start:      0x%p\t", sectionTssStartAddr);
-        printf("TSS end:        0x%p\n", sectionTssEndAddr);
-        printf("BSS start:      0x%p\t", sectionBssStartAddr);
-        printf("BSS end:        0x%p\n", sectionBssEndAddr);
-        printf("HEAP start:     0x%p\t", sectionHeapStartAddr);
-        printf("HEAP end:       0x%p\n", sectionHeapEndAddr);
-    }
+    GlobalDescriptor gdt[gdtLen];
+    gd_fillEntry(&gdt[0], 0, 0, 0);
+    gd_fillEntry(&gdt[1], 0, 0xffffffff, 0x9A);
+    gd_fillEntry(&gdt[2], 0, 0xffffffff, 0x92);
+    gd_fillEntry(
+            &gdt[3],
+            (uint32_t) ksects[KSECTION_SECTION_TSS].addr,
+            (uint32_t) ksects[KSECTION_SECTION_TSS].len,
+            0x89
+    );
 
-    GlobalDescriptor globalDescriptor[GdtSize];
-    globalDescriptor[0].base = 0;
-    globalDescriptor[0].limit = 0;
-    globalDescriptor[0].type = 0;
-    globalDescriptor[1].base = sectionTextStartAddr;
-    globalDescriptor[1].limit = sectionTextEndAddr - sectionTextStartAddr;
-    globalDescriptor[1].type = 0x9A;
-    globalDescriptor[2].base = sectionRodataStartAddr;
-    globalDescriptor[2].limit = sectionRodataEndAddr - sectionRodataStartAddr;
-    globalDescriptor[2].type = 0x90;
-    globalDescriptor[3].base = sectionDataStartAddr;
-    globalDescriptor[3].limit = sectionDataEndAddr - sectionDataStartAddr;
-    globalDescriptor[3].type = 0x92;
-    globalDescriptor[4].base = sectionTssStartAddr;
-    globalDescriptor[4].limit = sectionTssEndAddr - sectionTssStartAddr;
-    globalDescriptor[4].type = 0x89;
-    globalDescriptor[5].base = sectionBssStartAddr;
-    globalDescriptor[5].limit = sectionBssEndAddr - sectionBssStartAddr;
-    globalDescriptor[5].type = 0x92;
-    globalDescriptor[6].base = sectionBssEndAddr;
-    globalDescriptor[6].limit = mbt->mem_upper - sectionBssEndAddr;
-    globalDescriptor[6].type = 0x92;
-
-    commitGDT(GDT, globalDescriptor, GdtSize);
+    gdt_commit(gdtBuffer, gdt, gdtLen);
 
 }

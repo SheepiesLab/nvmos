@@ -1,6 +1,12 @@
-#include <kernel/gdt.h>
+#include <kernel/mman/gdt.h>
 
-int encodeGD(uint8_t *buffer, GlobalDescriptor GD) {
+int gd_fillEntry(GlobalDescriptor *gd, uint32_t base, uint32_t limit, uint8_t type) {
+    gd->base = base;
+    gd->limit = limit;
+    gd->type = type;
+}
+
+int gd_encode(uint8_t *buffer, GlobalDescriptor GD) {
     // Check the limit to make sure that it can be encoded
     if ((GD.limit > 65536) && ((GD.limit & 0xFFF) != 0xFFF)) {
         return -1;
@@ -30,17 +36,19 @@ int encodeGD(uint8_t *buffer, GlobalDescriptor GD) {
     return 0;
 }
 
-int commitGDT(uint8_t *buffer, GlobalDescriptor *GDT, size_t GDTSize) {
-    if (GDTSize > 0xFFFF)
+extern void setGDT(uint32_t base, uint16_t size);
+
+int gdt_commit(uint8_t *buffer, GlobalDescriptor *gdt, size_t gdtLen) {
+    if (gdtLen > 0xFFFF)
         return -1;
 
-    for (int i = 0; i < GDTSize; ++i) {
-        if (encodeGD(buffer + (16 * i), GDT[i]) == -1)
+    for (int i = 0; i < gdtLen; ++i) {
+        if (gd_encode(buffer + (16 * i), gdt[i]) == -1)
             return -1;
     }
 
     uint32_t gdtBase = (uint32_t) buffer;
-    uint16_t gdtSize = GDTSize;
+    uint16_t gdtSize = gdtLen;
     setGDT(gdtBase, gdtSize);
 
     return 0;
