@@ -25,6 +25,13 @@ stack_bottom:
 .skip 16384 # 16 KiB
 stack_top:
 
+# Reserve a heap for the initial thread.
+.section .heap
+.align 16
+heap_bottom:
+.skip 16384 # 16 KiB
+heap_top:
+
 # The kernel entry point.
 .section .text
 .global _start

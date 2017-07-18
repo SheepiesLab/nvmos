@@ -51,6 +51,14 @@ SECTIONS
     PROVIDE(__end_bss = .);
 	}
 
+	/* Heap */
+	.heap BLOCK(4K) : ALIGN(4K)
+	{
+    PROVIDE(__start_heap = .);
+		*(.heap)
+    PROVIDE(__end_heap = .);
+	}
+
 
 	PROVIDE(__end_k = .);
 

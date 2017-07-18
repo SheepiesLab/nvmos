@@ -55,6 +55,8 @@ void kernel_main(multiboot_info_t *mbt) {
             printf("TSS length:     0x%p\n", ksects[KSECTION_SECTION_TSS].len);
             printf("BSS start:      0x%p\t", ksects[KSECTION_SECTION_BSS].addr);
             printf("BSS length:     0x%p\n", ksects[KSECTION_SECTION_BSS].len);
+            printf("HEAP start:     0x%p\t", ksects[KSECTION_SECTION_HEAP].addr);
+            printf("HEAP length:    0x%p\n", ksects[KSECTION_SECTION_HEAP].len);
         }
     }
 
