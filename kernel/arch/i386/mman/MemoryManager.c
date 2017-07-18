@@ -11,7 +11,16 @@ int mman_construct(MemoryManager *mman, multiboot_info_t *mbt) {
 size_t mman_getMemoryMapLength(MemoryManager *mman) {
     if ((mman->mbt->flags & MULTIBOOT_INFO_MEM_MAP) != MULTIBOOT_INFO_MEM_MAP)
         return -1;
-    return mman->mbt->mmap_length / sizeof(MemoryMap);
+
+    multiboot_memory_map_t *mmap = mman->mbt->mmap_addr;
+
+    size_t i = 0;
+    while (mmap < mman->mbt->mmap_addr + mman->mbt->mmap_length) {
+        ++i;
+        mmap = (multiboot_memory_map_t *)((unsigned int) mmap + mmap->size + sizeof(mmap->size));
+    }
+
+    return i;
 }
 
 int mman_getMemoryMap(MemoryManager *mman, MemoryMap *_mmap, size_t max) {

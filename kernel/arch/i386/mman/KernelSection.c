@@ -40,9 +40,5 @@ KernelSection *ksection_getKsections() {
     ksects[4].addr = (uint64_t) &__start_bss;
     ksects[4].len = (uint64_t) (&__end_bss - &__start_bss);
 
-    ksects[5].section = KSECTION_SECTION_HEAP;
-    ksects[5].addr = (uint64_t) &__start_heap;
-    ksects[5].len = (uint64_t) (&__end_heap - &__start_heap);
-
     return ksects;
 }
