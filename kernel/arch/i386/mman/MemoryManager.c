@@ -3,9 +3,25 @@
 //
 
 #include <kernel/mman/MemoryManager.h>
+#include <kernel/mman/KernelSection.h>
+#include <kernel/mman/gdt.h>
 
 int mman_construct(MemoryManager *mman, multiboot_info_t *mbt) {
     mman->mbt = mbt;
+    KernelSection *ksects = ksection_getKsections();
+
+    GlobalDescriptor gdt[GDT_LEN];
+    gd_fillEntry(&gdt[0], 0, 0, 0);
+    gd_fillEntry(&gdt[1], 0, 0xffffffff, 0x9A);
+    gd_fillEntry(&gdt[2], 0, 0xffffffff, 0x92);
+    gd_fillEntry(
+            &gdt[3],
+            (uint32_t) ksects[KSECTION_SECTION_TSS].addr,
+            (uint32_t) ksects[KSECTION_SECTION_TSS].len,
+            0x89
+    );
+
+    gdt_commit(mman->gdtBuffer, gdt, GDT_LEN);
 }
 
 size_t mman_getMemoryMapLength(MemoryManager *mman) {

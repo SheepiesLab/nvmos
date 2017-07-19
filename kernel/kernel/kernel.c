@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <kernel/io/tty.h>
 #include <kernel/multiboot.h>
-#include <kernel/mman/gdt.h>
 #include <kernel/file.h>
 #include <kernel/stdout.h>
 #include <kernel/stderr.h>
@@ -14,8 +13,7 @@ void kernel_main(multiboot_info_t *mbt) {
     bool PRINT_SECTION_ADDR = true;
     bool PRINT_MMAP = true;
 
-    size_t gdtLen = 4;
-    uint8_t gdtBuffer[gdtLen * 8];
+    uint8_t idtBuffer[256 * 8];
 
     FILE _stdout;
     FILE _stderr;
@@ -61,17 +59,6 @@ void kernel_main(multiboot_info_t *mbt) {
     }
 
 
-    GlobalDescriptor gdt[gdtLen];
-    gd_fillEntry(&gdt[0], 0, 0, 0);
-    gd_fillEntry(&gdt[1], 0, 0xffffffff, 0x9A);
-    gd_fillEntry(&gdt[2], 0, 0xffffffff, 0x92);
-    gd_fillEntry(
-            &gdt[3],
-            (uint32_t) ksects[KSECTION_SECTION_TSS].addr,
-            (uint32_t) ksects[KSECTION_SECTION_TSS].len,
-            0x89
-    );
 
-    gdt_commit(gdtBuffer, gdt, gdtLen);
 
 }
