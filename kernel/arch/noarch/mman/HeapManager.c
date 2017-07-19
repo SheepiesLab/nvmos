@@ -33,7 +33,7 @@ struct heapAllocListNode {
 int heapman_construct(HeapManager *heapman, kptr_t heapStart, kptr_t heapEnd) {
     heapman->heapStart = heapStart;
     heapman->heapEnd = heapEnd;
-    head = NULL;
+    heapman->head = NULL;
     return 0;
 }
 
@@ -64,7 +64,7 @@ kptr_t heapman_malloc(HeapManager *heapman, size_t size) {
         return newNode->startAddr;
     } else {
         HeapAllocationListNode *currentNode = heapman->head;
-        while (currentNode->next != null) {
+        while (currentNode->next != NULL) {
             if (
                     currentNode->next->startAddr - currentNode->endAddr >
                     neededSpace) {

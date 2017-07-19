@@ -5,6 +5,8 @@
 #ifndef NVMOS_KDEF_H
 #define NVMOS_KDEF_H
 
-#define uint32_t kptr_t;
+#include <stdint.h>
+
+typedef uint32_t kptr_t;
 
 #endif //NVMOS_KDEF_H

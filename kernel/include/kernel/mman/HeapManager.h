@@ -6,6 +6,7 @@
 #define NVMOS_HEAPMANAGER_H
 
 #include <kernel/kdef.h>
+#include <stddef.h>
 
 typedef struct heapAllocListNode HeapAllocationListNode;
 
