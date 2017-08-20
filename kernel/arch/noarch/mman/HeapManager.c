@@ -18,11 +18,7 @@
  * Heap cannot overflow as it would not allocate when there is no space.
  */
 
-struct heapman {
-    HeapAllocationListNode *head;
-    kptr_t heapStart;
-    kptr_t heapEnd;
-};
+
 
 struct heapAllocListNode {
     kptr_t startAddr;

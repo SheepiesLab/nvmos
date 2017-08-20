@@ -7,6 +7,7 @@
 
 #include <kernel/multiboot.h>
 #include <kernel/mman/MemoryMap.h>
+#include <kernel/mman/HeapManager.h>
 #include <stddef.h>
 
 #define GDT_LEN 4
@@ -14,6 +15,7 @@
 typedef struct mman {
     multiboot_info_t *mbt;
     uint8_t gdtBuffer[GDT_LEN * 8];
+    HeapManager heapManager;
 } MemoryManager;
 
 int mman_construct(MemoryManager *mman, multiboot_info_t *mbt);

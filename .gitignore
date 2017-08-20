@@ -3,3 +3,5 @@ isodir
 sysroot
 
 \.idea/
+CMakeLists.txt
+\cmake-build-debug/

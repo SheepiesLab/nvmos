@@ -10,7 +10,11 @@
 
 typedef struct heapAllocListNode HeapAllocationListNode;
 
-typedef struct heapman HeapManager;
+typedef struct heapman {
+    HeapAllocationListNode *head;
+    kptr_t heapStart;
+    kptr_t heapEnd;
+} HeapManager;
 
 int heapman_construct(HeapManager *heapman, kptr_t heapStart, kptr_t heapEnd);
 
