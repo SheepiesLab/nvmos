@@ -23,11 +23,12 @@ int mman_construct(MemoryManager *mman, multiboot_info_t *mbt) {
 
     gdt_commit(mman->gdtBuffer, gdt, GDT_LEN);
 
-    heapman_construct(
-            &(mman->heapManager),
+    heap_construct(
+            &(mman->heap),
             ksects[KSECTION_SECTION_HEAP].addr,
             ksects[KSECTION_SECTION_HEAP].len +
-            ksects[KSECTION_SECTION_HEAP].addr
+            ksects[KSECTION_SECTION_HEAP].addr,
+            4096
     );
 }
 
