@@ -7,7 +7,7 @@
 
 #include <kernel/multiboot.h>
 #include <kernel/mman/MemoryMap.h>
-#include <kernel/mman/Heap.h>
+#include <kernel/mman/heap/Heap.h>
 #include <stddef.h>
 
 #define GDT_LEN 4

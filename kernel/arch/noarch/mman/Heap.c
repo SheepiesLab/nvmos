@@ -2,7 +2,8 @@
 // Created by benng on 7/18/17.
 //
 
-#include <kernel/mman/Heap.h>
+#include <kernel/mman/heap/Heap.h>
+#include <kernel/mman/heap/HeapFreeBlockList.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -50,20 +51,7 @@ int heap_construct(
     heap->blockSize = blockSize;
     heap->blockCount = (heapEnd - heapStart) / blockSize;
 
-    // Construct FreeBlockList
-    HeapFreeBlockNode *currentFBN = (HeapFreeBlockNode *) heapStart;
-    currentFBN->last = NULL;
-
-    for (size_t i = 0; i < heap->blockCount - 1; ++i) {
-        currentFBN->next = (HeapFreeBlockNode *) (currentFBN +
-                                                  blockSize);
-        currentFBN->next->last = currentFBN;
-        currentFBN = currentFBN->next;
-    }
-
-    currentFBN->next = NULL;
-
-    return 0;
+    return heapfbll_construct(heap);
 
 }
 
@@ -79,30 +67,13 @@ kptr_t heap_malloc(Heap *heap, size_t size) {
         ++blocksNeeded;
     ++blocksNeeded; // For allocation header
 
-    // Find consecutive free blocks
-    HeapFreeBlockNode *currentPtr = heap->heapFreeBlockListHead;
-    while (true) {
-        bool allocated = true;
-        kptr_t allocAddr = currentPtr;
-        for (size_t i = 0; i < blocksNeeded - 1; ++i) {
-            if (currentPtr->next == NULL) {
-                return NULL;
-            }
-            if (currentPtr->next - currentPtr != heap->blockSize) {
-                allocated = false;
-                break;
-            }
-            currentPtr = currentPtr->next;
-        }
-        if (allocated) {
-            HeapAllocationHeader *header = allocAddr;
-            header->blocksAllocated = blocksNeeded - 1;
-            return allocAddr + heap->blockSize;
-        }
-        currentPtr = currentPtr->next;
-    }
+    kptr_t allocAddr = heapfbll_pop(heap,blocksNeeded);
+    if(allocAddr == NULL) return NULL;
 
-    return NULL;
+    HeapAllocationHeader *header = (HeapAllocationHeader *)allocAddr;
+    header->blocksAllocated = blocksNeeded - 1;
+
+    return allocAddr + heap->blockSize;
 
 }
 
@@ -124,42 +95,8 @@ int heap_free(Heap *heap, kptr_t loc) {
 
     HeapAllocationHeader *header = loc - heap->blockSize;
     size_t blocksReleased = header->blocksAllocated + 1;
-    kptr_t releaseStartAddr = header;
+    kptr_t releaseStartAddr = (kptr_t)header;
 
-    HeapFreeBlockNode *currentPtr = heap->heapFreeBlockListHead;
-
-    while (true) {
-        if (currentPtr > releaseStartAddr) {
-            if ((currentPtr - releaseStartAddr) % heap->blockSize !=
-                0) {
-                return -1;
-            }
-            if ((currentPtr - releaseStartAddr) / heap->blockSize <
-                blocksReleased) {
-                return -1;
-            }
-            HeapFreeBlockNode *currentFBN =
-                    (HeapFreeBlockNode *) releaseStartAddr;
-            currentFBN->last = NULL;
-
-            for (size_t i = 0; i < blocksReleased; ++i) {
-                currentFBN->next = (HeapFreeBlockNode *) (currentFBN +
-                                                          blockSize);
-                currentFBN->next->last = currentFBN;
-                currentFBN = currentFBN->next;
-            }
-
-            currentFBN->next = currentPtr;
-            heap->heapFreeBlockListHead = releaseStartAddr;
-            return 0;
-        }
-
-        if (currentPtr->next == NULL) {
-            break;
-        }
-        currentPtr = currentPtr->next;
-    }
-
-
+    return heapfbll_insert(heap, releaseStartAddr, blocksReleased);
 
 }

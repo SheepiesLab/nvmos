@@ -2,26 +2,22 @@
 // Created by benng on 8/24/17.
 //
 
-#include <kernel/mman/Heap.h>
+#include <kernel/mman/heap/Heap.h>
+#include <kernel/mman/heap/HeapFreeBlockList.h>
 #include <stdbool.h>
 
 typedef HeapFreeBlockNode HeapFBN;
 
-struct heapFreeBlockNode {
-    HeapFreeBlockNode *last;
-    HeapFreeBlockNode *next;
-};
-
 int heapfbll_construct(Heap *heap) {
 
-    heap->heapFreeBlockListHead = (HeapFreeBlockNode *) heapStart;
+    heap->heapFreeBlockListHead = (HeapFBN *) heap->heapStart;
 
-    HeapFreeBlockNode *currentFBN = (HeapFreeBlockNode *) heapStart;
+    HeapFreeBlockNode *currentFBN = (HeapFBN *) heap->heapStart;
     currentFBN->last = NULL;
 
     for (size_t i = 0; i < heap->blockCount - 1; ++i) {
         currentFBN->next = (HeapFreeBlockNode *) (currentFBN +
-                                                  blockSize);
+                                                  heap->blockSize);
         currentFBN->next->last = currentFBN;
         currentFBN = currentFBN->next;
     }
@@ -61,7 +57,7 @@ int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
     dummyHeap.heapEnd = start + heap->blockSize * blocks;
     dummyHeap.blockSize = heap->blockSize;
     dummyHeap.blockCount = blocks;
-    heapfbll_construct(dummyHeap);
+    heapfbll_construct(&dummyHeap);
 
     // See if insert before head
     if ((kptr_t) (heap->heapFreeBlockListHead) > start) {
@@ -97,10 +93,10 @@ int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
 kptr_t heapfbll_pop(Heap *heap, size_t blocks) {
 
     // Find consecutive free blocks
-    HeapFreeBlockNode *currentPtr = heap->heapFreeBlockListHead;
+    HeapFBN *currentPtr = heap->heapFreeBlockListHead;
     while (true) {
         bool allocated = true;
-        kptr_t allocAddr = currentPtr;
+        kptr_t allocAddr = (kptr_t) currentPtr;
         for (size_t i = 0; i < blocks - 1; ++i) {
             if (currentPtr->next == NULL) {
                 return NULL;
@@ -112,7 +108,14 @@ kptr_t heapfbll_pop(Heap *heap, size_t blocks) {
             currentPtr = currentPtr->next;
         }
         if (allocated) {
-            //TODO cut linked list
+            HeapFBN *headOfSegment = (HeapFBN *) allocAddr;
+            HeapFBN *tailOfSegment = currentPtr;
+            if (headOfSegment->last != NULL)
+                headOfSegment->last->next = tailOfSegment->next;
+            else
+                heap->heapFreeBlockListHead = tailOfSegment->next;
+            if (tailOfSegment->next != NULL)
+                tailOfSegment->next->last = headOfSegment->last;
             return allocAddr;
         }
         currentPtr = currentPtr->next;
