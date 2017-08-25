@@ -8,7 +8,7 @@
 #include <kernel/stderr.h>
 #include <kernel/mman/MemoryManager.h>
 #include <kernel/mman/KernelSection.h>
-#include <kernel/mman/HeapManager.h>
+#include <kernel/mman/heap/Heap.h>
 
 void kernel_main(multiboot_info_t *mbt) {
     bool PRINT_SECTION_ADDR = true;
@@ -72,8 +72,21 @@ void kernel_main(multiboot_info_t *mbt) {
     }
 
 
-    int *testIntPtr = heapman_malloc(&(mman.heapManager),sizeof(int));
-    printf("heapManStart: 0x%p\n",mman.heapManager.heapStart);
-    printf("heapManEnd: 0x%p\n",mman.heapManager.heapEnd);
-    printf("testPtr: 0x%p\n",testIntPtr);
+    int *testIntPtr = (int *) heap_malloc(&(mman.heap), sizeof(int));
+    int *testIntPtr2 = (int *) heap_malloc(&(mman.heap), sizeof(int));
+    int *testIntArrPtr = (int *) heap_calloc(
+            &mman.heap,
+            100,
+            sizeof(int));
+    int *testIntPtr3 = (int *) heap_malloc(&(mman.heap), sizeof(int));
+    heap_free(&mman.heap, (kptr_t)testIntPtr2);
+    int *testIntPtr4 = (int *) heap_malloc(&(mman.heap), sizeof(int));
+    printf("heapManStart: 0x%p\n", mman.heap.heapStart);
+    printf("heapManEnd: 0x%p\n", mman.heap.heapEnd);
+    printf("testPtr1: 0x%p\n", testIntPtr);
+    printf("testPtr2: 0x%p\n", testIntPtr2);
+    printf("testPtrA: 0x%p\n", testIntArrPtr);
+    printf("testPtr3: 0x%p\n", testIntPtr3);
+    printf("testPtr4: 0x%p\n", testIntPtr4);
+
 }
