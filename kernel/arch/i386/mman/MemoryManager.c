@@ -27,9 +27,7 @@ int mman_construct(MemoryManager *mman, multiboot_info_t *mbt) {
             &(mman->heap),
             ksects[KSECTION_SECTION_HEAP].addr,
             ksects[KSECTION_SECTION_HEAP].len +
-            ksects[KSECTION_SECTION_HEAP].addr,
-            64
-    );
+            ksects[KSECTION_SECTION_HEAP].addr);
 }
 
 size_t mman_getMemoryMapLength(MemoryManager *mman) {
@@ -50,8 +48,10 @@ size_t mman_getMemoryMapLength(MemoryManager *mman) {
     return i;
 }
 
-int
-mman_getMemoryMap(MemoryManager *mman, MemoryMap *_mmap, size_t max) {
+int mman_getMemoryMap(
+        MemoryManager *mman,
+        MemoryMap *_mmap,
+        size_t max) {
     if ((mman->mbt->flags & MULTIBOOT_INFO_MEM_MAP) !=
         MULTIBOOT_INFO_MEM_MAP)
         return -1;

@@ -74,18 +74,25 @@ void kernel_main(multiboot_info_t *mbt) {
 
     int *testIntPtr = (int *) heap_malloc(&(mman.heap), sizeof(int));
     int *testIntPtr2 = (int *) heap_malloc(&(mman.heap), sizeof(int));
-    int *testIntArrPtr = (int *) heap_calloc(
-            &mman.heap,
-            100,
-            sizeof(int));
+//    int *testIntArrPtr = (int *) heap_calloc(
+//            &mman.heap,
+//            100,
+//            sizeof(int));
     int *testIntPtr3 = (int *) heap_malloc(&(mman.heap), sizeof(int));
     heap_free(&mman.heap, (kptr_t)testIntPtr2);
     int *testIntPtr4 = (int *) heap_malloc(&(mman.heap), sizeof(int));
+
+    *testIntPtr = 0;
+//    for (int i = 0; i < 100; ++i) testIntArrPtr[i] = 0;
+    *testIntPtr3 = 0;
+    *testIntPtr4 = 0;
+
+
     printf("heapManStart: 0x%p\n", mman.heap.heapStart);
     printf("heapManEnd: 0x%p\n", mman.heap.heapEnd);
     printf("testPtr1: 0x%p\n", testIntPtr);
     printf("testPtr2: 0x%p\n", testIntPtr2);
-    printf("testPtrA: 0x%p\n", testIntArrPtr);
+//    printf("testPtrA: 0x%p\n", testIntArrPtr);
     printf("testPtr3: 0x%p\n", testIntPtr3);
     printf("testPtr4: 0x%p\n", testIntPtr4);
 

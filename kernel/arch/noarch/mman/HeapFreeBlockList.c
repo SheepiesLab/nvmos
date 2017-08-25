@@ -5,10 +5,13 @@
 #include <kernel/mman/heap/Heap.h>
 #include <kernel/mman/heap/HeapFreeBlockList.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef HeapFreeBlockNode HeapFBN;
 
 int heapfbll_construct(Heap *heap) {
+    size_t blockSize = heap_blockSize();
+
 
     heap->heapFreeBlockListHead = (HeapFBN *) heap->heapStart;
 
@@ -16,8 +19,7 @@ int heapfbll_construct(Heap *heap) {
     currentFBN->last = NULL;
 
     for (size_t i = 0; i < heap->blockCount - 1; ++i) {
-        currentFBN->next = (HeapFreeBlockNode *) (currentFBN +
-                                                  heap->blockSize);
+        currentFBN->next = (kptr_t)currentFBN + blockSize;
         currentFBN->next->last = currentFBN;
         currentFBN = currentFBN->next;
     }
@@ -93,15 +95,18 @@ int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
 kptr_t heapfbll_pop(Heap *heap, size_t blocks) {
 
     // Find consecutive free blocks
-    HeapFBN *currentPtr = heap->heapFreeBlockListHead;
+    HeapFBN *currentPtr = (kptr_t)heap->heapFreeBlockListHead;
+    printf("HeapFBLHead: 0x%p\n", heap->heapFreeBlockListHead);
     while (true) {
         bool allocated = true;
         kptr_t allocAddr = (kptr_t) currentPtr;
-        for (size_t i = 0; i < blocks - 1; ++i) {
+        for (int i = 0; i < blocks - 1; ++i) {
             if (currentPtr->next == NULL) {
+                printf("current err: 0x%p\n\n", currentPtr);
                 return NULL;
             }
-            if (currentPtr->next - currentPtr != heap->blockSize) {
+            if ((kptr_t)currentPtr->next - (kptr_t)currentPtr != heap_blockSize()) {
+                printf("current nalloc: 0x%p\n\n", currentPtr);
                 allocated = false;
                 break;
             }
@@ -114,6 +119,8 @@ kptr_t heapfbll_pop(Heap *heap, size_t blocks) {
                 headOfSegment->last->next = tailOfSegment->next;
             else
                 heap->heapFreeBlockListHead = tailOfSegment->next;
+            if (heap->heapFreeBlockListHead != NULL)
+                heap->heapFreeBlockListHead->last = NULL;
             if (tailOfSegment->next != NULL)
                 tailOfSegment->next->last = headOfSegment->last;
             return allocAddr;

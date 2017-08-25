@@ -18,11 +18,12 @@ typedef struct heap {
     size_t blockCount;
 } Heap;
 
+size_t heap_blockSize();
+
 int heap_construct(
         Heap *heap,
         kptr_t heapStart,
-        kptr_t heapEnd,
-        size_t blockSize);
+        kptr_t heapEnd);
 
 kptr_t heap_malloc(Heap *heap, size_t size);
 

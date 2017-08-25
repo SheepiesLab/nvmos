@@ -4,4 +4,3 @@ set -e
 
 qemu-system-$(./target-triplet-to-arch.sh $HOST) -cdrom nvramos.iso -m 4G
 
-./clean.sh

@@ -27,25 +27,31 @@ struct heapAllocationHeader {
     size_t blocksAllocated;
 };
 
+size_t heap_blockSize(){
+    size_t blockSize;
+    if (sizeof(HeapFreeBlockNode) < sizeof(HeapAllocationHeader)) {
+        blockSize = sizeof(HeapAllocationHeader);
+    }
+    else{
+        blockSize = sizeof(HeapFreeBlockNode);
+    }
+    return blockSize;
+}
+
 int heap_construct(
         Heap *heap,
         kptr_t heapStart,
-        kptr_t heapEnd,
-        size_t blockSize) {
+        kptr_t heapEnd) {
 
     if (heap == NULL) {
         return -1;
     }
 
     // Block cannot hold free block list node
-    if (
-            blockSize < sizeof(HeapFreeBlockNode) ||
-            blockSize < sizeof(HeapAllocationHeader)) {
-        return -1;
-    }
+    size_t blockSize = heap_blockSize();
 
     // Fill metadata
-    heap->heapFreeBlockListHead = (HeapFreeBlockNode *) heapStart;
+    heap->heapFreeBlockListHead = heapStart;
     heap->heapStart = heapStart;
     heap->heapEnd = heapEnd;
     heap->blockSize = blockSize;
