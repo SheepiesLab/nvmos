@@ -5,7 +5,6 @@
 #include <kernel/mman/heap/Heap.h>
 #include <kernel/mman/heap/HeapFreeBlockList.h>
 #include <stdbool.h>
-#include <stdio.h>
 
 typedef HeapFreeBlockNode HeapFBN;
 
@@ -19,7 +18,7 @@ int heapfbll_construct(Heap *heap) {
     currentFBN->last = NULL;
 
     for (size_t i = 0; i < heap->blockCount - 1; ++i) {
-        currentFBN->next = (kptr_t)currentFBN + blockSize;
+        currentFBN->next = (kptr_t) currentFBN + blockSize;
         currentFBN->next->last = currentFBN;
         currentFBN = currentFBN->next;
     }
@@ -95,18 +94,16 @@ int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
 kptr_t heapfbll_pop(Heap *heap, size_t blocks) {
 
     // Find consecutive free blocks
-    HeapFBN *currentPtr = (kptr_t)heap->heapFreeBlockListHead;
-    printf("HeapFBLHead: 0x%p\n", heap->heapFreeBlockListHead);
+    HeapFBN *currentPtr = (kptr_t) heap->heapFreeBlockListHead;
     while (true) {
         bool allocated = true;
         kptr_t allocAddr = (kptr_t) currentPtr;
         for (int i = 0; i < blocks - 1; ++i) {
             if (currentPtr->next == NULL) {
-                printf("current err: 0x%p\n\n", currentPtr);
                 return NULL;
             }
-            if ((kptr_t)currentPtr->next - (kptr_t)currentPtr != heap_blockSize()) {
-                printf("current nalloc: 0x%p\n\n", currentPtr);
+            if ((kptr_t) currentPtr->next - (kptr_t) currentPtr !=
+                heap_blockSize()) {
                 allocated = false;
                 break;
             }

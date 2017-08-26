@@ -11,8 +11,7 @@
 #include <kernel/mman/heap/Heap.h>
 
 void kernel_main(multiboot_info_t *mbt) {
-    bool PRINT_SECTION_ADDR = true;
-    bool PRINT_MMAP = true;
+    bool PRINT_DEBUG = true;
 
     uint8_t idtBuffer[256 * 8];
 
@@ -28,7 +27,7 @@ void kernel_main(multiboot_info_t *mbt) {
 
     KernelSection *ksects = ksection_getKsections();
 
-    if (PRINT_MMAP) {
+    if (PRINT_DEBUG) {
         printf("MMap Addr: %p\n", mman.mbt->mmap_addr);
 
         size_t mmapLength = mman_getMemoryMapLength(&mman);
@@ -43,57 +42,58 @@ void kernel_main(multiboot_info_t *mbt) {
         }
         printf("\n");
 
-        if (PRINT_SECTION_ADDR) {
-            printf("Text start:     0x%p\t",
-                   ksects[KSECTION_SECTION_TEXT].addr);
-            printf("Text length:    0x%p\n",
-                   ksects[KSECTION_SECTION_TEXT].len);
-            printf("RODATA start:   0x%p\t",
-                   ksects[KSECTION_SECTION_RODATA].addr);
-            printf("RODATA length:  0x%p\n",
-                   ksects[KSECTION_SECTION_RODATA].len);
-            printf("DATA start:     0x%p\t",
-                   ksects[KSECTION_SECTION_DATA].addr);
-            printf("DATA length:    0x%p\n",
-                   ksects[KSECTION_SECTION_DATA].len);
-            printf("TSS start:      0x%p\t",
-                   ksects[KSECTION_SECTION_TSS].addr);
-            printf("TSS length:     0x%p\n",
-                   ksects[KSECTION_SECTION_TSS].len);
-            printf("BSS start:      0x%p\t",
-                   ksects[KSECTION_SECTION_BSS].addr);
-            printf("BSS length:     0x%p\n",
-                   ksects[KSECTION_SECTION_BSS].len);
-            printf("HEAP start:     0x%p\t",
-                   ksects[KSECTION_SECTION_HEAP].addr);
-            printf("HEAP length:    0x%p\n",
-                   ksects[KSECTION_SECTION_HEAP].len);
-        }
+        printf("Text start:     0x%p\t",
+               ksects[KSECTION_SECTION_TEXT].addr);
+        printf("Text length:    0x%p\n",
+               ksects[KSECTION_SECTION_TEXT].len);
+        printf("RODATA start:   0x%p\t",
+               ksects[KSECTION_SECTION_RODATA].addr);
+        printf("RODATA length:  0x%p\n",
+               ksects[KSECTION_SECTION_RODATA].len);
+        printf("DATA start:     0x%p\t",
+               ksects[KSECTION_SECTION_DATA].addr);
+        printf("DATA length:    0x%p\n",
+               ksects[KSECTION_SECTION_DATA].len);
+        printf("TSS start:      0x%p\t",
+               ksects[KSECTION_SECTION_TSS].addr);
+        printf("TSS length:     0x%p\n",
+               ksects[KSECTION_SECTION_TSS].len);
+        printf("BSS start:      0x%p\t",
+               ksects[KSECTION_SECTION_BSS].addr);
+        printf("BSS length:     0x%p\n",
+               ksects[KSECTION_SECTION_BSS].len);
+        printf("HEAP start:     0x%p\t",
+               ksects[KSECTION_SECTION_HEAP].addr);
+        printf("HEAP length:    0x%p\n",
+               ksects[KSECTION_SECTION_HEAP].len);
+
+        // Test Heap
+        int *testIntPtr = (int *) heap_malloc(&(mman.heap),
+                                              sizeof(int));
+        int *testIntPtr2 = (int *) heap_malloc(&(mman.heap),
+                                               sizeof(int));
+        int *testIntArrPtr = (int *) heap_calloc(
+                &mman.heap,
+                100,
+                sizeof(int));
+        int *testIntPtr3 = (int *) heap_malloc(&(mman.heap),
+                                               sizeof(int));
+        heap_free(&mman.heap, (kptr_t) testIntPtr2);
+        int *testIntPtr4 = (int *) heap_malloc(&(mman.heap),
+                                               sizeof(int));
+
+        *testIntPtr = 0;
+        for (int i = 0; i < 100; ++i) testIntArrPtr[i] = 0;
+        *testIntPtr3 = 0;
+        *testIntPtr4 = 0;
+
+        printf("heapManStart: 0x%p\n", mman.heap.heapStart);
+        printf("heapManEnd: 0x%p\n", mman.heap.heapEnd);
+        printf("testPtr1: 0x%p\n", testIntPtr);
+        printf("testPtr2: 0x%p\n", testIntPtr2);
+        printf("testPtrA: 0x%p\n", testIntArrPtr);
+        printf("testPtr3: 0x%p\n", testIntPtr3);
+        printf("testPtr4: 0x%p\n", testIntPtr4);
     }
-
-
-    int *testIntPtr = (int *) heap_malloc(&(mman.heap), sizeof(int));
-    int *testIntPtr2 = (int *) heap_malloc(&(mman.heap), sizeof(int));
-//    int *testIntArrPtr = (int *) heap_calloc(
-//            &mman.heap,
-//            100,
-//            sizeof(int));
-    int *testIntPtr3 = (int *) heap_malloc(&(mman.heap), sizeof(int));
-    heap_free(&mman.heap, (kptr_t)testIntPtr2);
-    int *testIntPtr4 = (int *) heap_malloc(&(mman.heap), sizeof(int));
-
-    *testIntPtr = 0;
-//    for (int i = 0; i < 100; ++i) testIntArrPtr[i] = 0;
-    *testIntPtr3 = 0;
-    *testIntPtr4 = 0;
-
-
-    printf("heapManStart: 0x%p\n", mman.heap.heapStart);
-    printf("heapManEnd: 0x%p\n", mman.heap.heapEnd);
-    printf("testPtr1: 0x%p\n", testIntPtr);
-    printf("testPtr2: 0x%p\n", testIntPtr2);
-//    printf("testPtrA: 0x%p\n", testIntArrPtr);
-    printf("testPtr3: 0x%p\n", testIntPtr3);
-    printf("testPtr4: 0x%p\n", testIntPtr4);
 
 }
