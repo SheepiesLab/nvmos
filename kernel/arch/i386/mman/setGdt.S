@@ -9,9 +9,9 @@ GDT_BASE_ADDR:
 .word 0
 
 setGDT:
-   MOV   %eax, 4(%esp)
-   MOV   GDT_BASE_ADDR, %eax
-   MOV   %ax, 8(%esp)
-   MOV   GDT_SIZE, %ax
-   LGDT  (GDT_SIZE)
+   MOV   4(%esp),   %eax
+   MOV   %eax,      GDT_BASE_ADDR
+   MOV   8(%esp),   %ax
+   MOV   %ax,       GDT_SIZE
+   LIDT  (GDT_SIZE)
    RET
