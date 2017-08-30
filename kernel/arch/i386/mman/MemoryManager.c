@@ -21,7 +21,10 @@ int mman_construct(MemoryManager *mman, multiboot_info_t *mbt) {
             0x89
     );
 
-    gdt_commit(mman->gdtBuffer, gdt, GDT_LEN);
+    gdt_commit(
+            mman->gdtBuffer,
+            gdt,
+            GDT_LEN);
 
     heap_construct(
             &(mman->heap),

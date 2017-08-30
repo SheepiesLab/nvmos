@@ -2,5 +2,9 @@
 set -e
 . ./iso.sh
 
-qemu-system-$(./target-triplet-to-arch.sh $HOST) -cdrom nvramos.iso -m 4G
+qemu-system-$(./target-triplet-to-arch.sh $HOST) \
+    -cdrom nvramos.iso \
+    -m 4G \
+    -serial stdio \
+    -d cpu_reset
 

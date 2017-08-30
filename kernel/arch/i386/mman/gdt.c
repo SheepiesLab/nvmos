@@ -37,19 +37,21 @@ int gd_encode(uint8_t *buffer, GlobalDescriptor GD) {
 }
 
 extern void setGDT(uint32_t base, uint16_t size);
+extern void reloadGDT(void);
 
 int gdt_commit(uint8_t *buffer, GlobalDescriptor *gdt, size_t gdtLen) {
     if (gdtLen > 0xFFFF)
         return -1;
 
     for (int i = 0; i < gdtLen; ++i) {
-        if (gd_encode(buffer + (16 * i), gdt[i]) == -1)
+        if (gd_encode(buffer + (8 * i), gdt[i]) == -1)
             return -1;
     }
 
     uint32_t gdtBase = (uint32_t) buffer;
     uint16_t gdtSize = gdtLen;
-    setGDT(gdtBase, gdtSize);
+    setGDT(gdtBase, gdtSize * 8);
+    reloadGDT();
 
     return 0;
 }
