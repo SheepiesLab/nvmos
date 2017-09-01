@@ -17,7 +17,7 @@ unsigned int inl(unsigned short int port);
 
 unsigned int inl_p(unsigned short int port);
 
-void outb(unsigned char value, unsigned short int port);
+void outb(unsigned char value, unsigned  short int port);
 
 void outb_p(unsigned char value, unsigned short int port);
 

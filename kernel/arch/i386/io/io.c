@@ -10,11 +10,11 @@ extern unsigned short int asm_inw(unsigned short int port);
 
 extern unsigned int asm_inl(unsigned short int port);
 
-extern void outb(unsigned char value, unsigned short int port);
+extern void asm_outb(unsigned char value, unsigned short int port);
 
-extern void outw(unsigned short int value, unsigned short int port);
+extern void asm_outw(unsigned short int value, unsigned short int port);
 
-extern void outl(unsigned int value, unsigned short int port);
+extern void asm_outl(unsigned int value, unsigned short int port);
 
 unsigned char inb(unsigned short int port) {
     return asm_inb(port);
@@ -41,26 +41,26 @@ unsigned int inl_p(unsigned short int port) {
 }
 
 void outb(unsigned char value, unsigned short int port) {
-    return asm_outb(port);
+    asm_outb(value, port);
 }
 
 void outb_p(unsigned char value, unsigned short int port) {
-    return asm_outb(port);
+    asm_outb(value, port);
 }
 
 void outw(unsigned short int value, unsigned short int port) {
-    return asm_outw(port);
+    asm_outw(value, port);
 }
 
 void outw_p(unsigned short int value, unsigned short int port) {
-    return asm_outw(port);
+    asm_outw(value, port);
 }
 
 void outl(unsigned int value, unsigned short int port) {
-    return asm_outl(port);
+    asm_outl(value, port);
 }
 
 void outl_p(unsigned int value, unsigned short int port) {
-    return asm_outl(port);
+    asm_outl(value, port);
 }
 
