@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <kernel/io/tty.h>
+#include <kernel/io/serial.h>
+#include <kernel/io/idt.h>
 #include <kernel/multiboot.h>
 #include <kernel/file.h>
 #include <kernel/stdout.h>
@@ -11,6 +13,7 @@
 #include <kernel/mman/heap/Heap.h>
 
 void kernel_main(multiboot_info_t *mbt) {
+
     bool PRINT_DEBUG = true;
 
     uint8_t idtBuffer[256 * 8];
@@ -19,7 +22,8 @@ void kernel_main(multiboot_info_t *mbt) {
     FILE _stderr;
     stdout_init(&_stdout);
     stderr_init(&_stderr);
-    terminal_initialize();
+//    terminal_initialize();
+    init_serial();
     printf("Hello, kernel World!\n\n");
 
     MemoryManager mman;
@@ -94,6 +98,10 @@ void kernel_main(multiboot_info_t *mbt) {
         printf("testPtrA: 0x%p\n", testIntArrPtr);
         printf("testPtr3: 0x%p\n", testIntPtr3);
         printf("testPtr4: 0x%p\n", testIntPtr4);
+
+        uint16_t *com1 = (kptr_t)0x400;
+        printf("com1: 0x%p\n", *com1);
     }
 
+    setIDT((uint32_t)idtBuffer, 256 * 8);
 }
