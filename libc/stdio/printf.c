@@ -102,7 +102,7 @@ int printf(const char *restrict format, ...) {
             written += len;
         } else if (*format == 'd') { //TODO: 64bit incompatible
             format++;
-            uint64_t num = va_arg(parameters, const uint64_t);
+            uint32_t num = va_arg(parameters, const uint32_t);
             size_t len = 0;
             char str[19];
             while (num != 0) {

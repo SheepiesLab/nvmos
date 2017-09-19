@@ -14,8 +14,9 @@ void init_serial() {
     outb(0x01, PORT + 0);    // Set divisor to 1 (lo byte) 115200 baud
     outb(0x00, PORT + 1);    //                  (hi byte)
     outb(0x03, PORT + 3);    // 8 bits, no parity, one stop bit
-    outb(0xC7, PORT + 2);    // Enable FIFO, clear them, with 14-byte threshold
+    outb(0x07, PORT + 2);    // Enable FIFO, clear them, with 1-byte threshold
     outb(0x0B, PORT + 4);    // IRQs enabled, RTS/DSR set
+    outb(0x0F, PORT + 1);    // Enable avail interrupts
 }
 
 int serial_received() {

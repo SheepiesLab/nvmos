@@ -12,7 +12,8 @@ extern unsigned int asm_inl(unsigned short int port);
 
 extern void asm_outb(unsigned char value, unsigned short int port);
 
-extern void asm_outw(unsigned short int value, unsigned short int port);
+extern void
+asm_outw(unsigned short int value, unsigned short int port);
 
 extern void asm_outl(unsigned int value, unsigned short int port);
 
@@ -64,3 +65,6 @@ void outl_p(unsigned int value, unsigned short int port) {
     asm_outl(value, port);
 }
 
+void io_wait() {
+    outb(0, 0x80);
+}

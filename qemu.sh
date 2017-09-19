@@ -5,7 +5,6 @@ set -e
 qemu-system-$(./target-triplet-to-arch.sh $HOST) \
     -cdrom nvramos.iso \
     -m 4G \
-    -nographic
-    #-serial stdio
+    -nographic \
+    -d int,cpu_reset
     #-s -S
-    #-d int,cpu_reset \

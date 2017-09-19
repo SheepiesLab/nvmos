@@ -3,7 +3,9 @@
 #include <stdbool.h>
 #include <kernel/io/tty.h>
 #include <kernel/io/serial.h>
-#include <kernel/io/idt.h>
+#include <kernel/int/idt.h>
+#include <kernel/int/pic.h>
+#include <kernel/int/isr.h>
 #include <kernel/multiboot.h>
 #include <kernel/file.h>
 #include <kernel/stdout.h>
@@ -99,9 +101,50 @@ void kernel_main(multiboot_info_t *mbt) {
         printf("testPtr3: 0x%p\n", testIntPtr3);
         printf("testPtr4: 0x%p\n", testIntPtr4);
 
-        uint16_t *com1 = (kptr_t)0x400;
+        uint16_t *com1 = (kptr_t) 0x400;
         printf("com1: 0x%p\n", *com1);
     }
 
-    setIDT((uint32_t)idtBuffer, 256 * 8);
+    {
+        InterruptDescriptor id;
+        id.type = ID_TYPE_386_TRAP;
+        id.isrAddr = (kptr_t) &exceptionHandler;
+        id.present = 1;
+        id.privilegeLevel = 0;
+        for (int i = 0; i < 0x20; ++i) {
+            interruptDescriptor_Encode(
+                    &id,
+                    idtBuffer + 8 * i);
+        }
+        id.type = ID_TYPE_386_INT;
+        id.isrAddr = (kptr_t) &irqHandler;
+        id.present = 1;
+        id.privilegeLevel = 0;
+        for (int i = 0x20; i < 0x30; ++i) {
+            interruptDescriptor_Encode(
+                    &id,
+                    idtBuffer + 8 * i);
+        }
+        id.type = ID_TYPE_386_INT;
+        id.isrAddr = (kptr_t) &interruptHandler;
+        id.present = 1;
+        id.privilegeLevel = 0;
+        for (int i = 0x30; i <= 0xFF; ++i) {
+            interruptDescriptor_Encode(
+                    &id,
+                    idtBuffer + 8 * i);
+        }
+    }
+    setIDT((uint32_t) idtBuffer, 256 * 8);
+    PIC_remap(0x20, 0x28);
+    for (int i = 0;i < 16; ++i){
+        IRQ_set_mask(i);
+    }
+    IRQ_clear_mask(0x04);
+
+    asm("int $0x30");
+    printf("After interrupt!\n");
+    while(1){
+        printf("%c",read_serial());
+    };
 }

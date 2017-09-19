@@ -1,6 +1,7 @@
 *.iso
 isodir
 sysroot
+debug.sym
 
 \.idea/
 CMakeLists.txt

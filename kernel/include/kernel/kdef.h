@@ -7,6 +7,6 @@
 
 #include <stdint.h>
 
-typedef uint64_t kptr_t;
+typedef uint32_t kptr_t;
 
 #endif //NVMOS_KDEF_H

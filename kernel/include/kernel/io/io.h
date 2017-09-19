@@ -17,7 +17,7 @@ unsigned int inl(unsigned short int port);
 
 unsigned int inl_p(unsigned short int port);
 
-void outb(unsigned char value, unsigned  short int port);
+void outb(unsigned char value, unsigned short int port);
 
 void outb_p(unsigned char value, unsigned short int port);
 
@@ -58,5 +58,7 @@ void outsl(
         unsigned short int port,
         const void *addr,
         unsigned long int count);
+
+void io_wait();
 
 #endif //NVMOS_IO_H
