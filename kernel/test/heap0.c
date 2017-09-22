@@ -25,18 +25,21 @@ n explained:
 #include <kernel/mman/heap/Heap.h>
 
 int testcases_heap0(kptr_t heapStart,kptr_t heapEnd){
-	const int TESTCASE_COUNT 1;
+	const int TESTCASE_COUNT = 1;
 	
 	int *testCases_seq[TESTCASE_COUNT];
 	int *testCases_res[TESTCASE_COUNT];
 	int testCases_n[TESTCASE_COUNT];
 
 	// Test Case 0
-	int testCase0_seq[2] = {8, 8};
-	int testCase0_res[2] = {0x8, 0x18};
-	testCases_seq[0] = testCase0_seq;
-	testCases_res[0] = testCase0_res;
-	testCases_n[0] = 2;
+	{
+		const int TESTCASE_ID = 0;
+		testCases_n[TESTCASE_ID] = 2;
+		int seq[testCases_n[TESTCASE_ID]] = {8, 8};
+		int res[testCases_n[TESTCASE_ID]] = {0x8, 0x18};
+		testCases_seq[TESTCASE_ID] = seq;
+		testCases_res[TESTCASE_ID] = res;
+	}
 
 	// Run all test cases
 	for(int i = 0;i < TESTCASE_COUNT; ++i){
