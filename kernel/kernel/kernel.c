@@ -145,6 +145,7 @@ void kernel_main(multiboot_info_t *mbt) {
     asm("int $0x30");
     printf("After interrupt!\n");
     while(1){
-        printf("%c",read_serial());
+//        printf("%c",read_serial());
+		printf("Serial: %d\n", read_serial());
     };
 }
