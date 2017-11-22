@@ -9,14 +9,14 @@
 #define DL_ALLOC_SEGMENT_HEAD_NODE 0x4
 #define DL_ALLOC_SEGMENT_TAIL_NODE 0x0
 
-struct datalayer_freeBlockListNode_struct{
+typedef struct{
   size_t length;
   uint8_t flags;
   kptr_t sameValueNext;
   kptr_t parent;
   kptr_t leftChild;
   kptr_t rightChild;
-};
+} datalayer_freeBlockListNode_t;
 
 typedef struct {
   size_t allocationBlockSize;

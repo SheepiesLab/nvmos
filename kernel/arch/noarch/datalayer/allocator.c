@@ -44,8 +44,8 @@ int DL_allocator_createAllocator(
   endBlock->leftChild = NULL;
   endBlock->rightChild = NULL;
 
-  freeBlockList->allocationBlockSize = allocationBlockSize;
-  freeBlockList->head = startBlock;
+  allocator->allocationBlockSize = allocationBlockSize;
+  allocator->head = startBlock;
 
   return 0;
 }
@@ -69,5 +69,15 @@ kptr_t DL_allocator_allocateBlocks(
   datalayer_allocator_t *allocator,
   size_t blockCount
 ){
-  
+
+}
+
+
+
+int DL_allocator_deallocateBlocks(
+  datalayer_allocator_t *allocator,
+  kptr_t startBlock,
+  size_t length
+){
+
 }
