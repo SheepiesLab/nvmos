@@ -7,18 +7,18 @@
 #include <stdio.h>
 
 
-__attribute__((interrupt)) void
-irqHandler(struct interrupt_frame *frame) {
-    printf("IRQ4");
-    PIC_sendEOI(4);
+void irqHandler(struct interrupt_frame *frame)
+{
+	printf("IRQ4");
+	PIC_sendEOI(4);
 }
 
-__attribute__((interrupt)) void
-interruptHandler(struct interrupt_frame *frame) {
-    printf("IH\n");
+void interruptHandler(struct interrupt_frame *frame)
+{
+	printf("IH\n");
 }
 
-__attribute__((interrupt)) void
-exceptionHandler(struct interrupt_frame *frame, uword_t error_code) {
-    printf("EH\n");
+void exceptionHandler(struct interrupt_frame *frame, uword_t error_code)
+{
+	printf("EH\n");
 }

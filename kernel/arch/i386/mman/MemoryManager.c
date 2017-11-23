@@ -71,7 +71,7 @@ int mman_getMemoryMap(
 		(multiboot_memory_map_t *)mman->mbt->mmap_addr;
 
 	size_t i = 0;
-	while (mmap < (mman->mbt->mmap_addr + mman->mbt->mmap_length) &&
+	while ((nvmos_pointer_t)mmap < (mman->mbt->mmap_addr + mman->mbt->mmap_length) &&
 	       i < max
 	       ) {
 		_mmap[i].len = mmap->len;
