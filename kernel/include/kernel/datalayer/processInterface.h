@@ -11,7 +11,7 @@ int datalayer_loadLibraryToProcess (process_t *process, const char *path);
 
 int datalayer_getPageTableOfProcess (process_t *process, char **target);
 
-int datalayer_allocatePageToProcess (process_t *process, nvmos_size_t size, nvmos_pointer_t *allocationAddress);
+int datalayer_allocatePageToProcess (process_t *process, size_t size, nvmos_pointer_t *allocationAddress);
 
 int datalayer_freePageFromProcess (process_t *process, nvmos_pointer_t allocationAddress);
 

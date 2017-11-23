@@ -14,20 +14,20 @@ typedef struct heap {
     HeapFreeBlockNode *heapFreeBlockListHead;
     nvmos_pointer_t heapStart;
     nvmos_pointer_t heapEnd;
-    nvmos_size_t blockSize;
-    nvmos_size_t blockCount;
+    size_t blockSize;
+    size_t blockCount;
 } Heap;
 
-nvmos_size_t heap_blockSize();
+size_t heap_blockSize();
 
 int heap_construct(
         Heap *heap,
         nvmos_pointer_t heapStart,
         nvmos_pointer_t heapEnd);
 
-nvmos_pointer_t heap_malloc(Heap *heap, nvmos_size_t size);
+nvmos_pointer_t heap_malloc(Heap *heap, size_t size);
 
-nvmos_pointer_t heap_calloc(Heap *heap, nvmos_size_t len, nvmos_size_t size);
+nvmos_pointer_t heap_calloc(Heap *heap, size_t len, size_t size);
 
 int heap_free(Heap *heap, nvmos_pointer_t loc);
 

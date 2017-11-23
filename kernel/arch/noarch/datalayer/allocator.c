@@ -2,9 +2,9 @@
 
 int nvmos_dl_alloc_createAllocator(
 	nvmos_dl_allocator_t *	allocator,
-	nvmos_pointer			startAddress,
-	nvmos_size			length,
-	nvmos_size			allocationBlockSize
+	nvmos_pointer_t			startAddress,
+	size_t					length,
+	size_t					allocationBlockSize
 	)
 {
 	{
@@ -18,7 +18,7 @@ int nvmos_dl_alloc_createAllocator(
 		}
 		length -= length % allocationBlockSize;
 	}
-	nvmos_size blockLength = length / allocationBlockSize;
+	size_t blockLength = length / allocationBlockSize;
 
 	if (blockLength < 2)
 		return -1;
@@ -63,8 +63,8 @@ int nvmos_dl_alloc_createAllocator(
 
 int nvmos_dl_alloc_retrieveAllocator(
 	nvmos_dl_allocator_t *	allocator,
-	nvmos_pointer			head,
-	nvmos_size			allocationBlockSize
+	nvmos_pointer_t			head,
+	size_t					allocationBlockSize
 	)
 {
 	freeBlockList->allocationBlockSize = allocationBlockSize;
@@ -77,7 +77,7 @@ int nvmos_dl_alloc_retrieveAllocator(
 
 nvmos_pointer nvmos_dl_alloc_allocateBlocks(
 	nvmos_dl_allocator_t *	allocator,
-	nvmos_size			blockCount
+	size_t					blockCount
 	)
 {
 }
@@ -87,7 +87,7 @@ nvmos_pointer nvmos_dl_alloc_allocateBlocks(
 int nvmos_dl_alloc_deallocateBlocks(
 	nvmos_dl_allocator_t *	allocator,
 	nvmos_pointer			startBlock,
-	nvmos_size			length
+	nvmos_size				length
 	)
 {
 }
