@@ -9,7 +9,7 @@
 typedef HeapFreeBlockNode HeapFBN;
 
 int heapfbll_construct(Heap *heap) {
-    size_t blockSize = heap_blockSize();
+    nvmos_size_t blockSize = heap_blockSize();
 
 
     heap->heapFreeBlockListHead = (HeapFBN *) heap->heapStart;
@@ -17,7 +17,7 @@ int heapfbll_construct(Heap *heap) {
     HeapFreeBlockNode *currentFBN = (HeapFBN *) heap->heapStart;
     currentFBN->last = NULL;
 
-    for (size_t i = 0; i < heap->blockCount - 1; ++i) {
+    for (nvmos_size_t i = 0; i < heap->blockCount - 1; ++i) {
         currentFBN->next = (nvmos_ptr_t) currentFBN + blockSize;
         currentFBN->next->last = currentFBN;
         currentFBN = currentFBN->next;
@@ -50,7 +50,7 @@ HeapFreeBlockNode *heapfbll_last(HeapFreeBlockNode *this) {
     return this;
 }
 
-int heapfbll_insert(Heap *heap, nvmos_ptr_t start, size_t blocks) {
+int heapfbll_insert(Heap *heap, nvmos_ptr_t start, nvmos_size_t blocks) {
 
     Heap dummyHeap;
     dummyHeap.heapFreeBlockListHead = start;
@@ -91,7 +91,7 @@ int heapfbll_insert(Heap *heap, nvmos_ptr_t start, size_t blocks) {
 
 }
 
-nvmos_ptr_t heapfbll_pop(Heap *heap, size_t blocks) {
+nvmos_ptr_t heapfbll_pop(Heap *heap, nvmos_size_t blocks) {
 
     // Find consecutive free blocks
     HeapFBN *currentPtr = (nvmos_ptr_t) heap->heapFreeBlockListHead;

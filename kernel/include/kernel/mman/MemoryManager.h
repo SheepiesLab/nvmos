@@ -20,8 +20,8 @@ typedef struct mman {
 
 int mman_construct(MemoryManager *mman, multiboot_info_t *mbt);
 
-int mman_getMemoryMap(MemoryManager *mman, MemoryMap *mmap, size_t max);
+int mman_getMemoryMap(MemoryManager *mman, MemoryMap *mmap, nvmos_size_t max);
 
-size_t mman_getMemoryMapLength(MemoryManager *mman);
+nvmos_size_t mman_getMemoryMapLength(MemoryManager *mman);
 
 #endif //NVMOS_MEMORYMANAGER_H

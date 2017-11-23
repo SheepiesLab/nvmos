@@ -24,11 +24,11 @@
 
 typedef struct heapAllocationHeader HeapAllocationHeader;
 struct heapAllocationHeader {
-    size_t blocksAllocated;
+    nvmos_size_t blocksAllocated;
 };
 
-size_t heap_blockSize(){
-    size_t blockSize;
+nvmos_size_t heap_blockSize(){
+    nvmos_size_t blockSize;
     if (sizeof(HeapFreeBlockNode) < sizeof(HeapAllocationHeader)) {
         blockSize = sizeof(HeapAllocationHeader);
     }
@@ -48,7 +48,7 @@ int heap_construct(
     }
 
     // Block cannot hold free block list node
-    size_t blockSize = heap_blockSize();
+    nvmos_size_t blockSize = heap_blockSize();
 
     // Fill metadata
     heap->heapFreeBlockListHead = heapStart;
@@ -61,13 +61,13 @@ int heap_construct(
 
 }
 
-nvmos_ptr_t heap_malloc(Heap *heap, size_t size) {
+nvmos_ptr_t heap_malloc(Heap *heap, nvmos_size_t size) {
 
     if (heap == NULL) {
         return NULL;
     }
 
-    size_t blocksNeeded =
+    nvmos_size_t blocksNeeded =
             (size + sizeof(HeapAllocationHeader)) / heap->blockSize;
     if ((size + sizeof(HeapAllocationHeader)) % heap->blockSize != 0)
         ++blocksNeeded;
@@ -83,7 +83,7 @@ nvmos_ptr_t heap_malloc(Heap *heap, size_t size) {
 
 }
 
-nvmos_ptr_t heap_calloc(Heap *heap, size_t len, size_t size) {
+nvmos_ptr_t heap_calloc(Heap *heap, nvmos_size_t len, nvmos_size_t size) {
 
     return heap_malloc(heap, len * size);
 
@@ -100,7 +100,7 @@ int heap_free(Heap *heap, nvmos_ptr_t loc) {
     }
 
     HeapAllocationHeader *header = loc - heap->blockSize;
-    size_t blocksReleased = header->blocksAllocated + 1;
+    nvmos_size_t blocksReleased = header->blocksAllocated + 1;
     nvmos_ptr_t releaseStartAddr = (nvmos_ptr_t)header;
 
     return heapfbll_insert(heap, releaseStartAddr, blocksReleased);

@@ -19,16 +19,16 @@ typedef struct {
 } nvmos_dl_freeBlockListNode_t;
 
 typedef struct {
-	size_t							allocationBlockSize;
+	nvmos_size_t							allocationBlockSize;
 	nvmos_dl_freeBlockListNode_t *	head;
 } nvmos_dl_allocator_t;
 
-int DL_allocator_createAllocator(nvmos_dl_allocator_t *allocator, nvmos_ptr_t startAddress, size_t length, size_t allocationBlockSize);
+int DL_allocator_createAllocator(nvmos_dl_allocator_t *allocator, nvmos_ptr_t startAddress, nvmos_size_t length, nvmos_size_t allocationBlockSize);
 
-int DL_allocator_retrieveAllocator(nvmos_dl_allocator_t *allocator, nvmos_ptr_t head, size_t allocationBlockSize);
+int DL_allocator_retrieveAllocator(nvmos_dl_allocator_t *allocator, nvmos_ptr_t head, nvmos_size_t allocationBlockSize);
 
-nvmos_ptr_t DL_allocator_allocateBlocks(nvmos_dl_allocator_t *allocator, size_t blockCount);
+nvmos_ptr_t DL_allocator_allocateBlocks(nvmos_dl_allocator_t *allocator, nvmos_size_t blockCount);
 
-int DL_allocator_deallocateBlocks(nvmos_dl_allocator_t *allocator, nvmos_ptr_t startBlock, size_t length);
+int DL_allocator_deallocateBlocks(nvmos_dl_allocator_t *allocator, nvmos_ptr_t startBlock, nvmos_size_t length);
 
 #endif

@@ -32,7 +32,7 @@ int gd_fillEntry(
         uint8_t type
 );
 
-int gdt_commit(uint8_t *buffer, GlobalDescriptor *gdt, size_t gdtLen);
+int gdt_commit(uint8_t *buffer, GlobalDescriptor *gdt, nvmos_size_t gdtLen);
 
 int gd_encode(uint8_t *buffer, GlobalDescriptor gd);
 

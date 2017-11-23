@@ -36,7 +36,7 @@ void kernel_main(multiboot_info_t *mbt) {
     if (PRINT_DEBUG) {
         printf("MMap Addr: %p\n", mman.mbt->mmap_addr);
 
-        size_t mmapLength = mman_getMemoryMapLength(&mman);
+        nvmos_size_t mmapLength = mman_getMemoryMapLength(&mman);
         printf("MMap Length: %d\n", (int) mmapLength);
 
         MemoryMap mmap[mmapLength];

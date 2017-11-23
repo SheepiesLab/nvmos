@@ -16,12 +16,12 @@ typedef struct {
 
 datalayer_t *datalayer_loadDatalayer(nvmos_ptr_t start);
 
-datalayer_t *datalayer_createDatalayer(nvmos_ptr_t start, size_t size, size_t pageSize);
+datalayer_t *datalayer_createDatalayer(nvmos_ptr_t start, nvmos_size_t size, nvmos_size_t pageSize);
 
-size_t datalayer_getSizeOfDatalayer(datalayer_t *datalayer);
+nvmos_size_t datalayer_getSizeOfDatalayer(datalayer_t *datalayer);
 
-size_t datalayer_getPageSizeOfDatalayer(datalayer_t *datalayer);
+nvmos_size_t datalayer_getPageSizeOfDatalayer(datalayer_t *datalayer);
 
-int datalayer_resizeDatalayer(datalayer_t *datalayer, size_t newSize);
+int datalayer_resizeDatalayer(datalayer_t *datalayer, nvmos_size_t newSize);
 
 int datalayer_unloadDatalayer(datalayer_t *datalayer);
