@@ -1,9 +1,9 @@
 
-int testcases_heap0(nvmos_ptr_t heapStart, nvmos_ptr_t heapEnd);
+int testcases_heap0(nvmos_pointer_t heapStart, nvmos_pointer_t heapEnd);
 
 int testDriver_heap0(
 		int *seq, 
-		nvmos_ptr_t *res, 
+		nvmos_pointer_t *res, 
 		int n, 
-		nvmos_ptr_t heapStart,
-		nvmos_ptr_t heapEnd);
+		nvmos_pointer_t heapStart,
+		nvmos_pointer_t heapEnd);

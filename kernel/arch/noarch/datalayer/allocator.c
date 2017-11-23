@@ -1,14 +1,14 @@
 #include <kernel/datalayer/allocator.h>
 
-int DL_allocator_createAllocator(
+int nvmos_dl_alloc_createAllocator(
 	nvmos_dl_allocator_t *	allocator,
-	nvmos_ptr_t					startAddress,
-	nvmos_size_t					length,
-	nvmos_size_t					allocationBlockSize
+	nvmos_pointer			startAddress,
+	nvmos_size			length,
+	nvmos_size			allocationBlockSize
 	)
 {
 	{
-		nvmos_size_t startOffset = startAddress % allocationBlockSize;
+		nvmos_size startOffset = startAddress % allocationBlockSize;
 		if (startOffset != 0) {
 			startOffset = allocationBlockSize - startOffset;
 			startAddress += startOffset;
@@ -18,7 +18,7 @@ int DL_allocator_createAllocator(
 		}
 		length -= length % allocationBlockSize;
 	}
-	nvmos_size_t blockLength = length / allocationBlockSize;
+	nvmos_size blockLength = length / allocationBlockSize;
 
 	if (blockLength < 2)
 		return -1;
@@ -31,7 +31,11 @@ int DL_allocator_createAllocator(
 
 	startBlock->length = blockLength;
 	startBlock->flags =
-		(NVMOS_DL_ALLOC_INTREE_NODE | NVMOS_DL_ALLOC_BLACK_NODE | NVMOS_DL_ALLOC_SEGMENT_HEAD_NODE);
+		(
+			NVMOS_DL_ALLOC_INTREE_NODE |
+			NVMOS_DL_ALLOC_BLACK_NODE |
+			NVMOS_DL_ALLOC_SEGMENT_HEAD_NODE
+		);
 	startBlock->sameValueNext = NULL;
 	startBlock->parent = NULL;
 	startBlock->leftChild = NULL;
@@ -39,9 +43,13 @@ int DL_allocator_createAllocator(
 
 	endBlock->length = blockLength;
 	endBlock->flags =
-		(NVMOS_DL_ALLOC_INTREE_NODE | NVMOS_DL_ALLOC_BLACK_NODE | NVMOS_DL_ALLOC_SEGMENT_TAIL_NODE);
+		(
+			NVMOS_DL_ALLOC_INTREE_NODE |
+			NVMOS_DL_ALLOC_BLACK_NODE |
+			NVMOS_DL_ALLOC_SEGMENT_TAIL_NODE
+		);
 	endBlock->sameValueNext = NULL;
-	endBlock->parent = (nvmos_ptr_t)startBlock;
+	endBlock->parent = (nvmos_pointer)startBlock;
 	endBlock->leftChild = NULL;
 	endBlock->rightChild = NULL;
 
@@ -53,10 +61,10 @@ int DL_allocator_createAllocator(
 
 
 
-int DL_allocator_retrieveAllocator(
+int nvmos_dl_alloc_retrieveAllocator(
 	nvmos_dl_allocator_t *	allocator,
-	nvmos_ptr_t					head,
-	nvmos_size_t					allocationBlockSize
+	nvmos_pointer			head,
+	nvmos_size			allocationBlockSize
 	)
 {
 	freeBlockList->allocationBlockSize = allocationBlockSize;
@@ -67,19 +75,19 @@ int DL_allocator_retrieveAllocator(
 
 
 
-nvmos_ptr_t DL_allocator_allocateBlocks(
+nvmos_pointer nvmos_dl_alloc_allocateBlocks(
 	nvmos_dl_allocator_t *	allocator,
-	nvmos_size_t					blockCount
+	nvmos_size			blockCount
 	)
 {
 }
 
 
 
-int DL_allocator_deallocateBlocks(
+int nvmos_dl_alloc_deallocateBlocks(
 	nvmos_dl_allocator_t *	allocator,
-	nvmos_ptr_t					startBlock,
-	nvmos_size_t					length
+	nvmos_pointer			startBlock,
+	nvmos_size			length
 	)
 {
 }

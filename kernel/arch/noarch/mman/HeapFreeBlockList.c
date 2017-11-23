@@ -18,7 +18,7 @@ int heapfbll_construct(Heap *heap) {
     currentFBN->last = NULL;
 
     for (nvmos_size_t i = 0; i < heap->blockCount - 1; ++i) {
-        currentFBN->next = (nvmos_ptr_t) currentFBN + blockSize;
+        currentFBN->next = (nvmos_pointer_t) currentFBN + blockSize;
         currentFBN->next->last = currentFBN;
         currentFBN = currentFBN->next;
     }
@@ -50,7 +50,7 @@ HeapFreeBlockNode *heapfbll_last(HeapFreeBlockNode *this) {
     return this;
 }
 
-int heapfbll_insert(Heap *heap, nvmos_ptr_t start, nvmos_size_t blocks) {
+int heapfbll_insert(Heap *heap, nvmos_pointer_t start, nvmos_size_t blocks) {
 
     Heap dummyHeap;
     dummyHeap.heapFreeBlockListHead = start;
@@ -61,7 +61,7 @@ int heapfbll_insert(Heap *heap, nvmos_ptr_t start, nvmos_size_t blocks) {
     heapfbll_construct(&dummyHeap);
 
     // See if insert before head
-    if ((nvmos_ptr_t) (heap->heapFreeBlockListHead) > start) {
+    if ((nvmos_pointer_t) (heap->heapFreeBlockListHead) > start) {
         HeapFBN *newListLast = heapfbll_last(
                 dummyHeap.heapFreeBlockListHead);
         newListLast->next = heap->heapFreeBlockListHead;
@@ -76,7 +76,7 @@ int heapfbll_insert(Heap *heap, nvmos_ptr_t start, nvmos_size_t blocks) {
     while (currentfbn->next != NULL) {
         currentfbn = currentfbn->next;
 
-        if ((nvmos_ptr_t) currentfbn > start) {
+        if ((nvmos_pointer_t) currentfbn > start) {
 
         }
     }
@@ -91,18 +91,18 @@ int heapfbll_insert(Heap *heap, nvmos_ptr_t start, nvmos_size_t blocks) {
 
 }
 
-nvmos_ptr_t heapfbll_pop(Heap *heap, nvmos_size_t blocks) {
+nvmos_pointer_t heapfbll_pop(Heap *heap, nvmos_size_t blocks) {
 
     // Find consecutive free blocks
-    HeapFBN *currentPtr = (nvmos_ptr_t) heap->heapFreeBlockListHead;
+    HeapFBN *currentPtr = (nvmos_pointer_t) heap->heapFreeBlockListHead;
     while (true) {
         bool allocated = true;
-        nvmos_ptr_t allocAddr = (nvmos_ptr_t) currentPtr;
+        nvmos_pointer_t allocAddr = (nvmos_pointer_t) currentPtr;
         for (int i = 0; i < blocks - 1; ++i) {
             if (currentPtr->next == NULL) {
                 return NULL;
             }
-            if ((nvmos_ptr_t) currentPtr->next - (nvmos_ptr_t) currentPtr !=
+            if ((nvmos_pointer_t) currentPtr->next - (nvmos_pointer_t) currentPtr !=
                 heap_blockSize()) {
                 allocated = false;
                 break;
