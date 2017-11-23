@@ -14,9 +14,9 @@ typedef struct {
 	uint32_t	flags;
 } datalayer_datalayerMeta_t;
 
-datalayer_t *datalayer_loadDatalayer(kptr_t start);
+datalayer_t *datalayer_loadDatalayer(nvmos_ptr_t start);
 
-datalayer_t *datalayer_createDatalayer(kptr_t start, size_t size, size_t pageSize);
+datalayer_t *datalayer_createDatalayer(nvmos_ptr_t start, size_t size, size_t pageSize);
 
 size_t datalayer_getSizeOfDatalayer(datalayer_t *datalayer);
 

@@ -84,7 +84,7 @@ void kernel_main(multiboot_info_t *mbt) {
                 sizeof(int));
         int *testIntPtr3 = (int *) heap_malloc(&(mman.heap),
                                                sizeof(int));
-        heap_free(&mman.heap, (kptr_t) testIntPtr2);
+        heap_free(&mman.heap, (nvmos_ptr_t) testIntPtr2);
         int *testIntPtr4 = (int *) heap_malloc(&(mman.heap),
                                                sizeof(int));
 
@@ -101,14 +101,14 @@ void kernel_main(multiboot_info_t *mbt) {
         printf("testPtr3: 0x%p\n", testIntPtr3);
         printf("testPtr4: 0x%p\n", testIntPtr4);
 
-        uint16_t *com1 = (kptr_t) 0x400;
+        uint16_t *com1 = (nvmos_ptr_t) 0x400;
         printf("com1: 0x%p\n", *com1);
     }
 
     {
         InterruptDescriptor id;
         id.type = ID_TYPE_386_TRAP;
-        id.isrAddr = (kptr_t) &exceptionHandler;
+        id.isrAddr = (nvmos_ptr_t) &exceptionHandler;
         id.present = 1;
         id.privilegeLevel = 0;
         for (int i = 0; i < 0x20; ++i) {
@@ -117,7 +117,7 @@ void kernel_main(multiboot_info_t *mbt) {
                     idtBuffer + 8 * i);
         }
         id.type = ID_TYPE_386_INT;
-        id.isrAddr = (kptr_t) &irqHandler;
+        id.isrAddr = (nvmos_ptr_t) &irqHandler;
         id.present = 1;
         id.privilegeLevel = 0;
         for (int i = 0x20; i < 0x30; ++i) {
@@ -126,7 +126,7 @@ void kernel_main(multiboot_info_t *mbt) {
                     idtBuffer + 8 * i);
         }
         id.type = ID_TYPE_386_INT;
-        id.isrAddr = (kptr_t) &interruptHandler;
+        id.isrAddr = (nvmos_ptr_t) &interruptHandler;
         id.present = 1;
         id.privilegeLevel = 0;
         for (int i = 0x30; i <= 0xFF; ++i) {

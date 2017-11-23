@@ -40,8 +40,8 @@ size_t heap_blockSize(){
 
 int heap_construct(
         Heap *heap,
-        kptr_t heapStart,
-        kptr_t heapEnd) {
+        nvmos_ptr_t heapStart,
+        nvmos_ptr_t heapEnd) {
 
     if (heap == NULL) {
         return -1;
@@ -61,7 +61,7 @@ int heap_construct(
 
 }
 
-kptr_t heap_malloc(Heap *heap, size_t size) {
+nvmos_ptr_t heap_malloc(Heap *heap, size_t size) {
 
     if (heap == NULL) {
         return NULL;
@@ -73,7 +73,7 @@ kptr_t heap_malloc(Heap *heap, size_t size) {
         ++blocksNeeded;
     ++blocksNeeded; // For allocation header
 
-    kptr_t allocAddr = heapfbll_pop(heap,blocksNeeded);
+    nvmos_ptr_t allocAddr = heapfbll_pop(heap,blocksNeeded);
     if(allocAddr == NULL) return NULL;
 
     HeapAllocationHeader *header = (HeapAllocationHeader *)allocAddr;
@@ -83,13 +83,13 @@ kptr_t heap_malloc(Heap *heap, size_t size) {
 
 }
 
-kptr_t heap_calloc(Heap *heap, size_t len, size_t size) {
+nvmos_ptr_t heap_calloc(Heap *heap, size_t len, size_t size) {
 
     return heap_malloc(heap, len * size);
 
 }
 
-int heap_free(Heap *heap, kptr_t loc) {
+int heap_free(Heap *heap, nvmos_ptr_t loc) {
 
     if (heap == NULL) {
         return -1;
@@ -101,7 +101,7 @@ int heap_free(Heap *heap, kptr_t loc) {
 
     HeapAllocationHeader *header = loc - heap->blockSize;
     size_t blocksReleased = header->blocksAllocated + 1;
-    kptr_t releaseStartAddr = (kptr_t)header;
+    nvmos_ptr_t releaseStartAddr = (nvmos_ptr_t)header;
 
     return heapfbll_insert(heap, releaseStartAddr, blocksReleased);
 

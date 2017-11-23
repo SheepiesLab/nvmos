@@ -9,9 +9,9 @@
 
 // X86 32bit behavior
 
-typedef uint32_t kptr_t;
-typedef uint32_t kuint_t;
-typedef int32_t kint_t;
-typedef kuint_t ksize_t;
+typedef uint32_t nvmos_ptr_t;
+typedef uint32_t nvmos_uint_t;
+typedef int32_t nvmos_int_t;
+typedef nvmos_uint_t nvmos_size_t;
 
 #endif //NVMOS_KDEF_H
