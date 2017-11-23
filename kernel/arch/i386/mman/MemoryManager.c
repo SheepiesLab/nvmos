@@ -33,14 +33,14 @@ int mman_construct(MemoryManager *mman, multiboot_info_t *mbt) {
             ksects[KSECTION_SECTION_HEAP].addr);
 }
 
-nvmos_size_t mman_getMemoryMapLength(MemoryManager *mman) {
+size_t mman_getMemoryMapLength(MemoryManager *mman) {
     if ((mman->mbt->flags & MULTIBOOT_INFO_MEM_MAP) !=
         MULTIBOOT_INFO_MEM_MAP)
         return -1;
 
     multiboot_memory_map_t *mmap = mman->mbt->mmap_addr;
 
-    nvmos_size_t i = 0;
+    size_t i = 0;
     while (mmap < mman->mbt->mmap_addr + mman->mbt->mmap_length) {
         ++i;
         mmap = (multiboot_memory_map_t *) ((unsigned int) mmap +
@@ -54,14 +54,14 @@ nvmos_size_t mman_getMemoryMapLength(MemoryManager *mman) {
 int mman_getMemoryMap(
         MemoryManager *mman,
         MemoryMap *_mmap,
-        nvmos_size_t max) {
+        size_t max) {
     if ((mman->mbt->flags & MULTIBOOT_INFO_MEM_MAP) !=
         MULTIBOOT_INFO_MEM_MAP)
         return -1;
 
     multiboot_memory_map_t *mmap = mman->mbt->mmap_addr;
 
-    nvmos_size_t i = 0;
+    size_t i = 0;
     while (mmap < mman->mbt->mmap_addr + mman->mbt->mmap_length &&
            i < max) {
         _mmap[i].len = mmap->len;

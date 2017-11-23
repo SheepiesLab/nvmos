@@ -39,7 +39,7 @@ int gd_encode(uint8_t *buffer, GlobalDescriptor GD) {
 extern void setGDT(uint32_t base, uint16_t size);
 extern void reloadGDT(void);
 
-int gdt_commit(uint8_t *buffer, GlobalDescriptor *gdt, nvmos_size_t gdtLen) {
+int gdt_commit(uint8_t *buffer, GlobalDescriptor *gdt, size_t gdtLen) {
     if (gdtLen > 0xFFFF)
         return -1;
 
