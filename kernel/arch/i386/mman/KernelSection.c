@@ -2,6 +2,7 @@
 // Created by benng on 7/17/17.
 //
 
+#include <kernel/kdef.h>
 #include <kernel/mman/KernelSection.h>
 
 extern uint8_t __start_text;
