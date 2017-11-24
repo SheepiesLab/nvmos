@@ -5,4 +5,4 @@ git add .
 git commit -m "Sync"
 git push
 
-bash -c "ssh ubuntu@nvmosdev.benbenng.net 'export PATH=\"/opt/cross/bin:$PATH\" && cd ~/workspace/nvmos &&./clean.sh && ./build.sh'"
+bash -c "ssh ubuntu@nvmosdev.benbenng.net 'export PATH=\"/opt/cross/bin:$PATH\" && cd ~/workspace/nvmos && git pull &&./clean.sh && ./build.sh'"
