@@ -103,41 +103,75 @@ nvmos_dl_freeBlockListNode_t *_findFittestNode(
 	return NULL;
 }
 
-#define SWAPNODE_A_NOPARENT 0x1
-#define SWAPNODE_B_NOPARENT 0x2
-#define SWAPNODE_A_PARENTLINKCORRUPTED 0x4
-#define SWAPNODE_B_PARENTLINKCORRUPTED 0x8
-uint32_t _swapNode(nvmos_dl_freeBlockListNode_t *a,
-				   nvmos_dl_freeBlockListNode_t *b)
+#define SWAPNODE_A_NULL 0x1
+#define SWAPNODE_B_NULL 0x2
+#define SWAPNODE_A_PARENT_NOTEXIST 0x4
+#define SWAPNODE_B_PARENT_NOTEXIST 0x8
+#define SWAPNODE_A_PARENT_CORRUPTED 0x10
+#define SWAPNODE_B_PARENT_CORRUPTED 0x20
+#define SWAPNODE_A_LEFT_CORRUPTED 0x40
+#define SWAPNODE_B_LEFT_CORRUPTED 0x80
+#define SWAPNODE_A_RIGHT_CORRUPTED 0x100
+#define SWAPNODE_B_RIGHT_CORRUPTED 0x200
+uint32_t _swapNode(
+	nvmos_dl_freeBlockListNode_t **head,
+	nvmos_dl_freeBlockListNode_t *a,
+	nvmos_dl_freeBlockListNode_t *b)
 {
 	uint32_t returnFlags = 0;
 
 	nvmos_dl_freeBlockListNode_t *tmp;
 
-	// Swap parent linkage
-	if (a->parent->leftChild != a &&
-		a->parent->rightChild != a)
+	if (a == NULL)
+		return SWAPNODE_A_NULL;
+
+	if (b == NULL)
+		return SWAPNODE_B_NULL;
+
+	if (a->parent == NULL && a != *head)
+		return SWAPNODE_A_PARENT_CORRUPTED;
+	else if (a->parent->leftChild != a &&
+			 a->parent->rightChild != a)
 	{
-		return SWAPNODE_A_PARENTLINKCORRUPTED;
+		return SWAPNODE_A_PARENT_CORRUPTED;
 	}
 	else if (a->parent->leftChild == a &&
 			 a->parent->rightChild == a)
 	{
-		return SWAPNODE_A_PARENTLINKCORRUPTED;
+		return SWAPNODE_A_PARENT_CORRUPTED;
 	}
 
-	if (b->parent->leftChild != b &&
-		b->parent->rightChild != b)
+	if (b->parent == NULL && b != *head)
+		return SWAPNODE_B_PARENT_CORRUPTED;
+	else if (b->parent->leftChild != b &&
+			 b->parent->rightChild != b)
 	{
-		return SWAPNODE_B_PARENTLINKCORRUPTED;
+		return SWAPNODE_B_PARENT_CORRUPTED;
 	}
 	else if (b->parent->leftChild == b &&
 			 b->parent->rightChild == b)
 	{
-		return SWAPNODE_B_PARENTLINKCORRUPTED;
+		return SWAPNODE_B_PARENT_CORRUPTED;
 	}
 
-	if (a->parent->leftChild == a)
+	if (a->leftChild != NULL && a->leftChild->parent != a)
+		return SWAPNODE_A_LEFT_CORRUPTED;
+
+	if (b->leftChild != NULL && b->leftChild->parent != b)
+		return SWAPNODE_B_LEFT_CORRUPTED;
+
+	if (a->rightChild != NULL && a->rightChild->parent != a)
+		return SWAPNODE_A_RIGHT_CORRUPTED;
+
+	if (b->rightChild != NULL && b->rightChild->parent != b)
+		return SWAPNODE_B_RIGHT_CORRUPTED;
+
+	// Swap parent linkage
+	if (a->parent == NULL)
+	{
+		*head = b;
+	}
+	else if (a->parent->leftChild == a)
 	{
 		a->parent->leftChild = b;
 	}
@@ -146,6 +180,10 @@ uint32_t _swapNode(nvmos_dl_freeBlockListNode_t *a,
 		a->parent->rightChild = b
 	}
 
+	if (b->parent == NULL)
+	{
+		*head = a;
+	}
 	if (b->parent->leftChild == b)
 	{
 		b->parent->leftChild = a;
@@ -160,7 +198,58 @@ uint32_t _swapNode(nvmos_dl_freeBlockListNode_t *a,
 	b->parent = tmp;
 
 	// Swap left child linkage
-	
+	if (a->leftChild != NULL && b->leftChild != NULL)
+	{
+		a->leftChild->parent = b;
+		b->leftChild->parent = a;
+
+		tmp = a->leftChild;
+		a->leftChild = b->leftChild;
+		b->leftChild = tmp;
+	}
+	else if (a->leftChild != NULL && b->leftChild == NULL)
+	{
+		b->leftChild = a->leftChild;
+		b->leftChild->parent = b;
+		a->leftChild = NULL;
+	}
+	else if (a->leftChild == NULL && b->leftChild != NULL)
+	{
+		a > leftChild = b->leftChild;
+		a->leftChild->parent = a;
+		b->leftChild = NULL;
+	}
+	else if (a->leftChild == NULL && b->leftChild == NULL)
+	{
+	}
+
+	// Swap right child linkage
+	if (a->rightChild != NULL && b->rightChild != NULL)
+	{
+		a->rightChild->parent = b;
+		b->rightChild->parent = a;
+
+		tmp = a->rightChild;
+		a->rightChild = b->rightChild;
+		b->rightChild = tmp;
+	}
+	else if (a->rightChild != NULL && b->rightChild == NULL)
+	{
+		b->rightChild = a->rightChild;
+		b->rightChild->parent = b;
+		a->rightChild = NULL;
+	}
+	else if (a->rightChild == NULL && b->rightChild != NULL)
+	{
+		a > rightChild = b->rightChild;
+		a->rightChild->parent = a;
+		b->rightChild = NULL;
+	}
+	else if (a->rightChild == NULL && b->rightChild == NULL)
+	{
+	}
+
+	return 0;
 }
 
 int _popNode(nvmos_dl_freeBlockListNode_t **head,
@@ -171,18 +260,6 @@ int _popNode(nvmos_dl_freeBlockListNode_t **head,
 	rightChild = target->rightChild;
 	parent = target->parent;
 
-	if (leftChild == NULL && rightChild == NULL)
-	{
-	}
-
-	if (leftChild == NULL)
-	{
-	}
-
-	if (rightChild == NULL)
-	{
-	}
-
 	if (leftChild != NULL && rightChild != NULL)
 	{
 		nvmos_dl_freeBlockListNode_t *inOrderSuccessor;
@@ -191,6 +268,37 @@ int _popNode(nvmos_dl_freeBlockListNode_t **head,
 		{
 			inOrderSuccessor = inOrderSuccessor->leftChild;
 		}
+		if (_swapNode(head, target, inOrderSuccessor))
+			return -1;
+		leftChild = target->leftChild;
+		rightChild = target->rightChild;
+		parent = target->parent;
+	}
+
+	if (target->flags & NVMOS_DL_ALLOC_RED_NODE ||
+		(target->leftChild != NULL &&
+		 target->leftChild->flags & NVMOS_DL_ALLOC_RED_NODE) ||
+		(target->rightChild != NULL &&
+		 target->rightChild->flags & NVMOS_DL_ALLOC_RED_NODE))
+	{
+		if (target->parent->leftChild == target)
+		{
+			target->parent->leftChild = NULL;
+		}
+		else if (target->parent->rightChild == target)
+		{
+			target->parent->rightChild = NULL;
+		}
+		else
+			return -1;
+	}
+
+	if (leftChild == NULL)
+	{
+	}
+
+	if (rightChild == NULL)
+	{
 	}
 
 	return -1;
