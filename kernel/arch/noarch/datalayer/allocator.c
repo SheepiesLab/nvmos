@@ -1,4 +1,5 @@
 #include <kernel/datalayer/allocator.h>
+#include <kernel/kdef.h>
 
 int nvmos_dl_alloc_createAllocator(
 	nvmos_dl_allocator_t *allocator,
@@ -68,7 +69,7 @@ int nvmos_dl_alloc_retrieveAllocator(
 	return 0;
 }
 
-nvmos_dl_freeBlockListNode_t *_findFittestSegment(
+nvmos_dl_freeBlockListNode_t *_findFittestNode(
 	nvmos_dl_freeBlockListNode_t *head,
 	size_t blockCount)
 {
@@ -82,7 +83,7 @@ nvmos_dl_freeBlockListNode_t *_findFittestSegment(
 	{
 		if (head->rightChild == NULL)
 			return NULL;
-		return _findFittestSegment(head->rightChild, blockCount);
+		return _findFittestNode(head->rightChild, blockCount);
 	}
 
 	if (head->length > blockCount)
@@ -90,7 +91,7 @@ nvmos_dl_freeBlockListNode_t *_findFittestSegment(
 		if (head->leftChild == NULL)
 			return head;
 		nvmos_dl_freeBlockListNode_t *candidate =
-			_findFittestSegment(head->leftChild, blockCount);
+			_findFittestNode(head->leftChild, blockCount);
 		if (candidate == NULL)
 			return head;
 		if (candidate->length > head->length)
@@ -102,13 +103,97 @@ nvmos_dl_freeBlockListNode_t *_findFittestSegment(
 	return NULL;
 }
 
-int _popSegment(nvmos_dl_freeBlockListNode_t **head,
-				nvmos_dl_freeBlockListNode_t *target)
+#define SWAPNODE_A_NOPARENT 0x1
+#define SWAPNODE_B_NOPARENT 0x2
+#define SWAPNODE_A_PARENTLINKCORRUPTED 0x4
+#define SWAPNODE_B_PARENTLINKCORRUPTED 0x8
+uint32_t _swapNode(nvmos_dl_freeBlockListNode_t *a,
+				   nvmos_dl_freeBlockListNode_t *b)
+{
+	uint32_t returnFlags = 0;
+
+	nvmos_dl_freeBlockListNode_t *tmp;
+
+	// Swap parent linkage
+	if (a->parent->leftChild != a &&
+		a->parent->rightChild != a)
+	{
+		return SWAPNODE_A_PARENTLINKCORRUPTED;
+	}
+	else if (a->parent->leftChild == a &&
+			 a->parent->rightChild == a)
+	{
+		return SWAPNODE_A_PARENTLINKCORRUPTED;
+	}
+
+	if (b->parent->leftChild != b &&
+		b->parent->rightChild != b)
+	{
+		return SWAPNODE_B_PARENTLINKCORRUPTED;
+	}
+	else if (b->parent->leftChild == b &&
+			 b->parent->rightChild == b)
+	{
+		return SWAPNODE_B_PARENTLINKCORRUPTED;
+	}
+
+	if (a->parent->leftChild == a)
+	{
+		a->parent->leftChild = b;
+	}
+	else if (a->parent->rightChild == a)
+	{
+		a->parent->rightChild = b
+	}
+
+	if (b->parent->leftChild == b)
+	{
+		b->parent->leftChild = a;
+	}
+	else if (b->parent->rightChild == b)
+	{
+		b->parent->rightChild = a;
+	}
+
+	tmp = a->parent;
+	a->parent = b->parent;
+	b->parent = tmp;
+
+	// Swap left child linkage
+	
+}
+
+int _popNode(nvmos_dl_freeBlockListNode_t **head,
+			 nvmos_dl_freeBlockListNode_t *target)
 {
 	nvmos_dl_freeBlockListNode_t *leftChild, rightChild, parent;
 	leftChild = target->leftChild;
 	rightChild = target->rightChild;
 	parent = target->parent;
+
+	if (leftChild == NULL && rightChild == NULL)
+	{
+	}
+
+	if (leftChild == NULL)
+	{
+	}
+
+	if (rightChild == NULL)
+	{
+	}
+
+	if (leftChild != NULL && rightChild != NULL)
+	{
+		nvmos_dl_freeBlockListNode_t *inOrderSuccessor;
+		inOrderSuccessor = rightChild;
+		while (inOrderSuccessor->leftChild != NULL)
+		{
+			inOrderSuccessor = inOrderSuccessor->leftChild;
+		}
+	}
+
+	return -1;
 }
 
 nvmos_pointer nvmos_dl_alloc_allocateBlocks(
@@ -116,18 +201,18 @@ nvmos_pointer nvmos_dl_alloc_allocateBlocks(
 	size_t blockCount)
 {
 	nvmos_dl_freeBlockListNode_t **head = &(allocator->head);
-	nvmos_dl_freeBlockListNode_t *selectedSegment =
-		_findFittestSegment(*head, blockCount);
-	if (selectedSegment == NULL)
+	nvmos_dl_freeBlockListNode_t *selectedNode =
+		_findFittestNode(*head, blockCount);
+	if (selectedNode == NULL)
 		return NULL;
 
-	if (selectedSegment->sameValueNext == NULL)
+	if (selectedNode->sameValueNext == NULL)
 	{
-		_popSegment(head, selectedSegment);
+		_popNode(head, selectedNode);
 	}
 
-	while (selectedSegment->sameValueNext != NULL)
-		selectedSegment = selectedSegment->sameValueNext;
+	while (selectedNode->sameValueNext != NULL)
+		selectedNode = selectedNode->sameValueNext;
 }
 
 int nvmos_dl_alloc_deallocateBlocks(
