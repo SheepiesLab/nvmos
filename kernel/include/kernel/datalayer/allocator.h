@@ -1,7 +1,8 @@
 #ifndef NVMOS_DL_ALLOC_H
 #define NVMOS_DL_ALLOC_H
 
-#include <kernel/datalayer/dataStruceture.h>
+#include <kernel/datalayer/datalayer.h>
+#include <stdint.h>
 
 #define NVMOS_DL_ALLOC_INTREE_NODE 0x1
 #define NVMOS_DL_ALLOC_RED_NODE 0x2
