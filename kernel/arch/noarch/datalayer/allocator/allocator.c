@@ -136,7 +136,7 @@ int nvmos_dl_alloc_deallocateBlocks(
     nvmos_dl_freeBlockNode_t *oneBlockAfter =
         (nvmos_dl_freeBlockNode_t *)(startBlock +
                                      length *
-                                         allocationBlockSize);
+                                         allocator->allocationBlockSize);
 
     // TODO Depends on destroying tail block on allocation
     if (oneBlockBefore->segmentTail ==
