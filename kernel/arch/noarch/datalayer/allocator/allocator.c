@@ -87,6 +87,7 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
     {
         return NULL;
     }
+
     if (targetNode->sameValueNext == NULL)
     {
         rbt_removeNode(target);
@@ -101,11 +102,20 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
         }
         tmp->sameValueNext = NULL;
     }
+
     if (gotBlockCount > blockCount)
     {
         size_t blocksLeft = gotBlockCount - blockCount;
-        
+        nvmos_pointer_t newStartBlock =
+            (nvmos_pointer_t)targetNode +
+            blockCount * allocator->allocationBlockSize;
+        nvmos_dl_alloc_deallocateBlocks(
+            allocator,
+            newStartBlock,
+            blocksLeft);
     }
+
+    return (nvmos_pointer_t)targetNode;
 }
 
 int nvmos_dl_alloc_deallocateBlocks(
@@ -113,4 +123,48 @@ int nvmos_dl_alloc_deallocateBlocks(
     nvmos_pointer_t startBlock,
     size_t length)
 {
+    nvmos_dl_freeBlockListNode_t *newNode =
+        (nvmos_dl_freeBlockListNode_t *)startBlock;
+    nvmos_dl_freeBlockListNode_t *endNode =
+        (nvmos_dl_freeBlockListNode_t *)(startBlock +
+                                         (length - 1) *
+                                             allocationBlockSize);
+
+    //TODO Merge Segment
+
+    newNode->sameValueNext = NULL;
+    newNode->segmentHead = (nvmos_pointer_t)newNode;
+    newNode->segmentTail = (nvmos_pointer_t)endNode;
+    newNode->redBlackTreeNode.parent = NULL;
+    newNode->redBlackTreeNode.leftChild = NULL;
+    newNode->redBlackTreeNode.rightChild = NULL;
+    newNode->redBlackTreeNode.redBlackFlag = rbt_RED;
+    newNode->redBlackTreeNode.value = length;
+    newNode->redBlackTreeNode.content = (nvmos_pointer_t)newNode;
+
+    endNode->sameValueNext = NULL;
+    endNode->segmentHead = (nvmos_pointer_t)newNode;
+    endNode->segmentTail = (nvmos_pointer_t)endNode;
+    endNode->redBlackTreeNode.parent = NULL;
+    endNode->redBlackTreeNode.leftChild = NULL;
+    endNode->redBlackTreeNode.rightChild = NULL;
+    endNode->redBlackTreeNode.redBlackFlag = rbt_RED;
+    endNode->redBlackTreeNode.value = length;
+    endNode->redBlackTreeNode.content = (nvmos_pointer_t)newNode;
+
+    rbt_node_t *sameLengthNode =
+        rbt_findNode(
+            allocator->head,
+            length,
+            true,
+            true);
+    if (sameLengthNode != NULL)
+    {
+        nvmos_dl_freeBlockListNode_t *node =
+            (nvmos_dl_freeBlockListNode_t *)sameLengthNode->content;
+        while (node->sameValueNext != NULL)
+        {
+            node = node->sameValueNext;
+        }
+    }
 }
