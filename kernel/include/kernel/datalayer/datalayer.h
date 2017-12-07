@@ -1,5 +1,11 @@
+#ifndef NVMOS_DATALAYER_H_
+#define NVMOS_DATALAYER_H_
+
+#include <stdint.h>
+#include <kernel/kdef.h>
+
 struct datalayer_datalayerHandle_struct;
-typedefe struct datalayer_datalayerHandle_struct datalayer_t;
+typedef struct datalayer_datalayerHandle_struct datalayer_t;
 
 #define NVMOS_DL_DLMETA_FLAG_LOCKED 0x1
 
@@ -25,3 +31,5 @@ size_t datalayer_getPageSizeOfDatalayer(datalayer_t *datalayer);
 int datalayer_resizeDatalayer(datalayer_t *datalayer, size_t newSize);
 
 int datalayer_unloadDatalayer(datalayer_t *datalayer);
+
+#endif

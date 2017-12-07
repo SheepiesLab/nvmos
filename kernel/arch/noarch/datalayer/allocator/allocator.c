@@ -25,12 +25,12 @@ int nvmos_dl_alloc_createAllocator(
     }
     allocator->allocationBlockSize = allocationBlockSize;
 
-    nvmos_dl_freeBlockListNode_t *headNode =
-        (nvmos_dl_freeBlockListNode_t *)realStartAddr;
-    nvmos_dl_freeBlockListNode_t *tailNode =
-        (nvmos_dl_freeBlockListNode_t *)(realStartAddr +
-                                         (blockCount - 1) *
-                                             allocationBlockSize);
+    nvmos_dl_freeBlockNode_t *headNode =
+        (nvmos_dl_freeBlockNode_t *)realStartAddr;
+    nvmos_dl_freeBlockNode_t *tailNode =
+        (nvmos_dl_freeBlockNode_t *)(realStartAddr +
+                                     (blockCount - 1) *
+                                         allocationBlockSize);
 
     headNode->sameValueNext = NULL;
     headNode->redBlackTreeNode.parent = NULL;
@@ -66,7 +66,7 @@ int nvmos_dl_alloc_retrieveAllocator(
 {
     allocator->allocationBlockSize = allocationBlockSize;
     allocator->head =
-        (nvmos_dl_freeBlockListNode_t *)head->redBlackTreeNode;
+        (nvmos_dl_freeBlockNode_t *)head->redBlackTreeNode;
     return 0;
 }
 
@@ -81,8 +81,8 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
         return NULL;
     }
     size_t gotBlockCount = target->value;
-    nvmos_dl_freeBlockListNode_t *targetNode =
-        (nvmos_dl_freeBlockListNode_t *)target->content;
+    nvmos_dl_freeBlockNode_t *targetNode =
+        (nvmos_dl_freeBlockNode_t *)target->content;
     if (targetNode == NULL)
     {
         return NULL;
@@ -94,7 +94,7 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
     }
     else
     {
-        nvmos_dl_freeBlockListNode_t *tmp;
+        nvmos_dl_freeBlockNode_t *tmp;
         while (targetNode->sameValueNext->sameValueNext != NULL)
         {
             tmp = targetNode;
@@ -123,14 +123,129 @@ int nvmos_dl_alloc_deallocateBlocks(
     nvmos_pointer_t startBlock,
     size_t length)
 {
-    nvmos_dl_freeBlockListNode_t *newNode =
-        (nvmos_dl_freeBlockListNode_t *)startBlock;
-    nvmos_dl_freeBlockListNode_t *endNode =
-        (nvmos_dl_freeBlockListNode_t *)(startBlock +
-                                         (length - 1) *
-                                             allocationBlockSize);
+    nvmos_dl_freeBlockNode_t *newNode =
+        (nvmos_dl_freeBlockNode_t *)startBlock;
+    nvmos_dl_freeBlockNode_t *endNode =
+        (nvmos_dl_freeBlockNode_t *)(startBlock +
+                                     (length - 1) *
+                                         allocationBlockSize);
 
-    //TODO Merge Segment
+    nvmos_dl_freeBlockNode_t *oneBlockBefore =
+        (nvmos_dl_freeBlockNode_t *)(startBlock -
+                                     allocationBlockSize);
+    nvmos_dl_freeBlockNode_t *oneBlockAfter =
+        (nvmos_dl_freeBlockNode_t *)(startBlock +
+                                     length *
+                                         allocationBlockSize);
+
+    // TODO Depends on destroying tail block on allocation
+    if (oneBlockBefore->segmentTail ==
+            (nvmos_pointer_t)oneBlockBefore &&
+        oneBlockBefore->segmentHead ==
+            oneBlockBefore->segmentTail -
+                (oneBlockBefore->redBlackTreeNode.value - 1) *
+                    allocator->allocationBlockSize)
+    {
+        size_t previousSegmentLength =
+            oneBlockBefore->redBlackTreeNode.value;
+        rbt_node_t *segmentBefore =
+            rbt_findNode(
+                &(allocator->head),
+                previousSegmentLength,
+                true,
+                true);
+        if (segmentBefore != NULL)
+        {
+            nvmos_pointer_t sameValuePrevious = NULL;
+            nvmos_pointer_t targetNode =
+                (nvmos_dl_freeBlockNode_t *)(segmentBefore->content);
+            bool found = false;
+
+            while (targetNode != NULL &&
+                   targetNode != oneBlockBefore->segmentHead)
+            {
+                sameValuePrevious = targetNode;
+                targetNode =
+                    targetNode->sameValueNext;
+            }
+            if (targetNode != NULL &&
+                sameValuePrevious == NULL)
+            {
+                rbt_removeNode(
+                    &(allocator->head),
+                    &(targetNode->redBlackTreeNode));
+                found = true;
+            }
+            else if (targetNode != NULL &&
+                     sameValuePrevious != NULL)
+            {
+                (nvmos_dl_freeBlockNode_t *)
+                    sameValuePrevious->sameValueNext =
+                    targetNode->sameValueNext;
+                found = true;
+            }
+            if (found)
+            {
+                length += previousSegmentLength;
+                newNode = targetNode;
+            }
+        }
+    }
+
+    if (oneBlockAfter->segmentHead ==
+            (nvmos_pointer_t)oneBlockAfter &&
+        oneBlockAfter->segmentTail ==
+            (nvmos_pointer_t)oneBlockAfter +
+                (oneBlockAfter->redBlackTreeNode.value - 1) *
+                    allocator->allocationBlockSize)
+    {
+        size_t nextSegmentLength =
+            oneBlockAfter->redBlackTreeNode.value;
+        rbt_node_t *segmentAfter =
+            rbt_findNode(
+                &(allocator->head),
+                nextSegmentLength,
+                true,
+                true);
+        if (segmentAfter != NULL)
+        {
+            nvmos_pointer_t sameValuePrevious = NULL;
+            nvmos_pointer_t targetNode =
+                (nvmos_dl_freeBlockNode_t *)(segmentAfter->content);
+            bool found = false;
+
+            while (targetNode != NULL &&
+                   targetNode != oneBlockAfter->segmentHead)
+            {
+                sameValuePrevious = targetNode;
+                targetNode =
+                    targetNode->sameValueNext;
+            }
+            if (targetNode != NULL &&
+                sameValuePrevious == NULL)
+            {
+                rbt_removeNode(
+                    &(allocator->head),
+                    &(targetNode->redBlackTreeNode));
+                found = true;
+            }
+            else if (targetNode != NULL &&
+                     sameValuePrevious != NULL)
+            {
+                (nvmos_dl_freeBlockNode_t *)
+                    sameValuePrevious->sameValueNext =
+                    targetNode->sameValueNext;
+                found = true;
+            }
+            if (found)
+            {
+                length += nextSegmentLength;
+                endNode =
+                    (nvmos_dl_freeBlockNode_t *)
+                        targetNode->segmentTail;
+            }
+        }
+    }
 
     newNode->sameValueNext = NULL;
     newNode->segmentHead = (nvmos_pointer_t)newNode;
@@ -160,11 +275,18 @@ int nvmos_dl_alloc_deallocateBlocks(
             true);
     if (sameLengthNode != NULL)
     {
-        nvmos_dl_freeBlockListNode_t *node =
-            (nvmos_dl_freeBlockListNode_t *)sameLengthNode->content;
+        nvmos_dl_freeBlockNode_t *node =
+            (nvmos_dl_freeBlockNode_t *)sameLengthNode->content;
         while (node->sameValueNext != NULL)
         {
             node = node->sameValueNext;
         }
+        node->sameValueNext = (nvmos_pointer_t)newNode;
+    }
+    else
+    {
+        rbt_insertNode(
+            &(allocator->head),
+            &(newNode->redBlackTreeNode));
     }
 }

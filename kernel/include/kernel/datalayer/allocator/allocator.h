@@ -1,5 +1,5 @@
-#ifndef NVMOS_DL_ALLOC_H
-#define NVMOS_DL_ALLOC_H
+#ifndef NVMOS_DL_ALLOCATOR_H
+#define NVMOS_DL_ALLOCATOR_H
 
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/allocator/redBlackTree/rbt.h>
@@ -11,7 +11,7 @@ typedef struct
 	nvmos_pointer_t segmentHead;
 	nvmos_pointer_t segmentTail;
 	rbt_node_t redBlackTreeNode;
-} nvmos_dl_freeBlockListNode_t;
+} nvmos_dl_freeBlockNode_t;
 
 typedef struct
 {

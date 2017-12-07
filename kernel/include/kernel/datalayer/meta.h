@@ -1,6 +1,11 @@
+#ifndef NVMOS_DL_META_H_
+#define NVMOS_DL_META_H_
+
 #define NVMOS_DL_META_FLAG_ISFILE 0x1 // Either file meta or process meta
 #define NVMOS_DL_META_FLAG_ISDIR  0x2
 #define NVMOS_DL_META_FLAG_FREE   0x4
+
+#include <stdint.h>
 
 struct NVMOS_DL_fileMeta {
 	uint64_t	refCount;           //Fiel reference is the access point to file
@@ -34,3 +39,5 @@ struct NVMOS_DL_meta {
 	} metaContent;
 	uint32_t	flags;
 };
+
+#endif
