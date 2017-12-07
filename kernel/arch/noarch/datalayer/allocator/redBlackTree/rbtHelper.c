@@ -263,7 +263,7 @@ rbt_node_t *getSibling(rbt_node_t *head, rbt_node_t *target)
     return NULL;
 }
 
-rbt_nodeProperty_t getNodeColor(rbt_node_t *target)
+rbt_redBlackFlag_t getNodeColor(rbt_node_t *target)
 {
     if (target == NULL || target->redBlackFlag == rbt_BLACK)
     {
