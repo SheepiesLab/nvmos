@@ -66,7 +66,7 @@ int nvmos_dl_alloc_retrieveAllocator(
 {
     allocator->allocationBlockSize = allocationBlockSize;
     allocator->head =
-        ((nvmos_dl_freeBlockNode_t *)head)->redBlackTreeNode;
+        &(((nvmos_dl_freeBlockNode_t *)head)->redBlackTreeNode);
     return 0;
 }
 
@@ -95,7 +95,7 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
     else
     {
         nvmos_dl_freeBlockNode_t *tmp;
-        while ((nvmos_dl_freeBlockNode_t *)(targetNode->sameValueNext)->sameValueNext != NULL)
+        while (((nvmos_dl_freeBlockNode_t *)(targetNode->sameValueNext))->sameValueNext != NULL)
         {
             tmp = targetNode;
             targetNode = targetNode->sameValueNext;
@@ -132,7 +132,7 @@ int nvmos_dl_alloc_deallocateBlocks(
 
     nvmos_dl_freeBlockNode_t *oneBlockBefore =
         (nvmos_dl_freeBlockNode_t *)(startBlock -
-                                     allocationBlockSize);
+                                     allocator->allocationBlockSize);
     nvmos_dl_freeBlockNode_t *oneBlockAfter =
         (nvmos_dl_freeBlockNode_t *)(startBlock +
                                      length *
@@ -179,7 +179,7 @@ int nvmos_dl_alloc_deallocateBlocks(
             else if (targetNode != NULL &&
                      sameValuePrevious != NULL)
             {
-                (nvmos_dl_freeBlockNode_t *)((nvmos_dl_freeBlockNode_t *)sameValuePrevious)->sameValueNext =
+                ((nvmos_dl_freeBlockNode_t *)sameValuePrevious)->sameValueNext =
                     ((nvmos_dl_freeBlockNode_t *)targetNode)->sameValueNext;
                 found = true;
             }
@@ -231,7 +231,7 @@ int nvmos_dl_alloc_deallocateBlocks(
             else if (targetNode != NULL &&
                      sameValuePrevious != NULL)
             {
-                (nvmos_dl_freeBlockNode_t *)((nvmos_dl_freeBlockNode_t *)sameValuePrevious)->sameValueNext =
+                ((nvmos_dl_freeBlockNode_t *)sameValuePrevious)->sameValueNext =
                     ((nvmos_dl_freeBlockNode_t *)targetNode)->sameValueNext;
                 found = true;
             }
