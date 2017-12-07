@@ -2,6 +2,7 @@
 #define RBT_RBT_H_
 
 #include <kernel/kdef.h>
+#include <stdbool.h>
 
 enum rbt_redBlackFlag
 {

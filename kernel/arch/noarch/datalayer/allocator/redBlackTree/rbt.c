@@ -1,6 +1,7 @@
 #include <kernel/datalayer/allocator/redBlackTree/rbt.h>
 #include <kernel/datalayer/allocator/redBlackTree/rbtHelper.h>
 
+
 rbt_nodeProperty_t rbt_getNodeProperty(
     rbt_node_t *head,
     rbt_node_t *target)
