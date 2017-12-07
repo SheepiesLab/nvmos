@@ -94,13 +94,15 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
     }
     else
     {
-        nvmos_dl_freeBlockNode_t *tmp;
+        nvmos_dl_freeBlockNode_t *tmp = NULL;
         while (((nvmos_dl_freeBlockNode_t *)(targetNode->sameValueNext))->sameValueNext != NULL)
         {
             tmp = targetNode;
-            targetNode = targetNode->sameValueNext;
+            targetNode =
+                (nvmos_dl_freeBlockNode_t *)(targetNode->sameValueNext);
         }
-        tmp->sameValueNext = NULL;
+        if (tmp != NULL)
+            tmp->sameValueNext = NULL;
     }
 
     if (gotBlockCount > blockCount)
@@ -150,7 +152,7 @@ int nvmos_dl_alloc_deallocateBlocks(
             oneBlockBefore->redBlackTreeNode.value;
         rbt_node_t *segmentBefore =
             rbt_findNode(
-                &(allocator->head),
+                allocator->head,
                 previousSegmentLength,
                 true,
                 true);
@@ -158,7 +160,7 @@ int nvmos_dl_alloc_deallocateBlocks(
         {
             nvmos_pointer_t sameValuePrevious = NULL;
             nvmos_pointer_t targetNode =
-                (nvmos_dl_freeBlockNode_t *)(segmentBefore->content);
+                segmentBefore->content;
             bool found = false;
 
             while (targetNode != NULL &&
@@ -202,7 +204,7 @@ int nvmos_dl_alloc_deallocateBlocks(
             oneBlockAfter->redBlackTreeNode.value;
         rbt_node_t *segmentAfter =
             rbt_findNode(
-                &(allocator->head),
+                allocator->head,
                 nextSegmentLength,
                 true,
                 true);
@@ -210,7 +212,7 @@ int nvmos_dl_alloc_deallocateBlocks(
         {
             nvmos_pointer_t sameValuePrevious = NULL;
             nvmos_pointer_t targetNode =
-                (nvmos_dl_freeBlockNode_t *)(segmentAfter->content);
+                segmentAfter->content;
             bool found = false;
 
             while (targetNode != NULL &&
@@ -276,7 +278,7 @@ int nvmos_dl_alloc_deallocateBlocks(
             (nvmos_dl_freeBlockNode_t *)sameLengthNode->content;
         while (node->sameValueNext != NULL)
         {
-            node = node->sameValueNext;
+            node = (nvmos_dl_freeBlockNode_t *)node->sameValueNext;
         }
         node->sameValueNext = (nvmos_pointer_t)newNode;
     }
@@ -286,4 +288,6 @@ int nvmos_dl_alloc_deallocateBlocks(
             &(allocator->head),
             &(newNode->redBlackTreeNode));
     }
+
+    return 0;
 }

@@ -203,6 +203,8 @@ int swapNodeColor(rbt_node_t *a, rbt_node_t *b)
     tmp = a->redBlackFlag;
     a->redBlackFlag = b->redBlackFlag;
     b->redBlackFlag = tmp;
+
+    return 0;
 }
 
 rbt_node_t *getUncle(rbt_node_t *head, rbt_node_t *target)
@@ -303,7 +305,7 @@ void printTree(rbt_node_t *head, unsigned int level)
         printf("--- | ");
     }
     printf("\n");
-    for (int i = 0; i < level + 1; ++i)
+    for (unsigned int i = 0; i < level + 1; ++i)
     {
         printf("    | ");
     }
