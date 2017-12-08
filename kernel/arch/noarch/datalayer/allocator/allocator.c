@@ -16,7 +16,7 @@ int nvmos_dl_alloc_createAllocator(
     }
     realStartAddr += startAddress;
 
-    length = length % allocationBlockSize;
+    length -= length % allocationBlockSize;
 
     uint32_t blockCount = length / allocationBlockSize;
     if (blockCount < 2)
