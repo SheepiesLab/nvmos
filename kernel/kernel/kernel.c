@@ -162,7 +162,7 @@ void kernel_main(multiboot_info_t *mbt)
         0x1000);
     printf(
         "First Node Addr: %p",
-        (datalayerBlockAllocator->head->content));
+        (datalayerBlockAllocator.head->content));
 
     nvmos_pointer_t firstAlloc =
         nvmos_dl_alloc_allocateBlocks(
