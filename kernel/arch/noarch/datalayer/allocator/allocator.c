@@ -52,7 +52,7 @@ int nvmos_dl_alloc_createAllocator(
     headNode->segmentHead = (nvmos_pointer_t)headNode;
     headNode->segmentTail = (nvmos_pointer_t)tailNode;
 
-    allocator->head = NULL
+    allocator->head = NULL;
     rbt_insertNode(
         &(allocator->head),
         (&headNode->redBlackTreeNode));
