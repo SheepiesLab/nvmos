@@ -13,6 +13,7 @@
 #include <kernel/mman/MemoryManager.h>
 #include <kernel/mman/KernelSection.h>
 #include <kernel/mman/heap/Heap.h>
+#include <kernel/datalayer/allocator/allocator.h>
 
 void kernel_main(multiboot_info_t *mbt) {
 
@@ -144,6 +145,10 @@ void kernel_main(multiboot_info_t *mbt) {
 
     asm("int $0x30");
     printf("After interrupt!\n");
+
+    nvmos_dl_allocator_t datalayerBlockAllocator;
+    
+
     while(1){
 //        printf("%c",read_serial());
 		printf("Serial: %d\n", read_serial());
