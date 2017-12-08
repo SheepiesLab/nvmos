@@ -15,7 +15,8 @@
 #include <kernel/mman/heap/Heap.h>
 #include <kernel/datalayer/allocator/allocator.h>
 
-void kernel_main(multiboot_info_t *mbt) {
+void kernel_main(multiboot_info_t *mbt)
+{
 
     bool PRINT_DEBUG = true;
 
@@ -25,7 +26,7 @@ void kernel_main(multiboot_info_t *mbt) {
     FILE _stderr;
     stdout_init(&_stdout);
     stderr_init(&_stderr);
-//    terminal_initialize();
+    //    terminal_initialize();
     init_serial();
     printf("Hello, kernel World!\n\n");
 
@@ -34,15 +35,17 @@ void kernel_main(multiboot_info_t *mbt) {
 
     KernelSection *ksects = ksection_getKsections();
 
-    if (PRINT_DEBUG) {
+    if (PRINT_DEBUG)
+    {
         printf("MMap Addr: %p\n", mman.mbt->mmap_addr);
 
         size_t mmapLength = mman_getMemoryMapLength(&mman);
-        printf("MMap Length: %d\n", (int) mmapLength);
+        printf("MMap Length: %d\n", (int)mmapLength);
 
         MemoryMap mmap[mmapLength];
         mman_getMemoryMap(&mman, mmap, mmapLength);
-        for (int i = 0; i < mmapLength; ++i) {
+        for (int i = 0; i < mmapLength; ++i)
+        {
             printf("Addr: %p; ", mmap[i].addr);
             printf("Len: %p; ", mmap[i].len);
             printf("Type: %d\n", mmap[i].type);
@@ -75,22 +78,23 @@ void kernel_main(multiboot_info_t *mbt) {
                ksects[KSECTION_SECTION_HEAP].len);
 
         // Test Heap
-        int *testIntPtr = (int *) heap_malloc(&(mman.heap),
+        int *testIntPtr = (int *)heap_malloc(&(mman.heap),
+                                             sizeof(int));
+        int *testIntPtr2 = (int *)heap_malloc(&(mman.heap),
                                               sizeof(int));
-        int *testIntPtr2 = (int *) heap_malloc(&(mman.heap),
-                                               sizeof(int));
-        int *testIntArrPtr = (int *) heap_calloc(
-                &mman.heap,
-                100,
-                sizeof(int));
-        int *testIntPtr3 = (int *) heap_malloc(&(mman.heap),
-                                               sizeof(int));
-        heap_free(&mman.heap, (nvmos_pointer_t) testIntPtr2);
-        int *testIntPtr4 = (int *) heap_malloc(&(mman.heap),
-                                               sizeof(int));
+        int *testIntArrPtr = (int *)heap_calloc(
+            &mman.heap,
+            100,
+            sizeof(int));
+        int *testIntPtr3 = (int *)heap_malloc(&(mman.heap),
+                                              sizeof(int));
+        heap_free(&mman.heap, (nvmos_pointer_t)testIntPtr2);
+        int *testIntPtr4 = (int *)heap_malloc(&(mman.heap),
+                                              sizeof(int));
 
         *testIntPtr = 0;
-        for (int i = 0; i < 100; ++i) testIntArrPtr[i] = 0;
+        for (int i = 0; i < 100; ++i)
+            testIntArrPtr[i] = 0;
         *testIntPtr3 = 0;
         *testIntPtr4 = 0;
 
@@ -102,43 +106,47 @@ void kernel_main(multiboot_info_t *mbt) {
         printf("testPtr3: 0x%p\n", testIntPtr3);
         printf("testPtr4: 0x%p\n", testIntPtr4);
 
-        uint16_t *com1 = (nvmos_pointer_t) 0x400;
+        uint16_t *com1 = (nvmos_pointer_t)0x400;
         printf("com1: 0x%p\n", *com1);
     }
 
     {
         InterruptDescriptor id;
         id.type = ID_TYPE_386_TRAP;
-        id.isrAddr = (nvmos_pointer_t) &exceptionHandler;
+        id.isrAddr = (nvmos_pointer_t)&exceptionHandler;
         id.present = 1;
         id.privilegeLevel = 0;
-        for (int i = 0; i < 0x20; ++i) {
+        for (int i = 0; i < 0x20; ++i)
+        {
             interruptDescriptor_Encode(
-                    &id,
-                    idtBuffer + 8 * i);
+                &id,
+                idtBuffer + 8 * i);
         }
         id.type = ID_TYPE_386_INT;
-        id.isrAddr = (nvmos_pointer_t) &irqHandler;
+        id.isrAddr = (nvmos_pointer_t)&irqHandler;
         id.present = 1;
         id.privilegeLevel = 0;
-        for (int i = 0x20; i < 0x30; ++i) {
+        for (int i = 0x20; i < 0x30; ++i)
+        {
             interruptDescriptor_Encode(
-                    &id,
-                    idtBuffer + 8 * i);
+                &id,
+                idtBuffer + 8 * i);
         }
         id.type = ID_TYPE_386_INT;
-        id.isrAddr = (nvmos_pointer_t) &interruptHandler;
+        id.isrAddr = (nvmos_pointer_t)&interruptHandler;
         id.present = 1;
         id.privilegeLevel = 0;
-        for (int i = 0x30; i <= 0xFF; ++i) {
+        for (int i = 0x30; i <= 0xFF; ++i)
+        {
             interruptDescriptor_Encode(
-                    &id,
-                    idtBuffer + 8 * i);
+                &id,
+                idtBuffer + 8 * i);
         }
     }
-    setIDT((uint32_t) idtBuffer, 256 * 8);
+    setIDT((uint32_t)idtBuffer, 256 * 8);
     PIC_remap(0x20, 0x28);
-    for (int i = 0;i < 16; ++i){
+    for (int i = 0; i < 16; ++i)
+    {
         IRQ_set_mask(i);
     }
     IRQ_clear_mask(0x04);
@@ -147,10 +155,41 @@ void kernel_main(multiboot_info_t *mbt) {
     printf("After interrupt!\n");
 
     nvmos_dl_allocator_t datalayerBlockAllocator;
-    
+    nvmos_dl_alloc_createAllocator(
+        &datalayerBlockAllocator,
+        0x110000,
+        0xbfed0000,
+        0x1000);
+    nvmos_pointer_t firstAlloc =
+        nvmos_dl_alloc_allocateBlocks(
+            &datalayerBlockAllocator,
+            5);
+    nvmos_pointer_t secondAlloc =
+        nvmos_dl_alloc_allocateBlocks(
+            &datalayerBlockAllocator,
+            5);
 
-    while(1){
-//        printf("%c",read_serial());
-		printf("Serial: %d\n", read_serial());
+    printf("FirstAlloc: %p\n", firstAlloc);
+    printf("SecondAlloc: %p\n", secondAlloc);
+
+    nvmos_dl_alloc_deallocateBlocks(
+        &datalayerBlockAllocator,
+        firstAlloc,
+        5);
+    nvmos_dl_alloc_deallocateBlocks(
+        &datalayerBlockAllocator,
+        secondAlloc,
+        5);
+
+    nvmos_pointer_t thirdAlloc =
+        nvmos_dl_alloc_allocateBlocks(
+            &datalayerBlockAllocator,
+            5);
+    printf("ThirdAlloc: %p\n", thirdAlloc);
+
+    while (1)
+    {
+        //        printf("%c",read_serial());
+        printf("Serial: %d\n", read_serial());
     };
 }
