@@ -13,20 +13,22 @@
 
 
 
-struct NVMSO_DL_freeMeta
+struct meta_freeMeta
 {
 	uint64_t nextFreeMeta;
 };
+typedef struct meta_freeMeta meta_freeMeta_t;
 
-struct NVMOS_DL_meta
+struct meta_meta
 {
 	uint64_t metaId;
 	union {
 		file_meta_t fileMeta;
 		proc_meta_t processMeta;
-		datalayer_freeMeta_t freeMeta;
+		meta_freeMeta_t freeMeta;
 	} metaContent;
 	uint32_t flags;
 };
+typedef struct meta_meta meta_meta_t;
 
 #endif
