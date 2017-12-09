@@ -30,7 +30,7 @@ struct rbt_node
     rbt_node_t *rightChild;
     rbt_redBlackFlag_t redBlackFlag;
     uint32_t value;
-    nvmos_pointer_t content;
+    nvmos_ptr_t content;
 };
 
 rbt_nodeProperty_t rbt_getNodeProperty(

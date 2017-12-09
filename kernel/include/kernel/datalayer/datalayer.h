@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <kernel/kdef.h>
 
+#define BLOCK_SIZE 0x1000
+
 struct nvmos_dl_datalayerHandle_struct;
 typedef struct nvmos_dl_datalayerHandle_struct datalayer_t;
 
@@ -24,11 +26,11 @@ typedef struct
 
 int datalayer_loadDatalayer(
 	datalayer_t *datalayer,
-	nvmos_pointer_t start);
+	nvmos_ptr_t start);
 
 int datalayer_createDatalayer(
 	datalayer_t *datalayer,
-	nvmos_pointer_t start,
+	nvmos_ptr_t start,
 	size_t size,
 	size_t allocationBlockSize);
 
@@ -56,7 +58,7 @@ int *nvmos_dl_createDirectory (datalayer *datalayer, const char *target);
 
 int nvmos_dl_createFile (datalayer_t *datalayer, const char *target);
 
-file_t *nvmos_dl_openFile (datalayer_t *datalayer, const char *target, const char *mode);
+file_t *nvmos_dl_openFile (datalayer_t *datalayer, const char *target);
 
 int nvmos_dl_moveFileOrDirectory (datalayer_t *datalayer, const char *targetDirectory, const char *source);
 
@@ -95,9 +97,9 @@ int nvmos_dl_loadLibraryToProcess (process_t *process, const char *path);
 
 int nvmos_dl_getPageTableOfProcess (process_t *process, char **target);
 
-int nvmos_dl_allocatePageToProcess (process_t *process, size_t size, nvmos_pointer_t *allocationAddress);
+int nvmos_dl_allocatePageToProcess (process_t *process, size_t size, nvmos_ptr_t *allocationAddress);
 
-int nvmos_dl_freePageFromProcess (process_t *process, nvmos_pointer_t allocationAddress);
+int nvmos_dl_freePageFromProcess (process_t *process, nvmos_ptr_t allocationAddress);
 
 int nvmos_dl_removeProcess (process_t *process);
 

@@ -5,7 +5,7 @@
 struct nvmos_dl_datalayerHandle_struct
 {
     nvmos_dl_datalayerMeta_t *datalayerMeta;
-    nvmos_pointer_t startAddress;
+    nvmos_ptr_t startAddress;
     size_t blockCount;
     size_t allocationBlockSize;
     struct NVMOS_DL_meta *kroot;
@@ -16,7 +16,7 @@ struct nvmos_dl_datalayerHandle_struct
 
 int datalayer_loadDatalayer(
     datalayer_t *datalayer,
-    nvmos_pointer_t start)
+    nvmos_ptr_t start)
 {
     nvmos_dl_datalayerMeta_t *datalayerMeta =
         (nvmos_dl_datalayerMeta_t *)start;
@@ -25,7 +25,7 @@ int datalayer_loadDatalayer(
     {
         datalayer->datalayerMeta = datalayerMeta;
         datalayer->startAddress =
-            (nvmos_pointer_t)(datalayerMeta->startAddress);
+            (nvmos_ptr_t)(datalayerMeta->startAddress);
         datalayer->blockCount = datalayerMeta->blockCount;
         datalayer_allocationBlockSize =
             datalayerMeta->allocationBlockSize;
@@ -44,7 +44,7 @@ int datalayer_loadDatalayer(
 
 int datalayer_createDatalayer(
     datalayer_t *datalayer,
-    nvmos_pointer_t start,
+    nvmos_ptr_t start,
     size_t size,
     size_t allocationBlockSize)
 {

@@ -7,27 +7,11 @@
 #define NVMOS_DL_META_FLAG_LOCKED 0x8
 
 #include <stdint.h>
+#include <kernel/datalayer/datalayer.h>
+#include <kernel/datalayer/file.h>
+#include <kernel/datalayer/proc.h>
 
-struct NVMOS_DL_fileMeta
-{
-	uint64_t refCount; //Fiel reference is the access point to file
-	uint64_t contentLength;
-	uint64_t firstBlock;
-	uint64_t secondBlockPointers;
-	uint64_t thirdBlockPointers;
-};
 
-struct NVMOS_DL_processMeta
-{
-	uint32_t processId;
-	uint32_t parentId;
-	uint64_t pageTableLocation;
-	uint64_t pageTableLength;
-	uint64_t contentLength;
-	uint64_t firstBlock;
-	uint64_t secondBlockPointers;
-	uint64_t thirdBlockPointers;
-};
 
 struct NVMSO_DL_freeMeta
 {
@@ -38,8 +22,8 @@ struct NVMOS_DL_meta
 {
 	uint64_t metaId;
 	union {
-		datalayer_fileMeta_t fileMeta;
-		datalayer_processMeta_t processMeta;
+		file_meta_t fileMeta;
+		proc_meta_t processMeta;
 		datalayer_freeMeta_t freeMeta;
 	} metaContent;
 	uint32_t flags;

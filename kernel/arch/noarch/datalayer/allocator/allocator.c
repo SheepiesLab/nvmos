@@ -3,11 +3,11 @@
 
 int nvmos_dl_alloc_createAllocator(
     nvmos_dl_allocator_t *allocator,
-    nvmos_pointer_t startAddress,
+    nvmos_ptr_t startAddress,
     size_t length,
     size_t allocationBlockSize)
 {
-    nvmos_pointer_t realStartAddr =
+    nvmos_ptr_t realStartAddr =
         startAddress % allocationBlockSize;
     if (realStartAddr != 0)
     {
@@ -38,9 +38,9 @@ int nvmos_dl_alloc_createAllocator(
     headNode->redBlackTreeNode.rightChild = NULL;
     headNode->redBlackTreeNode.value = blockCount;
     headNode->redBlackTreeNode.content =
-        (nvmos_pointer_t)headNode;
-    headNode->segmentHead = (nvmos_pointer_t)headNode;
-    headNode->segmentTail = (nvmos_pointer_t)tailNode;
+        (nvmos_ptr_t)headNode;
+    headNode->segmentHead = (nvmos_ptr_t)headNode;
+    headNode->segmentTail = (nvmos_ptr_t)tailNode;
 
     tailNode->sameValueNext = NULL;
     tailNode->redBlackTreeNode.parent = NULL;
@@ -48,9 +48,9 @@ int nvmos_dl_alloc_createAllocator(
     tailNode->redBlackTreeNode.rightChild = NULL;
     tailNode->redBlackTreeNode.value = blockCount;
     tailNode->redBlackTreeNode.content =
-        (nvmos_pointer_t)headNode;
-    headNode->segmentHead = (nvmos_pointer_t)headNode;
-    headNode->segmentTail = (nvmos_pointer_t)tailNode;
+        (nvmos_ptr_t)headNode;
+    headNode->segmentHead = (nvmos_ptr_t)headNode;
+    headNode->segmentTail = (nvmos_ptr_t)tailNode;
 
     allocator->head = NULL;
     rbt_insertNode(
@@ -62,7 +62,7 @@ int nvmos_dl_alloc_createAllocator(
 
 int nvmos_dl_alloc_retrieveAllocator(
     nvmos_dl_allocator_t *allocator,
-    nvmos_pointer_t head,
+    nvmos_ptr_t head,
     size_t allocationBlockSize)
 {
     allocator->allocationBlockSize = allocationBlockSize;
@@ -71,7 +71,7 @@ int nvmos_dl_alloc_retrieveAllocator(
     return 0;
 }
 
-nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
+nvmos_ptr_t nvmos_dl_alloc_allocateBlocks(
     nvmos_dl_allocator_t *allocator,
     size_t blockCount)
 {
@@ -109,8 +109,8 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
     if (gotBlockCount > blockCount)
     {
         size_t blocksLeft = gotBlockCount - blockCount;
-        nvmos_pointer_t newStartBlock =
-            (nvmos_pointer_t)targetNode +
+        nvmos_ptr_t newStartBlock =
+            (nvmos_ptr_t)targetNode +
             blockCount * allocator->allocationBlockSize;
         nvmos_dl_alloc_deallocateBlocks(
             allocator,
@@ -118,12 +118,12 @@ nvmos_pointer_t nvmos_dl_alloc_allocateBlocks(
             blocksLeft);
     }
 
-    return (nvmos_pointer_t)targetNode;
+    return (nvmos_ptr_t)targetNode;
 }
 
 int nvmos_dl_alloc_deallocateBlocks(
     nvmos_dl_allocator_t *allocator,
-    nvmos_pointer_t startBlock,
+    nvmos_ptr_t startBlock,
     size_t length)
 {
     nvmos_dl_freeBlockNode_t *newNode =
@@ -143,7 +143,7 @@ int nvmos_dl_alloc_deallocateBlocks(
 
     // TODO Depends on destroying tail block on allocation
     if (oneBlockBefore->segmentTail ==
-            (nvmos_pointer_t)oneBlockBefore &&
+            (nvmos_ptr_t)oneBlockBefore &&
         oneBlockBefore->segmentHead ==
             oneBlockBefore->segmentTail -
                 (oneBlockBefore->redBlackTreeNode.value - 1) *
@@ -159,8 +159,8 @@ int nvmos_dl_alloc_deallocateBlocks(
                 true);
         if (segmentBefore != NULL)
         {
-            nvmos_pointer_t sameValuePrevious = NULL;
-            nvmos_pointer_t targetNode =
+            nvmos_ptr_t sameValuePrevious = NULL;
+            nvmos_ptr_t targetNode =
                 segmentBefore->content;
             bool found = false;
 
@@ -195,9 +195,9 @@ int nvmos_dl_alloc_deallocateBlocks(
     }
 
     if (oneBlockAfter->segmentHead ==
-            (nvmos_pointer_t)oneBlockAfter &&
+            (nvmos_ptr_t)oneBlockAfter &&
         oneBlockAfter->segmentTail ==
-            (nvmos_pointer_t)oneBlockAfter +
+            (nvmos_ptr_t)oneBlockAfter +
                 (oneBlockAfter->redBlackTreeNode.value - 1) *
                     allocator->allocationBlockSize)
     {
@@ -211,8 +211,8 @@ int nvmos_dl_alloc_deallocateBlocks(
                 true);
         if (segmentAfter != NULL)
         {
-            nvmos_pointer_t sameValuePrevious = NULL;
-            nvmos_pointer_t targetNode =
+            nvmos_ptr_t sameValuePrevious = NULL;
+            nvmos_ptr_t targetNode =
                 segmentAfter->content;
             bool found = false;
 
@@ -248,24 +248,24 @@ int nvmos_dl_alloc_deallocateBlocks(
     }
 
     newNode->sameValueNext = NULL;
-    newNode->segmentHead = (nvmos_pointer_t)newNode;
-    newNode->segmentTail = (nvmos_pointer_t)endNode;
+    newNode->segmentHead = (nvmos_ptr_t)newNode;
+    newNode->segmentTail = (nvmos_ptr_t)endNode;
     newNode->redBlackTreeNode.parent = NULL;
     newNode->redBlackTreeNode.leftChild = NULL;
     newNode->redBlackTreeNode.rightChild = NULL;
     newNode->redBlackTreeNode.redBlackFlag = rbt_RED;
     newNode->redBlackTreeNode.value = length;
-    newNode->redBlackTreeNode.content = (nvmos_pointer_t)newNode;
+    newNode->redBlackTreeNode.content = (nvmos_ptr_t)newNode;
 
     endNode->sameValueNext = NULL;
-    endNode->segmentHead = (nvmos_pointer_t)newNode;
-    endNode->segmentTail = (nvmos_pointer_t)endNode;
+    endNode->segmentHead = (nvmos_ptr_t)newNode;
+    endNode->segmentTail = (nvmos_ptr_t)endNode;
     endNode->redBlackTreeNode.parent = NULL;
     endNode->redBlackTreeNode.leftChild = NULL;
     endNode->redBlackTreeNode.rightChild = NULL;
     endNode->redBlackTreeNode.redBlackFlag = rbt_RED;
     endNode->redBlackTreeNode.value = length;
-    endNode->redBlackTreeNode.content = (nvmos_pointer_t)newNode;
+    endNode->redBlackTreeNode.content = (nvmos_ptr_t)newNode;
 
     rbt_node_t *sameLengthNode =
         rbt_findNode(
@@ -281,7 +281,7 @@ int nvmos_dl_alloc_deallocateBlocks(
         {
             node = (nvmos_dl_freeBlockNode_t *)node->sameValueNext;
         }
-        node->sameValueNext = (nvmos_pointer_t)newNode;
+        node->sameValueNext = (nvmos_ptr_t)newNode;
     }
     else
     {

@@ -24,7 +24,7 @@ n explained:
 
 #include <kernel/mman/heap/Heap.h>
 
-int testcases_heap0(nvmos_pointer_t heapStart,nvmos_pointer_t heapEnd){
+int testcases_heap0(nvmos_ptr_t heapStart,nvmos_ptr_t heapEnd){
 	const int TESTCASE_COUNT = 1;
 	
 	int *testCases_seq[TESTCASE_COUNT];
@@ -61,14 +61,14 @@ int testcases_heap0(nvmos_pointer_t heapStart,nvmos_pointer_t heapEnd){
 
 int testDriver_heap0(
 		int *seq, 
-		nvmos_pointer_t *res, 
+		nvmos_ptr_t *res, 
 		int n, 
-		nvmos_pointer_t heapStart,
-		nvmos_pointer_t heapEnd){
+		nvmos_ptr_t heapStart,
+		nvmos_ptr_t heapEnd){
 	Heap heap;
 	heap_construct(&heap, heapStart, heapEnd);
 	
-	nvmos_pointer_t allocs[n];
+	nvmos_ptr_t allocs[n];
 
 	for (int i = 0; i < n; ++i){
 		if (seq[i]>0){
