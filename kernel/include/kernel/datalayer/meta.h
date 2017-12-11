@@ -1,10 +1,10 @@
 #ifndef NVMOS_DL_META_H_
 #define NVMOS_DL_META_H_
 
-#define NVMOS_DL_META_FLAG_ISFILE 0x1 // Either file meta or process meta
-#define NVMOS_DL_META_FLAG_ISDIR 0x2
-#define NVMOS_DL_META_FLAG_FREE 0x4
-#define NVMOS_DL_META_FLAG_LOCKED 0x8
+#define META_FLAG_ISFILE 0x1 // Either file meta or process meta
+#define META_FLAG_ISDIR 0x2
+#define META_FLAG_FREE 0x4
+#define META_FLAG_LOCKED 0x8
 
 #include <stdint.h>
 #include <kernel/datalayer/datalayer.h>

@@ -1,5 +1,7 @@
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/meta.h>
+#include <kernel/datalayer/ptrBlks.h>
+#include <kernel/datalayer/allocator/allocator.h>
 
 struct fileRef
 {
@@ -8,17 +10,44 @@ struct fileRef
 };
 typedef struct fileRef dir_fileRef_t;
 
-struct fileRefBlock {
+struct fileRefBlock
+{
 	dir_fileRef_t fileRefs[16];
-}
-typedef struct fileRefBlock dir_fileRefBlock_t;
+} typedef struct fileRefBlock dir_fileRefBlk_t;
 
-int dir_sortFileRefs(dir_fileRef_t *fileRefs, size_t length);
+typedef uint32_t dir_fileRefId_t;
+const dir_fileRefId_t dir_fileRefId_inval = 0xFFFFFFFF;
 
-struct NVMOS_DL_fileMeta *dir_getFileMeta(dir_fileRef_t *fileRef);
-struct NVMOS_DL_fileMeta *dir_searchFile(
+bool dir_isDir(meta_meta_t *dir);
+
+dir_fileRefId_t dir_addFileRef(
+	file_meta_t *dir,
+	uint8_t *fileName,
+	file_meta_t fileMeta,
+	nvmos_dl_allocator_t *allocator);
+
+dir_fileRefId_t dir_rePosFileRef(
+	file_meta_t *dir,
+	dir_fileRefId_t fileRefId);
+
+dir_fileRefId_t dir_searchFile(
+	file_meta_t *dir,
+	char *fileName);
+
+dir_fileRef_t *dir_getFileRefById(
+	file_meta_t *dir,
+	dir_fileRefId_t id);
+
+bool dir_fileNameUsed(
+	file_meta_t *dir,
+	char *fileName);
+
+dir_fileRefId_t dir_renameFile(
+	file_meta_t *dir,
 	char *fileName,
-	dir_fileRef_t *fileRef,
-	size_t length);
+	char *newFileName);
 
-int dir_delFile(dir_fileRef_t *fileRef);
+int dir_delFile(
+	file_meta_t *dir,
+	char *fileName,
+	nvmos_dl_allocator_t *allocator);

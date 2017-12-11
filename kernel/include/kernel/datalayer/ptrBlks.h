@@ -1,4 +1,5 @@
 #include <kernel/datalayer/datalayer.h>
+#include <kernel/datalayer/meta.h>
 
 struct ptrBlks_3rdBlk
 {
@@ -24,49 +25,47 @@ struct ptrBlks_dataBlk
 };
 typedef struct ptrBlks_dataBlk ptrBlks_dataBlk_t;
 
-struct ptrBlks_dataBlkIter
+struct ptrBlks
 {
     ptrBlks_dataBlk_t *_1stBlk;   //Hold 1 block
     ptrBlks_1stBlk_t *_1stPtrBlk; //Hold 1k blocks
     ptrBlks_2ndBlk_t *_2ndPtrBlk; //Hold 1M blocks
     ptrBlks_3rdBlk_t *_3rdPtrBlk; //Hold 1G blocks
-    size_t pos;
+
+    size_t size;
 };
-typedef struct ptrBlks_dataBlkIter ptrBlks_dataBlkIter_t;
+typedef struct ptrBlks ptrBlks_t;
 
-int ptrBlks_pushBlk(
-    ptrBlks_dataBlkIter_t *iter,
-    nvmos_ptr_t blk);
+#define PTRBLKS_MAX 0x40100401
 
-int ptrBlks_pushBlks(
-    ptrBlks_dataBlkIter_t *iter,
-    nvmos_ptr_t blkSeg,
-    size_t len);
-
-int ptrBlks_popBlks(
-    ptrBlks_dataBlkIter_t *iter,
-    size_t len);
-
-size_t ptrBlks_count(
-    ptrBlks_dataBlkIter_t *iter);
-
-void ptrBLks_initIter(
-    ptrBlks_dataBlkIter_t *iter,
+void ptrBlks_construct(
+    ptrBlks_t *ptrBlks,
     ptrBlks_dataBlk_t *_1stBlk,
     ptrBlks_1stBlk_t *_1stPtrBlk,
     ptrBlks_2ndBlk_t *_2ndPtrBlk,
     ptrBlks_3rdBlk_t *_3rdPtrBlk);
 
-size_t ptrBlks_getPos(ptrBlks_dataBlkIter_t *iter);
+void ptrBlks_constructFromFileMeta(
+    ptrBlks_t *ptrBlks,
+    file_meta_t *fileMeta);
 
-nvmos_ptr_t ptrBlks_goto(ptrBlks_dataBlkIter_t *iter, size_t pos);
+void ptrBlks_saveToFileMeta(
+    ptrBlks_t *ptrBlks,
+    file_meta_t *fileMeta);
 
-nvmos_ptr_t ptrBlks_this(ptrBlks_dataBlkIter_t *iter);
+ptrBlks_dataBlk_t *ptrBlks_getDataBlkAt(
+    ptrBlks_t *ptrBlks,
+    size_t index);
 
-nvmos_ptr_t ptrBlks_next(ptrBlks_dataBlkIter_t *iter);
+size_t ptrBlks_getSize(ptrBlks_t *ptrBlks);
 
-nvmos_ptr_t ptrBlks_prev(ptrBlks_dataBlkIter_t *iter);
+int ptrBlks_pushBlks(
+    ptrBlks_t *ptrBlks,
+    nvmos_ptr_t blkSeg,
+    size_t len,
+    nvmos_dl_allocator_t *allocator);
 
-nvmos_ptr_t ptrBlks_first(ptrBlks_dataBlkIter_t *iter);
-
-nvmos_ptr_t ptrBlks_last(ptrBlks_dataBlkIter_t *iter);
+int ptrBlks_popBlks(
+    ptrBlks_t *ptrBlks,
+    size_t len,
+    nvmos_dl_allocator_t *allocator);

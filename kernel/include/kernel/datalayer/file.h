@@ -5,10 +5,10 @@ struct file_meta
 {
     uint64_t refCount; //Fiel reference is the access point to file
     uint64_t fileSize;
-    uint64_t _1stBlk;
-    uint64_t _1stPtrBlk;
-    uint64_t _2ndPtrBlk;
-    uint64_t _3rdPtrBlk;
+    uint32_t _1stBlk;
+    uint32_t _1stPtrBlk;
+    uint32_t _2ndPtrBlk;
+    uint32_t _3rdPtrBlk;
 };
 typedef struct file_meta file_meta_t;
 
