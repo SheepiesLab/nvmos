@@ -14,6 +14,6 @@ typedef uint32_t nvmos_ptr_t;
 typedef uint32_t nvmos_uint_t;
 typedef int32_t nvmos_int_t;
 typedef nvmos_uint_t size_t;
-typedef nvmos_ret_t nvmos_int_t;
+typedef nvmos_int_t nvmos_ret_t ;
 
 #endif //NVMOS_KDEF_H
