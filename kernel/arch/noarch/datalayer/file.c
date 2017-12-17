@@ -1,5 +1,6 @@
 #include <kernel/datalayer/file.h>
 #include <kernel/datalayer/ptrBlks.h>
+#include <string.h>
 
 size_t file_read(
     file_meta_t *file,
@@ -60,7 +61,7 @@ size_t file_write(
 
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
-        &pTRBlks, file);
+        &ptrBlks, file);
 
     size_t bytesWritten = 0;
 #define bufPos bytesWritten
@@ -75,7 +76,7 @@ size_t file_write(
         if (ptrBlks_pushBlks(&ptrBlks, newBlks, newBlks, alloc))
         {
             ptrBlks_saveToFileMeta(
-                &pTRBlks, file);
+                &ptrBlks, file);
             return 0;
         }
     }
@@ -106,7 +107,7 @@ size_t file_write(
 
 #undef bufPos
     ptrBlks_saveToFileMeta(
-        &pTRBlks, file);
+        &ptrBlks, file);
     return bytesWritten;
 }
 
@@ -131,19 +132,19 @@ int file_discardTail(
 
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
-        &pTRBlks, file);
+        &ptrBlks, file);
 
     size_t newFileSize = file->fileSize - len;
     size_t oldBlkLen = file->fileSize >> 12;
     size_t newBlkLen = file->fileSize >> 12;
-    file->fileSize = newfileSize;
+    file->fileSize = newFileSize;
     size_t blksToBePoped = oldBlkLen - newBlkLen;
     if (blksToBePoped > 0)
     {
-        ptrBlks_popBlks(&ptrBlks, blksToBePoped, alloc)
+        ptrBlks_popBlks(&ptrBlks, blksToBePoped, alloc);
     }
     ptrBlks_saveToFileMeta(
-        &pTRBlks, file);
+        &ptrBlks, file);
     return 0;
 }
 
@@ -153,7 +154,7 @@ int file_removeFile(
 {
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
-        &pTRBlks, file);
+        &ptrBlks, file);
 
     size_t blkLen = ptrBlks_getSize(&ptrBlks);
     if (blkLen != 0)
@@ -171,7 +172,7 @@ size_t file_getMap(
 {
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
-        &pTRBlks, file);
+        &ptrBlks, file);
 
     for (size_t i = 0; i < len; ++i)
     {
