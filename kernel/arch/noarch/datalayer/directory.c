@@ -40,12 +40,14 @@ dir_fileRefId_t dir_addFileRef(
     size_t fileRefsLen = dir->fileSize / 0x100;
     dir_fileRefId_t newFileRefId = (dir_fileRefId_t)fileRefsLen;
 
+    ptrBlks_t ptrBlks;
+    ptrBlks_constructFromFileMeta(&ptrBlks, dir);
+
     if (newFileRefId % 16 == 0)
     {
         nvmos_ptr_t newBlk =
             nvmos_dl_alloc_allocateBlocks(allocator, 1);
-        ptrBlks_t ptrBlks;
-        ptrBlks_constructFromFileMeta(&ptrBlks, dir);
+
         ptrBlks_pushBlks(&ptrBlks, newBlk, 1, allocator);
     }
 
@@ -99,7 +101,7 @@ dir_fileRefId_t dir_rePosFileRef(
     {
         next = dir_getFileRefById(dir, fileRefId + 1);
         InvalidCases(next);
-        cmpRes = strcmp(next->fileName, this->fileName);
+        int cmpRes = strcmp(next->fileName, this->fileName);
         if (cmpRes == 0)
         {
             return dir_fileRefId_inval;
@@ -210,7 +212,8 @@ dir_fileRefId_t dir_renameFileRef(
         return dir_fileRefId_inval;
     }
 
-    dir_fileRef_t *fileRef = dir_searchFileRef(dir, fileName);
+    dir_fileRefId_t fileRefId = dir_searchFileRef(dir, fileName);
+    dir_fileRef_t *fileRef = dir_getFileRefById(dir, fileRefId);
     if (fileRef == NULL)
         return dir_fileRefId_inval;
 
@@ -240,12 +243,14 @@ int dir_delFileRef(
     dir->fileSize -= 0x100;
 
     size_t fileRefsLen = dir->fileSize / 0x100;
-    dir_fileRefId_t newFileRefId = (dir_fileRefId_t)fileRefsLen;
+    newFileRefId = (dir_fileRefId_t)fileRefsLen;
+
+    ptrBlks_t ptrBlks;
+    ptrBlks_constructFromFileMeta(&ptrBlks, dir);
 
     if (newFileRefId % 16 == 0)
     {
-        ptrBlks_t ptrBlks;
-        ptrBlks_constructFromFileMeta(&ptrBlks, dir);
+
         ptrBlks_popBlks(&ptrBlks, 1, allocator);
     }
 
