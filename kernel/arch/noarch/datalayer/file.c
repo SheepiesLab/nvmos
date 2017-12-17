@@ -1,4 +1,5 @@
 #include <kernel/datalayer/file.h>
+#include <kernel/datalayer/ptrBlks.h>
 
 size_t file_read(
     file_meta_t *file,
@@ -13,7 +14,7 @@ size_t file_read(
 
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
-        &pTRBlks, file);
+        &ptrBlks, file);
 
     size_t bytesRead = 0;
 #define bufPos bytesRead
