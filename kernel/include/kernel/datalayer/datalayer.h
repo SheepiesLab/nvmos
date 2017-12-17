@@ -47,7 +47,7 @@ int datalayer_resizeDatalayer(
 int datalayer_unloadDatalayer(
 	datalayer_t *datalayer);
 
-
+/*
 
 struct nvmos_dl_fileHandle_struct;
 typedefe struct nvmos_dl_fileHandle_struct file_t;
@@ -102,5 +102,7 @@ int nvmos_dl_allocatePageToProcess (process_t *process, size_t size, nvmos_ptr_t
 int nvmos_dl_freePageFromProcess (process_t *process, nvmos_ptr_t allocationAddress);
 
 int nvmos_dl_removeProcess (process_t *process);
+
+*/
 
 #endif
