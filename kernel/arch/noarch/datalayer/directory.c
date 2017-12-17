@@ -1,4 +1,5 @@
 #include <kernel/datalayer/directory.h>
+#include <kernel/datalayer/ptrBlks.h>
 #include <string.h>
 
 void swapFileRef(dir_fileRef_t *a, dir_fileRef_t *b)
@@ -33,7 +34,7 @@ dir_fileRefId_t dir_addFileRef(
     meta_meta_t *fileMeta,
     nvmos_dl_allocator_t *allocator)
 {
-    if (dir_fileNameUsed(dir, fileName))
+    if (dir_fileNameUsed(dir, (char *)fileName))
         return dir_fileRefId_inval;
 
     size_t fileRefsLen = dir->fileSize / 0x100;
@@ -54,7 +55,7 @@ dir_fileRefId_t dir_addFileRef(
 
     memcpy(newFileRef->fileName, fileName, 252);
     newFileRef->fileMetaPtr = (uint32_t)fileMeta;
-    ptrBlks_saveToFileMeta(&ptRBlks, dir);
+    ptrBlks_saveToFileMeta(&ptrBlks, dir);
     return dir_rePosFileRef(dir, newFileRefId);
 }
 
@@ -77,7 +78,7 @@ dir_fileRefId_t dir_rePosFileRef(
     {
         prev = dir_getFileRefById(dir, fileRefId - 1);
         InvalidCases(prev);
-        cmpRes = strcmp(this->fileName, prev->fileName);
+        int cmpRes = strcmp(this->fileName, prev->fileName);
         if (cmpRes == 0)
         {
             return dir_fileRefId_inval;
@@ -94,7 +95,7 @@ dir_fileRefId_t dir_rePosFileRef(
         }
     }
 
-    while (fileRefId != dir->size / 256 - 1)
+    while (fileRefId != dir->fileSize / 256 - 1)
     {
         next = dir_getFileRefById(dir, fileRefId + 1);
         InvalidCases(next);
@@ -128,7 +129,7 @@ dir_fileRefId_t fileRefBinSearch(
 {
     if (from > to)
         return dir_fileRefId_inval;
-    mid = (from + to) / 2;
+    dir_fileRefId_t mid = (from + to) / 2;
     char *targetFN = dir_getFileRefById(dir, mid)->fileName;
     int cmpRes = strcmp(targetFN, fileName);
     if (cmpRes == 0)
@@ -181,7 +182,7 @@ dir_fileRef_t *dir_getFileRefById(
         (dir_fileRefBlk_t *)ptrBlks_getDataBlkAt(&ptrBlks, blkId);
     if (fileRefBlk == NULL)
         return NULL;
-    return fileRefBlk->fileRefs[fileRefId];
+    return &(fileRefBlk->fileRefs[fileRefId]);
 }
 
 bool dir_fileNameUsed(
@@ -209,7 +210,7 @@ dir_fileRefId_t dir_renameFileRef(
         return dir_fileRefId_inval;
     }
 
-    dir_fileRef_t *fileRef = dir_getFileRefById(dir, fileRefId);
+    dir_fileRef_t *fileRef = dir_searchFileRef(dir, fileName);
     if (fileRef == NULL)
         return dir_fileRefId_inval;
 
@@ -234,8 +235,8 @@ int dir_delFileRef(
     if (fileRef == NULL)
         return -1;
 
-    memset(newFileRef->fileName, 0, 252);
-    newFileRef->fileMetaPtr = NULL;
+    memset(fileRef->fileName, 0, 252);
+    fileRef->fileMetaPtr = NULL;
     dir->fileSize -= 0x100;
 
     size_t fileRefsLen = dir->fileSize / 0x100;
@@ -245,10 +246,10 @@ int dir_delFileRef(
     {
         ptrBlks_t ptrBlks;
         ptrBlks_constructFromFileMeta(&ptrBlks, dir);
-        ptrBlks_popBlks(ptrBlks, 1, allocator);
+        ptrBlks_popBlks(&ptrBlks, 1, allocator);
     }
 
     ptrBlks_saveToFileMeta(
-        &pTRBlks, dir);
+        &ptrBlks, dir);
     return 0;
 }

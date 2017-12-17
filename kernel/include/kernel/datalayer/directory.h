@@ -3,6 +3,7 @@
 
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/meta.h>
+#include <kernel/datalayer/file.h>
 #include <kernel/datalayer/ptrBlks.h>
 #include <kernel/datalayer/allocator/allocator.h>
 
