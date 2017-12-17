@@ -1,3 +1,6 @@
+#ifndef _PTRBLKS_H_
+#define _PTRBLKS_H_
+
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/meta.h>
 
@@ -36,7 +39,8 @@ struct ptrBlks
 };
 typedef struct ptrBlks ptrBlks_t;
 
-#define PTRBLKS_MAX 0x40100401
+#define PTRBLKS_MAXID 0x40100400
+#define PTRBLKS_MAXSIZE 0x40100401
 
 void ptrBlks_construct(
     ptrBlks_t *ptrBlks,
@@ -69,3 +73,5 @@ int ptrBlks_popBlks(
     ptrBlks_t *ptrBlks,
     size_t len,
     nvmos_dl_allocator_t *allocator);
+
+#endif

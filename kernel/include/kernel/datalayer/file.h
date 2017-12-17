@@ -1,5 +1,9 @@
+#ifndef _FILE_H_
+#define _FILE_H_
+
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/ptrBlks.h>
+#include <kernel/datalayer/allocator/allocator.h>
 
 struct file_meta
 {
@@ -12,32 +16,44 @@ struct file_meta
 };
 typedef struct file_meta file_meta_t;
 
-int file_read(
-    file_meta_t *meta,
+#define FILE_MAXSIZE (PTRBLKS_MAXSIZE << 12)
+
+size_t file_read(
+    file_meta_t *file,
     char *buf,
     size_t pos,
     size_t len);
 
-int file_write(
-    file_meta_t *meta,
+uint8_t file_getByteAt(
+    file_meta_t *file,
+    size_t pos);
+
+size_t file_write(
+    file_meta_t *filemeta,
     char *buf,
     size_t pos,
-    size_t len);
+    size_t len,
+    nvmos_dl_allocator_t *alloc);
 
-int file_append(
-    file_meta_t *meta,
+size_t file_append(
+    file_meta_t *file,
     char *buf,
-    size_t len);
+    size_t len,
+    nvmos_dl_allocator_t *alloc);
 
 int file_discardTail(
-    file_meta_t *meta,
-    size_t len);
+    file_meta_t *file,
+    size_t len,
+    nvmos_dl_allocator_t *alloc);
 
 int file_removeFile(
-    file_meta_t *meta);
+    file_meta_t *file,
+    nvmos_dl_allocator_t *alloc);
 
-int file_getMap(
-    file_meta_t *meta,
+size_t file_getMap(
+    file_meta_t *file,
     nvmos_ptr_t *buf,
     size_t fromBlk,
     size_t len);
+
+#endif

@@ -30,7 +30,7 @@ bool dir_isDir(meta_meta_t *dir)
 dir_fileRefId_t dir_addFileRef(
     file_meta_t *dir,
     uint8_t *fileName,
-    file_meta_t fileMeta,
+    meta_meta_t *fileMeta,
     nvmos_dl_allocator_t *allocator)
 {
     if (dir_fileNameUsed(dir, fileName))
@@ -54,6 +54,7 @@ dir_fileRefId_t dir_addFileRef(
 
     memcpy(newFileRef->fileName, fileName, 252);
     newFileRef->fileMetaPtr = (uint32_t)fileMeta;
+    ptrBlks_saveToFileMeta(&pTRBlks, dir);
     return dir_rePosFileRef(dir, newFileRefId);
 }
 
@@ -147,7 +148,7 @@ dir_fileRefId_t fileRefBinSearch(
     return dir_fileRefId_inval;
 }
 
-dir_fileRefId_t dir_searchFile(
+dir_fileRefId_t dir_searchFileRef(
     file_meta_t *dir,
     char *fileName)
 {
@@ -185,10 +186,10 @@ bool dir_fileNameUsed(
     file_meta_t *dir,
     char *fileName)
 {
-    return dir_searchFile(dir, fileName) != dir_fileRefId_inval;
+    return dir_searchFileRef(dir, fileName) != dir_fileRefId_inval;
 }
 
-dir_fileRefId_t dir_renameFile(
+dir_fileRefId_t dir_renameFileRef(
     file_meta_t *dir,
     char *fileName,
     char *newFileName)
@@ -214,7 +215,7 @@ dir_fileRefId_t dir_renameFile(
     return dir_rePosFileRef(dir, fileRefId);
 }
 
-int dir_delFile(
+int dir_delFileRef(
     file_meta_t *dir,
     char *fileName,
     nvmos_dl_allocator_t *allocator)
@@ -222,7 +223,7 @@ int dir_delFile(
     uint8_t newFileName[252];
     memset(newFileName, 0xFF, 252);
     dir_fileRefId_t newFileRefId =
-        dir_renameFile(dir, fileName, newFileName);
+        dir_renameFileRef(dir, fileName, newFileName);
 
     if (newFileRefId == dir_fileRefId_inval)
         return -1;
@@ -245,5 +246,7 @@ int dir_delFile(
         ptrBlks_popBlks(ptrBlks, 1, allocator);
     }
 
+    ptrBlks_saveToFileMeta(
+        &pTRBlks, dir);
     return 0;
 }
