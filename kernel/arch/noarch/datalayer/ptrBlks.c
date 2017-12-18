@@ -13,7 +13,7 @@ void ptrBlks_construct(
     ptrBlks->_2ndPtrBlk = _2ndPtrBlk;
     ptrBlks->_3rdPtrBlk = _3rdPtrBlk;
 
-    for (size_t i = 0; i < PTRBLKS_MAX; ++i)
+    for (size_t i = 0; i < PTRBLKS_MAXSIZE; ++i)
     {
         if (ptrBlks_getDataBlkAt(ptrBlks, i) == NULL)
         {
@@ -43,7 +43,7 @@ void ptrBlks_constructFromFileMeta(
         }
     }
 
-    ptrBlks->size = PTRBLKS_MAX;
+    ptrBlks->size = PTRBLKS_MAXSIZE;
 }
 
 void ptrBlks_saveToFileMeta(
@@ -219,7 +219,7 @@ int ptrBlks_pushBlks(
                     return -1;
                 current2ndPtr = (ptrBlks_2ndBlk_t *)newPtrBlk;
                 ptrBlks->_3rdPtrBlk->_2ndBlkPtrs[current2nd] =
-                    (ptrBlks2ndBlk_t *)newPtrBlk;
+                    (ptrBlks_2ndBlk_t *)newPtrBlk;
             }
             while (current1st < 0x400)
             {
@@ -268,7 +268,7 @@ int ptrBlks_popBlks(
         len = ptrBlks->size;
     }
 
-    if (ptrBlks->size >= PTRBLKS_MAX)
+    if (ptrBlks->size >= PTRBLKS_MAXSIZE)
     {
         return -1;
     }
