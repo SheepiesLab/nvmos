@@ -10,6 +10,7 @@
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/file.h>
 #include <kernel/datalayer/proc.h>
+#include <kernel/datalayer/allocator/allocator.h>
 
 
 
@@ -30,5 +31,24 @@ struct meta_meta
 	uint32_t flags;
 };
 typedef struct meta_meta meta_meta_t;
+
+typedef struct {
+	meta_meta_t metas[93];
+	uint32_t nextBlk;
+} meta_metaBlk_t;
+
+meta_meta_t *meta_getNextFreeMeta(
+	meta_metaBlk_t *metaBlk, 
+	nvmos_dl_allocator_t *alloc);
+
+bool meta_isFile(meta_meta_t *meta);
+bool meta_isDir(meta_meta_t *meta);
+bool meta_isProc(meta_meta_t *meta);
+bool meta_isFree(meta_meta_t *meta);
+
+void meta_setFile(meta_meta_t *meta);
+void meta_setDir(meta_meta_t *meta);
+void meta_setProc(meta_meta_t *meta);
+void meta_setFree(meta_meta_t *meta);
 
 #endif
