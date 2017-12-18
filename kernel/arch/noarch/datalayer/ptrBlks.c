@@ -455,7 +455,7 @@ int ptrBlks_popBlks(
         len -= 1;
         ptrBlks->size -= 1;
         nvmos_dl_alloc_deallocateBlocks(allocator, ptrBlks->1stBlk, 1);
-        ptrBlks->1stBlk = NULL;
+        ptrBlks->_1stBlk = NULL;
 
         if (len == 0)
             return 0;
