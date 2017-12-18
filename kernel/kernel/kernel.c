@@ -14,6 +14,7 @@
 #include <kernel/mman/KernelSection.h>
 #include <kernel/mman/heap/Heap.h>
 #include <kernel/datalayer/allocator/allocator.h>
+#include <kernel/datalayer/meta.h>
 
 void kernel_main(multiboot_info_t *mbt)
 {
@@ -190,6 +191,8 @@ void kernel_main(multiboot_info_t *mbt)
             &datalayerBlockAllocator,
             5);
     printf("ThirdAlloc: %p\n", thirdAlloc);
+
+    printf("Sizeof meta_meta_t: %d\n", sizeof(meta_meta_t));
 
     while (1)
     {
