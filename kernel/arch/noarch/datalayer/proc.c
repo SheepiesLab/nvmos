@@ -365,7 +365,7 @@ int proc_unmapFile(
     proc_meta_t *meta,
     nvmos_ptr_t procAddr,
     size_t len,
-    nvmos_dl_allocator_t *alloc);
+    nvmos_dl_allocator_t *alloc)
 {
     if (procAddr % 0x1000 != 0)
     {
