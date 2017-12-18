@@ -432,7 +432,7 @@ int ptrBlks_popBlks(
                 blkCount = 1;
             }
 
-            current1stPtr->_dataBlkPtrs[current] = NULL;
+            ptrBlks->_1stPtrBlk->_dataBlkPtrs[current] = NULL;
             len -= 1;
             ptrBlks->size -= 1;
             current = (ptrBlks->size - 1) % 0x400;
@@ -454,7 +454,7 @@ int ptrBlks_popBlks(
     {
         len -= 1;
         ptrBlks->size -= 1;
-        nvmos_dl_alloc_deallocateBlocks(allocator, ptrBlks->1stBlk, 1);
+        nvmos_dl_alloc_deallocateBlocks(allocator, ptrBlks->_1stBlk, 1);
         ptrBlks->_1stBlk = NULL;
 
         if (len == 0)
