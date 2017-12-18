@@ -1,4 +1,5 @@
 #include <kernel/datalayer/proc.h>
+#include <kernel/datalayer/ptrBlks.h>
 
 int proc_createProc(
     proc_meta_t *meta,
@@ -68,9 +69,9 @@ int proc_allocBlks(
     if (newBlks == NULL)
         return -1;
 
-    size_t i = procAddr;
-    size_t term = procAddr + len * 0x1000;
-    pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
+    i = procAddr;
+    term = procAddr + len * 0x1000;
+    pageDir = (pageDir_t *)meta->pageDir;
     for (; i < term; i += 0x1000)
     {
         size_t pageDirIndex = i >> 22;
@@ -178,7 +179,7 @@ int proc_freeBlks(
         if (!(pageDirEntry & PAGEDIR_PRESENT) ||
             pageTable == NULL)
         {
-            return -1
+            return -1;
         }
 
         uint32_t pageTableEntry =
@@ -192,9 +193,9 @@ int proc_freeBlks(
         }
     }
 
-    size_t i = procAddr;
-    size_t term = procAddr + len * 0x1000;
-    pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
+    i = procAddr;
+    term = procAddr + len * 0x1000;
+    pageDir = (pageDir_t *)meta->pageDir;
     for (; i < term; i += 0x1000)
     {
         size_t pageDirIndex = i >> 22;
@@ -210,7 +211,7 @@ int proc_freeBlks(
 
         nvmos_dl_alloc_deallocateBlocks(
             alloc,
-            pageTableEntry & PAGEDIR_ADDR_MASK,
+            *pageTableEntry & PAGEDIR_ADDR_MASK,
             1);
         *pageTableEntry = 0;
     }
@@ -284,9 +285,9 @@ int proc_mapFile(
         }
     }
 
-    size_t i = procAddr;
-    size_t term = procAddr + len * 0x1000;
-    pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
+    i = procAddr;
+    term = procAddr + len * 0x1000;
+    pageDir = (pageDir_t *)meta->pageDir;
     for (size_t j = 0; i < term; i += 0x1000)
     {
         size_t pageDirIndex = i >> 22;
@@ -363,7 +364,8 @@ int proc_mapFile(
 int proc_unmapFile(
     proc_meta_t *meta,
     nvmos_ptr_t procAddr,
-    nvmos_dl_allocator_t *alloc)
+    size_t len,
+    nvmos_dl_allocator_t *alloc);
 {
     if (procAddr % 0x1000 != 0)
     {
@@ -394,7 +396,7 @@ int proc_unmapFile(
         if (!(pageDirEntry & PAGEDIR_PRESENT) ||
             pageTable == NULL)
         {
-            return -1
+            return -1;
         }
 
         uint32_t pageTableEntry =
@@ -408,9 +410,9 @@ int proc_unmapFile(
         }
     }
 
-    size_t i = procAddr;
-    size_t term = procAddr + len * 0x1000;
-    pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
+    i = procAddr;
+    term = procAddr + len * 0x1000;
+    pageDir = (pageDir_t *)meta->pageDir;
     for (; i < term; i += 0x1000)
     {
         size_t pageDirIndex = i >> 22;
@@ -483,9 +485,9 @@ int proc_mapKernel(
 
     nvmos_ptr_t newBlks = kAddr;
 
-    size_t i = procAddr;
-    size_t term = procAddr + len * 0x1000;
-    pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
+    i = procAddr;
+    term = procAddr + len * 0x1000;
+    pageDir = (pageDir_t *)meta->pageDir;
     for (; i < term; i += 0x1000)
     {
         size_t pageDirIndex = i >> 22;
@@ -593,7 +595,7 @@ int proc_unmapKernel(
         if (!(pageDirEntry & PAGEDIR_PRESENT) ||
             pageTable == NULL)
         {
-            return -1
+            return -1;
         }
 
         uint32_t pageTableEntry =
@@ -607,9 +609,9 @@ int proc_unmapKernel(
         }
     }
 
-    size_t i = procAddr;
-    size_t term = procAddr + len * 0x1000;
-    pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
+    i = procAddr;
+    term = procAddr + len * 0x1000;
+    pageDir = (pageDir_t *)meta->pageDir;
     for (; i < term; i += 0x1000)
     {
         size_t pageDirIndex = i >> 22;
@@ -642,7 +644,7 @@ int proc_removeProc(
         uint32_t *pageDirEntry =
             &(pageDir->pageDirEntries[j]);
         pageTable_t *pageTable =
-            (pageTable_t *)pageDirEntry & PAGEDIR_ADDR_MASK;
+            (pageTable_t *)(pageDirEntry & PAGEDIR_ADDR_MASK);
 
         if (!(*pageDirEntry & PAGEDIR_PRESENT) ||
             pageTable == NULL)
