@@ -644,7 +644,7 @@ int proc_removeProc(
         uint32_t *pageDirEntry =
             &(pageDir->pageDirEntries[j]);
         pageTable_t *pageTable =
-            (pageTable_t *)(pageDirEntry & PAGEDIR_ADDR_MASK);
+            (pageTable_t *)(*pageDirEntry & PAGEDIR_ADDR_MASK);
 
         if (!(*pageDirEntry & PAGEDIR_PRESENT) ||
             pageTable == NULL)
