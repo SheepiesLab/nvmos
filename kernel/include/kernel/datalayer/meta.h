@@ -34,11 +34,11 @@ typedef struct meta_meta meta_meta_t;
 
 typedef struct {
 	meta_meta_t metas[93];
-	uint32_t nextBlk;
+	uint32_t next;
 } meta_metaBlk_t;
 
 meta_meta_t *meta_getNextFreeMeta(
-	meta_metaBlk_t *metaBlk, 
+	meta_metaBlk_t **metaBlk, 
 	nvmos_dl_allocator_t *alloc);
 
 bool meta_isFile(meta_meta_t *meta);
