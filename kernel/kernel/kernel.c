@@ -155,6 +155,8 @@ void kernel_main(multiboot_info_t *mbt)
     asm("int $0x30");
     printf("After interrupt!\n");
 
+    // Datalayer Allocator
+
     nvmos_dl_allocator_t datalayerBlockAllocator;
     nvmos_dl_alloc_createAllocator(
         &datalayerBlockAllocator,
@@ -193,6 +195,8 @@ void kernel_main(multiboot_info_t *mbt)
     printf("ThirdAlloc: %p\n", thirdAlloc);
 
     printf("Sizeof meta_meta_t: %d\n", sizeof(meta_meta_t));
+
+    
 
     while (1)
     {

@@ -20,9 +20,11 @@ LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
 NOARCHDIR=arch/noarch
+TESTDIR=test
 
 include $(ARCHDIR)/make.config
 include $(NOARCHDIR)/make.config
+include $(TESTDIR)/make.config
 
 CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
 CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
@@ -32,6 +34,7 @@ LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
 KERNEL_OBJS=\
 $(KERNEL_ARCH_OBJS) \
 $(KERNEL_NOARCH_OBJS) \
+$(KERNEL_TEST_OBJS) \
 kernel/kernel.o \
 
 OBJS=\
