@@ -10,19 +10,6 @@ void nvmos_test_success(
     printf("Test: %s Case: %d Success!\n", testName, testCaseNum);
 }
 
-#define nvmos_test_fail(                             \
-    testName,                                        \
-    testCaseNum,                                     \
-    errorMsg,                                        \
-    errorMsgPara)                                    \
-    printf(                                          \
-        "---!!! Test: %s Case: %d Failed! !!!---\n", \
-        testName,                                    \
-        testCaseNum);                                \
-    printf("---!!! ErrorMsg: ");                     \
-    printf(errorMsg, errorMsgPara);                  \
-    printf(" !!!---\n");
-
 int nvmos_test_runAllTests(
     nvmos_ptr_t availMem,
     size_t availMemLen)

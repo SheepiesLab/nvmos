@@ -11,8 +11,17 @@ void nvmos_test_success(
     char *testName,
     uint32_t testCaseNum);
 
-void nvmos_test_fail(
-    char *testName,
-    uint32_t testCaseNum);
+#define nvmos_test_fail(                             \
+    testName,                                        \
+    testCaseNum,                                     \
+    errorMsg,                                        \
+    errorMsgPara)                                    \
+    printf(                                          \
+        "---!!! Test: %s Case: %d Failed! !!!---\n", \
+        testName,                                    \
+        testCaseNum);                                \
+    printf("---!!! ErrorMsg: ");                     \
+    printf(errorMsg, errorMsgPara);                  \
+    printf(" !!!---\n");
 
 #endif
