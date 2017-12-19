@@ -132,7 +132,7 @@ int printf(const char *restrict format, ...)
             char str[19];
             if (num == 0)
             {
-                str[18 - len] = 0;
+                str[18 - len] = "0";
                 ++len;
             }
             while (num != 0)
