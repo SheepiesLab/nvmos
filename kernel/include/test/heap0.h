@@ -37,8 +37,9 @@ static nvmos_test_case_heap0_test0_t case0 = {
      {FREE, 0x8, 0},
      {MALLOC, 1, 0x8}}};
 
-static nvmos_test_case_heap0_test0_t *cases[HEAP0_TEST0_TESTCASE_COUNT] =
-    {&case0};
+static nvmos_test_case_heap0_test0_t *
+    heap0_test0_cases[HEAP0_TEST0_TESTCASE_COUNT] =
+        {&case0};
 
 int nvmos_test_driver_heap0_test0(
     nvmos_ptr_t availMem,
@@ -51,6 +52,6 @@ int nvmos_test_run_heap0_test0(
     nvmos_test_case_heap0_test0_t *testCase[HEAP0_TEST0_TESTCASE_COUNT]);
 
 #define RUN_HEAP0_TEST0(availMem, availMemLen) \
-    nvmos_test_run_heap0_test0(availMem, availMemLen, cases);
+    nvmos_test_run_heap0_test0(availMem, availMemLen, heap0_test0_cases);
 
 #endif
