@@ -79,8 +79,8 @@ void kernel_main(multiboot_info_t *mbt)
                ksects[KSECTION_SECTION_HEAP].len);
 
         nvmos_test_runAllTests(
-            ksects[KSECTION_SECTION_HEAP].addr,
-            ksects[KSECTION_SECTION_HEAP].len);
+            ksects[KSECTION_SECTION_HEAP].addr % 0x100000000,
+            ksects[KSECTION_SECTION_HEAP].len % 0x100000000);
     }
 
     {
