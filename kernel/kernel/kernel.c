@@ -31,28 +31,10 @@ void kernel_main(multiboot_info_t *mbt)
     init_serial();
     printf("Hello, kernel World!\n\n");
 
-    MemoryManager mman;
-    mman_construct(&mman, mbt);
-
+    //Kernel Code Sections
     KernelSection *ksects = ksection_getKsections();
-
     if (PRINT_DEBUG)
     {
-        printf("MMap Addr: %p\n", mman.mbt->mmap_addr);
-
-        size_t mmapLength = mman_getMemoryMapLength(&mman);
-        printf("MMap Length: %d\n", (int)mmapLength);
-
-        MemoryMap mmap[mmapLength];
-        mman_getMemoryMap(&mman, mmap, mmapLength);
-        for (int i = 0; i < mmapLength; ++i)
-        {
-            printf("Addr: %p; ", mmap[i].addr);
-            printf("Len: %p; ", mmap[i].len);
-            printf("Type: %d\n", mmap[i].type);
-        }
-        printf("\n");
-
         printf("Text start:     0x%p\t",
                ksects[KSECTION_SECTION_TEXT].addr);
         printf("Text length:    0x%p\n",
@@ -79,9 +61,33 @@ void kernel_main(multiboot_info_t *mbt)
                ksects[KSECTION_SECTION_HEAP].len);
     }
 
+    // Memory Manager
+    MemoryManager mman;
+    mman_construct(&mman, mbt);
+    if (PRINT_DEBUG)
+    {
+        printf("MMap Addr: %p\n", mman.mbt->mmap_addr);
+        size_t mmapLength = mman_getMemoryMapLength(&mman);
+        printf("MMap Length: %d\n", (int)mmapLength);
+        MemoryMap mmap[mmapLength];
+        mman_getMemoryMap(&mman, mmap, mmapLength);
+        for (int i = 0; i < mmapLength; ++i)
+        {
+            printf("Addr: %p; ", mmap[i].addr);
+            printf("Len: %p; ", mmap[i].len);
+            printf("Type: %d\n", mmap[i].type);
+        }
+        printf("\n");
+    }
+
+    printf("\n");
+    printf("\n");
     nvmos_test_runAllTests(
-        (uint32_t)ksects[KSECTION_SECTION_HEAP].addr,
-        (uint32_t)ksects[KSECTION_SECTION_HEAP].len);
+        (uint32_t)ksects[KSECTION_SECTION_HEAP].addr +
+            (uint32_t)ksects[KSECTION_SECTION_HEAP].len,
+        0x40000000);
+    printf("\n");
+    printf("\n");
 
     {
         InterruptDescriptor id;
