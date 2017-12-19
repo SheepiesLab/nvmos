@@ -77,11 +77,12 @@ void kernel_main(multiboot_info_t *mbt)
                ksects[KSECTION_SECTION_HEAP].addr);
         printf("HEAP length:    0x%p\n",
                ksects[KSECTION_SECTION_HEAP].len);
-    }
-
+               
     nvmos_test_runAllTests(
         ksects[KSECTION_SECTION_HEAP].addr,
         ksects[KSECTION_SECTION_HEAP].len);
+    }
+
 
     {
         InterruptDescriptor id;

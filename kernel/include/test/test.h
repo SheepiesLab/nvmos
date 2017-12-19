@@ -24,4 +24,4 @@ void nvmos_test_success(
     printf(errorMsg, errorMsgPara);                  \
     printf(" !!!---\n");
 
-#endif
+#endifnvmos
