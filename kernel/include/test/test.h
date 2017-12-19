@@ -9,7 +9,7 @@ int nvmos_test_runAllTests(
 
 void nvmos_test_success(
     char *testName,
-    uint32_t testCaseNum);
+    size_t testCaseNum);
 
 #define nvmos_test_fail(                             \
     testName,                                        \

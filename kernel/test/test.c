@@ -5,9 +5,9 @@
 
 void nvmos_test_success(
     char *testName,
-    uint32_t testCaseNum)
+    size_t testCaseNum)
 {
-    printf("Test: %s Case: %d Success!\n", testName, testCaseNum);
+    printf("Test: %s Case: %d Success!\n", testName, (int)testCaseNum);
 }
 
 int nvmos_test_runAllTests(
