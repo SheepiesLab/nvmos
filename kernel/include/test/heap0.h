@@ -1,7 +1,7 @@
 #ifndef TEST_HEAP0_H_
 #define TEST_HEAP0_H_
 
-#include <kdef.h>
+#include <kernel/kdef.h>
 #include <kernel/mman/heap/Heap.h>
 
 typedef enum {
