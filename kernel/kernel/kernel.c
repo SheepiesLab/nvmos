@@ -80,11 +80,6 @@ void kernel_main(multiboot_info_t *mbt)
         printf("\n");
     }
 
-    printf("%d\n", 0);
-    printf("%d\n", 1);
-    printf("%d\n", 2);
-    printf("%d\n", 3);
-
     printf("\n");
     printf("\n");
     nvmos_test_runAllTests(
