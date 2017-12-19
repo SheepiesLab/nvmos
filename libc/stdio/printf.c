@@ -132,8 +132,8 @@ int printf(const char *restrict format, ...)
             char str[19];
             if (num == 0)
             {
-                str[18 - len] = "0";
-                ++len;
+                if (!print("0", 1))
+                    return -1;
             }
             while (num != 0)
             {
