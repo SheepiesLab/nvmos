@@ -77,39 +77,11 @@ void kernel_main(multiboot_info_t *mbt)
                ksects[KSECTION_SECTION_HEAP].addr);
         printf("HEAP length:    0x%p\n",
                ksects[KSECTION_SECTION_HEAP].len);
-
-        // Test Heap
-        int *testIntPtr = (int *)heap_malloc(&(mman.heap),
-                                             sizeof(int));
-        int *testIntPtr2 = (int *)heap_malloc(&(mman.heap),
-                                              sizeof(int));
-        int *testIntArrPtr = (int *)heap_calloc(
-            &mman.heap,
-            100,
-            sizeof(int));
-        int *testIntPtr3 = (int *)heap_malloc(&(mman.heap),
-                                              sizeof(int));
-        heap_free(&mman.heap, (nvmos_ptr_t)testIntPtr2);
-        int *testIntPtr4 = (int *)heap_malloc(&(mman.heap),
-                                              sizeof(int));
-
-        *testIntPtr = 0;
-        for (int i = 0; i < 100; ++i)
-            testIntArrPtr[i] = 0;
-        *testIntPtr3 = 0;
-        *testIntPtr4 = 0;
-
-        printf("heapManStart: 0x%p\n", mman.heap.heapStart);
-        printf("heapManEnd: 0x%p\n", mman.heap.heapEnd);
-        printf("testPtr1: 0x%p\n", testIntPtr);
-        printf("testPtr2: 0x%p\n", testIntPtr2);
-        printf("testPtrA: 0x%p\n", testIntArrPtr);
-        printf("testPtr3: 0x%p\n", testIntPtr3);
-        printf("testPtr4: 0x%p\n", testIntPtr4);
-
-        uint16_t *com1 = (nvmos_ptr_t)0x400;
-        printf("com1: 0x%p\n", *com1);
     }
+
+    nvmos_test_runAllTests(
+        ksects[KSECTION_SECTION_HEAP].addr,
+        ksects[KSECTION_SECTION_HEAP].len);
 
     {
         InterruptDescriptor id;
@@ -195,8 +167,6 @@ void kernel_main(multiboot_info_t *mbt)
     printf("ThirdAlloc: %p\n", thirdAlloc);
 
     printf("Sizeof meta_meta_t: %d\n", sizeof(meta_meta_t));
-
-    
 
     while (1)
     {
