@@ -24,7 +24,7 @@ void nvmos_test_success(
     printf(errorMsg, __VA_ARGS__);                   \
     printf(" !!!---\n");
 
-#define nvmos_test_TestRunner(testPart, testNo) \
+#define nvmos_test_testRunner(testPart, testNo) \
     int nvmos_test_run_##testPart##_##testNo(   \
         nvmos_ptr_t availMem,                   \
         size_t availMemLen,                     \
