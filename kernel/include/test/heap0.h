@@ -3,6 +3,7 @@
 
 #include <kernel/kdef.h>
 #include <kernel/mman/heap/Heap.h>
+#include <test/test.h>
 
 typedef enum {
     MALLOC,
@@ -38,7 +39,7 @@ static nvmos_test_case_heap0_test0_t case0 = {
      {MALLOC, 1, 0x8}}};
 
 static nvmos_test_case_heap0_test0_t *
-    heap0_test0_cases[HEAP0_TEST0_TESTCASE_COUNT] =
+    heap0_test0_cases[heap0_test0_TESTCASE_COUNT] =
         {&case0};
 
 nvmos_test_testDriver(heap0, test0);
