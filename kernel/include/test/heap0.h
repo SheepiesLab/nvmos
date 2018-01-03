@@ -22,7 +22,7 @@ typedef struct
     testSeqUnit_t testSeq[];
 } nvmos_test_case_heap0_test0_t;
 
-#define HEAP0_TEST0_TESTCASE_COUNT 1
+#define heap0_test0_TESTCASE_COUNT 1
 
 static nvmos_test_case_heap0_test0_t case0 = {
     10,
@@ -41,17 +41,8 @@ static nvmos_test_case_heap0_test0_t *
     heap0_test0_cases[HEAP0_TEST0_TESTCASE_COUNT] =
         {&case0};
 
-int nvmos_test_driver_heap0_test0(
-    nvmos_ptr_t availMem,
-    size_t availMemLen,
-    nvmos_test_case_heap0_test0_t *testCase);
+nvmos_test_testDriver(heap0, test0);
 
-int nvmos_test_run_heap0_test0(
-    nvmos_ptr_t availMem,
-    size_t availMemLen,
-    nvmos_test_case_heap0_test0_t *testCase[HEAP0_TEST0_TESTCASE_COUNT]);
-
-#define RUN_HEAP0_TEST0(availMem, availMemLen) \
-    nvmos_test_run_heap0_test0(availMem, availMemLen, heap0_test0_cases);
+nvmos_test_testRunner(heap0, test0);
 
 #endif
