@@ -37,7 +37,7 @@ void nvmos_test_success(
         for (size_t i = 0; i < testPart##_##testNo##_TESTCASE_COUNT; ++i) \
         {                                                                 \
             int testResult =                                              \
-                nvmos_test_driver_##testPart##testNo(                     \
+                nvmos_test_driver_##testPart##_##testNo(                     \
                     availMem,                                             \
                     availMemLen,                                          \
                     testCase[i]);                                         \
