@@ -36,7 +36,7 @@ static nvmos_test_testcase_t(heap0, test0) case0 = {
      {FREE, 0x8, 0},
      {MALLOC, 1, 0x8}}};
 
-static const unsigned int nvmos_test_testcaseCount(heap0, test0) 1;
+static const unsigned int nvmos_test_testcaseCount(heap0, test0) = 1;
 
 static nvmos_test_testcase_t(heap0, test0) *
     nvmos_test_cases(heap0, test0)
