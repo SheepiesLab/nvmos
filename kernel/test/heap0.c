@@ -19,18 +19,39 @@ nvmos_test_testDriver(heap0, test0)
                     &heap,
                     testCase->testSeq[i].sizeOrLoc);
             if (result == NULL)
+            {
+                nvmos_test_fail(
+                    testName,
+                    i,
+                    "Case failed at %d",
+                    testResult);
                 CLEANUP_RETURN(-i);
+            }
 
             if (result !=
                 testCase->testSeq[i].result + availMem)
+            {
+                nvmos_test_fail(
+                    testName,
+                    i,
+                    "Case failed at %d",
+                    testResult);
                 CLEANUP_RETURN(-i);
+            }
         }
         else
         {
             if (heap_free(
                     &heap,
                     testCase->testSeq[i].sizeOrLoc + availMem))
+            {
+                nvmos_test_fail(
+                    testName,
+                    i,
+                    "Case failed at %d",
+                    testResult);
                 CLEANUP_RETURN(-i);
+            }
         }
     }
     CLEANUP_RETURN(0);

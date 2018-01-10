@@ -37,24 +37,29 @@ void nvmos_test_success(
         for (size_t i = 0; i < testPart##_##testNo##_TESTCASE_COUNT; ++i) \
         {                                                                 \
             int testResult =                                              \
-                nvmos_test_driver_##testPart##_##testNo(                     \
+                nvmos_test_driver_##testPart##_##testNo(                  \
                     availMem,                                             \
                     availMemLen,                                          \
                     testCase[i]);                                         \
             if (testResult)                                               \
             {                                                             \
-                nvmos_test_fail(                                          \
-                    testName,                                             \
-                    i,                                                    \
-                    "Case failed at %d",                                  \
-                    testResult);                                          \
             }                                                             \
             else                                                          \
             {                                                             \
                 nvmos_test_success(testName, i);                          \
             }                                                             \
         }                                                                 \
+        memset(availMem, 0, availMemLen);                                 \
     }
+
+#define nvmos_test_testcase_t(testPart, testNo) \
+    nvmos_test_case_##testPart##_##testNo##_t
+
+#define nvmos_test_cases(testPart, testNo) \
+    testPart##_##testNo##_##cases
+
+#define nvmos_test_testcaseCount(testPart, testNo) \
+    testPart##_##testNo##_TESTCASE_COUNT
 
 #define nvmos_test_testDriver(testPart, testNo)  \
     int nvmos_test_driver_##testPart##_##testNo( \

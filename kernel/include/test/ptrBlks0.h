@@ -1,19 +1,32 @@
 #ifndef TEST_PTRBLKS0_H_
 #define TEST_PTRBLKS0_H_
 
-#define ptrBlks0_test0_TESTCASE_COUNT 0
-
 typedef struct
 {
-    uint8_t *data;
     int32_t *pushSeq;
-} nvmos_test_case_ptrBlks0_test0_t;
+    size_t pushSeqLen;
+    size_t maxBlkCount;
+} nvmos_test_testcase_t(ptrBlks0, test0);
+
+#define nvmos_test_testcaseCount(ptrBlks0, test0) 1
+
+static int32_t case0_pushSeq[12] =
+    {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+
+static nvmos_test_testcase_t(TEST_PART, TEST_NAME) case0 =
+    {
+        .pushSeq = case0_pushSeq,
+        .pushSeqLen = 12,
+        .maxBlkCount = 4096
+};
+
+static nvmos_test_testcase_t(TEST_PART, TEST_NAME) *
+    nvmos_test_cases(TEST_PART, TEST_NAME)
+        [nvmos_test_testcaseCount(TEST_PART, TEST_NAME)] =
+    {&case0};
 
 nvmos_test_testDriver(ptrBlks0, test0);
 
-int nvmos_test_run_ptrBlks0_test0(
-    nvmos_ptr_t availMem,
-    size_t availMemLen,
-    nvmos_test_case_ptrBlks0_test0_t *testCase[PTRBLKS0_TEST0_TESTCASE_COUNT]);
+nvmos_test_testRunner(ptrBlks0, test0);
 
 #endif
