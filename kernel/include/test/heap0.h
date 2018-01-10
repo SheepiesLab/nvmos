@@ -5,9 +5,6 @@
 #include <kernel/mman/heap/Heap.h>
 #include <test/test.h>
 
-#define TEST_PART heap0
-#define TEST_NAME test0
-
 typedef enum {
     MALLOC,
     FREE
@@ -24,9 +21,9 @@ typedef struct
 {
     size_t actionLen;
     testSeqUnit_t testSeq[];
-} nvmos_test_testcase_t(TEST_PART, TEST_NAME);
+} nvmos_test_testcase_t(heap0, test0);
 
-static nvmos_test_testcase_t(TEST_PART, TEST_NAME) case0 = {
+static nvmos_test_testcase_t(heap0, test0) case0 = {
     10,
     {{MALLOC, 1, 0x8},
      {MALLOC, 2, 0x18},
@@ -39,18 +36,15 @@ static nvmos_test_testcase_t(TEST_PART, TEST_NAME) case0 = {
      {FREE, 0x8, 0},
      {MALLOC, 1, 0x8}}};
 
-#define nvmos_test_testcaseCount(TEST_PART, TEST_NAME) 1
+static const unsigned int nvmos_test_testcaseCount(heap0, test0) 1;
 
-static nvmos_test_testcase_t(TEST_PART, TEST_NAME) *
-    nvmos_test_cases(TEST_PART, TEST_NAME)
-        [nvmos_test_testcaseCount(TEST_PART, TEST_NAME)] =
+static nvmos_test_testcase_t(heap0, test0) *
+    nvmos_test_cases(heap0, test0)
+        [nvmos_test_testcaseCount(heap0, test0)] =
     {&case0};
 
-nvmos_test_testDriver(TEST_PART, TEST_NAME);
+nvmos_test_testDriver(heap0, test0);
 
-nvmos_test_testRunner(TEST_PART, TEST_NAME);
-
-#undef TEST_PART
-#undef TEST_NAME
+nvmos_test_testRunner(heap0, test0);
 
 #endif
