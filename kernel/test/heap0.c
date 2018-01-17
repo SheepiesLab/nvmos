@@ -8,6 +8,7 @@ nvmos_test_testDriver(heap0, test0)
     return (x);
 
 #define testName "heap0_test0"
+#define testCaseNum 0
 
     Heap heap;
     heap_construct(&heap, availMem, availMem + availMemLen);
@@ -24,9 +25,9 @@ nvmos_test_testDriver(heap0, test0)
             {
                 nvmos_test_fail(
                     testName,
-                    i,
+                    testCaseNum,
                     "Case failed at %d",
-                    testResult);
+                    i);
                 CLEANUP_RETURN(-i);
             }
 
@@ -60,6 +61,7 @@ nvmos_test_testDriver(heap0, test0)
 
 #undef CLEANUP_RETURN
 #undef testName
+#undef testCaseNum
 }
 
 nvmos_test_defTestRunner(heap0, test0)
