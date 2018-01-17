@@ -7,6 +7,8 @@ nvmos_test_testDriver(heap0, test0)
     memset(availMem, 0, availMemLen); \
     return (x);
 
+#define testName "heap0_test0"
+
     Heap heap;
     heap_construct(&heap, availMem, availMem + availMemLen);
 
@@ -57,6 +59,7 @@ nvmos_test_testDriver(heap0, test0)
     CLEANUP_RETURN(0);
 
 #undef CLEANUP_RETURN
+#undef testName
 }
 
 nvmos_test_defTestRunner(heap0, test0)
