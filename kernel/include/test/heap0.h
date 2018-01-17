@@ -36,7 +36,7 @@ static nvmos_test_testcase_t(heap0, test0) case0 = {
      {FREE, 0x8, 0},
      {MALLOC, 1, 0x8}}};
 
-nvmos_test_defTestcaseCount(heap0, test0, 1)
+#define heap0_test0_TESTCASE_COUNT 1
 
 static nvmos_test_testcase_t(heap0, test0) *
     nvmos_test_cases(heap0, test0)
