@@ -22,7 +22,7 @@ static nvmos_test_testcase_t(ptrBlks0, test0) nvmos_test_testcase(ptrBlks0, test
 static nvmos_test_testcase_t(ptrBlks0, test0) *
     nvmos_test_cases(ptrBlks0, test0)
         [nvmos_test_testcaseCount(ptrBlks0, test0)] =
-    {&case0};
+    {&nvmos_test_testcase(ptrBlks0, test0, case0)};
 
 nvmos_test_testDriver(ptrBlks0, test0);
 
