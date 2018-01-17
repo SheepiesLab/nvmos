@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include <test/heap0.h>
+#include <test/ptrBlks.h>
 
 void nvmos_test_success(
     char *testName,

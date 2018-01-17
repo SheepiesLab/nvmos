@@ -17,7 +17,7 @@ nvmos_test_testDriver(ptrBlks0, test0)
     size_t pushSeqPos = 0;
     size_t blkCount = 0;
 
-        for (; pushSeqPos < testCase->pushSeqLen; ++pushSeqPos)
+    for (; pushSeqPos < testCase->pushSeqLen; ++pushSeqPos)
     {
         if (blkCount + testCase->pushSeq[pushSeqPos] < 0 ||
             blkCount + testCase->pushSeq[pushSeqPos] > testCase->maxBlkCount)
@@ -90,7 +90,8 @@ nvmos_test_testDriver(ptrBlks0, test0)
                 i);
             return -1;
         }
-        if (blkPtr != blkList[i]){
+        if (blkPtr != blkList[i])
+        {
             nvmos_test_fail(
                 "ptrBlks0",
                 0,
