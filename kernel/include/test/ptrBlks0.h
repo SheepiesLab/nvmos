@@ -8,7 +8,7 @@ typedef struct
     size_t maxBlkCount;
 } nvmos_test_testcase_t(ptrBlks0, test0);
 
-#define nvmos_test_defTestcaseCount(ptrBlks0, test0, 1)
+nvmos_test_defTestcaseCount(ptrBlks0, test0, 1)
 
 static int32_t case0_pushSeq[12] =
     {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
