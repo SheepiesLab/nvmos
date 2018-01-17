@@ -61,6 +61,9 @@ void nvmos_test_success(
 #define nvmos_test_testcaseCount(testPart, testNo) \
     testPart##_##testNo##_TESTCASE_COUNT
 
+#define nvmos_test_defTestcaseCount(testPart, testNo, testcaseCount) \
+    static const testPart##_##testNo##_TESTCASE_COUNT = testcaseCount;
+
 #define nvmos_test_testDriver(testPart, testNo)  \
     int nvmos_test_driver_##testPart##_##testNo( \
         nvmos_ptr_t availMem,                    \
