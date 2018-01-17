@@ -36,9 +36,9 @@ nvmos_test_testDriver(heap0, test0)
             {
                 nvmos_test_fail(
                     testName,
-                    i,
+                    testCaseNum,
                     "Case failed at %d",
-                    testResult);
+                    i);
                 CLEANUP_RETURN(-i);
             }
         }
