@@ -23,7 +23,7 @@ typedef struct
     testSeqUnit_t testSeq[];
 } nvmos_test_testcase_t(heap0, test0);
 
-static nvmos_test_testcase_t(heap0, test0) case0 = {
+static nvmos_test_testcase_t(heap0, test0) nvmos_test_testcase(heap0, test0, case0) = {
     10,
     {{MALLOC, 1, 0x8},
      {MALLOC, 2, 0x18},
@@ -41,7 +41,7 @@ static nvmos_test_testcase_t(heap0, test0) case0 = {
 static nvmos_test_testcase_t(heap0, test0) *
     nvmos_test_cases(heap0, test0)
         [nvmos_test_testcaseCount(heap0, test0)] =
-    {&case0};
+    {&nvmos_test_testcase(heap0, test0, case0)};
 
 nvmos_test_testDriver(heap0, test0);
 

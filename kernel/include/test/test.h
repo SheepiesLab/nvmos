@@ -55,6 +55,9 @@ void nvmos_test_success(
 #define nvmos_test_testcase_t(testPart, testNo) \
     nvmos_test_case_##testPart##_##testNo##_t
 
+#define nvmos_test_testcase(testPart, testNo, testCase) \
+    testPart##testNo##testCase
+
 #define nvmos_test_cases(testPart, testNo) \
     testPart##_##testNo##_##cases
 
