@@ -15,7 +15,7 @@ nvmos_test_testDriver(ptrBlks0, test0)
     nvmos_ptr_t blkList[testCase->maxBlkCount];
 
     size_t pushSeqPos = 0;
-    size_t blkCount = 0
+    size_t blkCount = 0;
 
         for (; pushSeqPos < testCase->pushSeqLen; ++pushSeqPos)
     {
@@ -50,7 +50,7 @@ nvmos_test_testDriver(ptrBlks0, test0)
                 return -1;
             }
 
-            for (int i = 1; i < testCase->pushSeq[pushSeqPos], ++i)
+            for (int i = 1; i < testCase->pushSeq[pushSeqPos]; ++i)
             {
                 blkList[blkCount + i] = blkList[blkCount] + 0x1000;
             }
