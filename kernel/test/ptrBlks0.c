@@ -4,6 +4,8 @@
 #include <kernel/datalayer/allocator/allocator.h>
 #include <kernel/datalayer/ptrBlks.h>
 
+#include <stdlib.h>
+
 nvmos_test_testDriver(ptrBlks0, test0)
 {
     nvmos_dl_allocator_t allocator;
