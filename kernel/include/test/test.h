@@ -27,12 +27,14 @@ void nvmos_test_success(
 #define nvmos_test_testRunner(testPart, testNo) \
     int nvmos_test_run_##testPart##_##testNo(   \
         nvmos_ptr_t availMem,                   \
-        size_t availMemLen,                     \
-        nvmos_test_case_##testPart##_##testNo##_t *testCase[testPart##_##testNo##_TESTCASE_COUNT])
+        size_t availMemLen)
 
 #define nvmos_test_defTestRunner(testPart, testNo)                        \
     nvmos_test_testRunner(testPart, testNo)                               \
     {                                                                     \
+        nvmos_test_testcase_t(testPart, testNo) * testCase;               \
+        size_t testPart##_##testNo##_TESTCASE_COUNT =                     \
+            nvmos_test_getTestCases(testPart, testNo)(&testCase);         \
         char testName[] = #testPart "_" #testNo;                          \
         for (size_t i = 0; i < testPart##_##testNo##_TESTCASE_COUNT; ++i) \
         {                                                                 \
@@ -58,6 +60,9 @@ void nvmos_test_success(
 #define nvmos_test_testcase(testPart, testNo, testCase) \
     testPart##testNo##testCase
 
+#define nvmos_test_getTestCases(testPart, testNo) \
+    nvmos_test_getTestCases_##testPart##_##testNo
+
 #define nvmos_test_cases(testPart, testNo) \
     testPart##_##testNo##_##cases
 
@@ -71,6 +76,6 @@ void nvmos_test_success(
         nvmos_test_case_##testPart##_##testNo##_t *testCase)
 
 #define nvmos_test_runTest(testPart, testNo, availMem, availMemLen) \
-    nvmos_test_run_##testPart##_##testNo(availMem, availMemLen, testPart##_##testNo##_cases);
+    nvmos_test_run_##testPart##_##testNo(availMem, availMemLen);
 
 #endif
