@@ -83,8 +83,8 @@ void kernel_main(multiboot_info_t *mbt)
     printf("\n");
     printf("\n");
     nvmos_test_runAllTests(
-        (uint32_t)ksects[KSECTION_SECTION_HEAP].addr +
-            (uint32_t)ksects[KSECTION_SECTION_HEAP].len,
+        (nvmos_ptr_t)(ksects[KSECTION_SECTION_HEAP].addr +
+                      ksects[KSECTION_SECTION_HEAP].len),
         0x40000000);
     printf("\n");
     printf("\n");
