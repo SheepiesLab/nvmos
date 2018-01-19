@@ -11,8 +11,7 @@ nvmos_test_testDriver(heap0, test0)
 #define testCaseNum 0
 
     Heap heap;
-    heap_bt
-    construct(&heap, availMem, availMem + availMemLen);
+    heap_construct(&heap, availMem, availMem + availMemLen);
 
     for (size_t i = 0; i < testCase->actionLen; ++i)
     {
