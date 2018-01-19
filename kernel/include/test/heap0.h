@@ -20,11 +20,10 @@ typedef struct
 typedef struct
 {
     size_t actionLen;
-    testSeqUnit_t testSeq[];
+    testSeqUnit_t *testSeq;
 } nvmos_test_testcase_t(heap0, test0);
 
-static nvmos_test_testcase_t(heap0, test0) nvmos_test_testcase(heap0, test0, case0) = {
-    10,
+testSeqUnit_t case0_testSeq[] =
     {{MALLOC, 1, 0x8},
      {MALLOC, 2, 0x18},
      {MALLOC, 3, 0x30},
@@ -34,7 +33,12 @@ static nvmos_test_testcase_t(heap0, test0) nvmos_test_testcase(heap0, test0, cas
      {MALLOC, 3, 0x18},
      {MALLOC, 2, 0x38},
      {FREE, 0x8, 0},
-     {MALLOC, 1, 0x8}}};
+     {MALLOC, 1, 0x8}};
+
+static nvmos_test_testcase_t(heap0, test0)
+    nvmos_test_testcase(heap0, test0, case0) = {
+        10,
+        case0_testSeq};
 
 #define heap0_test0_TESTCASE_COUNT 1
 
