@@ -12,8 +12,8 @@ void nvmos_test_success(
 }
 
 int nvmos_test_runAllTests(
-    nvmos_ptr_t availMem,
-    size_t availMemLen)
+    const nvmos_ptr_t availMem,
+    const size_t availMemLen)
 {
     printf("Test Memory Address: %p\n", availMem);
     printf("Test Memory Size: %p\n", availMemLen);

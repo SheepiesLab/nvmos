@@ -4,8 +4,8 @@
 #include <kernel/kdef.h>
 
 int nvmos_test_runAllTests(
-    nvmos_ptr_t availMem,
-    size_t availMemLen);
+    const nvmos_ptr_t availMem,
+    const size_t availMemLen);
 
 void nvmos_test_success(
     char *testName,
