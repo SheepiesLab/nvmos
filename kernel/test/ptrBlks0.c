@@ -23,6 +23,8 @@ size_t nvmos_test_getTestCases(ptrBlks0, test0)(
             [nvmos_test_testcaseCount(ptrBlks0, test0)] =
         {&nvmos_test_testcase(ptrBlks0, test0, case0)};
 
+    *res = nvmos_test_cases(ptrBlks0, test0);
+
     return 1;
 }
 
