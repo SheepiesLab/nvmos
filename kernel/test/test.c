@@ -15,9 +15,12 @@ int nvmos_test_runAllTests(
     const nvmos_ptr_t availMem,
     const size_t availMemLen)
 {
-    printf("Test Memory Address: %p\n", availMem);
-    printf("Test Memory Size: %p\n", availMemLen);
-    
-    nvmos_test_runTest(heap0, test0, availMem, availMemLen);
-    nvmos_test_runTest(ptrBlks0, test0, availMem, availMemLen);
+    const nvmos_ptr_t _availMem = availMem;
+    const size_t _availMemLen = availMemLen;
+
+    printf("Test Memory Address: %p\n", _availMem);
+    printf("Test Memory Size: %p\n", _availMemLen);
+
+    nvmos_test_runTest(heap0, test0, _availMem, _availMemLen);
+    nvmos_test_runTest(ptrBlks0, test0, _availMem, _availMemLen);
 }
