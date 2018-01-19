@@ -108,6 +108,7 @@ int printf(const char *restrict format, ...)
         {
             format++;
             uint64_t ptr = va_arg(parameters, const uint64_t);
+            uint64_t oriptr = ptr;
             size_t len = sizeof(ptr) * 2;
             if (maxrem < len)
             {
@@ -123,6 +124,7 @@ int printf(const char *restrict format, ...)
             if (!print(str, len))
                 return -1;
             written += len;
+            ptr = oriptr;
         }
         else if (*format == 'd')
         { //TODO: 64bit incompatible
