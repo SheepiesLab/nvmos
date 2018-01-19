@@ -8,21 +8,8 @@ typedef struct
     size_t maxBlkCount;
 } nvmos_test_testcase_t(ptrBlks0, test0);
 
-#define ptrBlks0_test0_TESTCASE_COUNT 1
-
-static int32_t case0_pushSeq[12] =
-    {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
-
-static nvmos_test_testcase_t(ptrBlks0, test0) nvmos_test_testcase(ptrBlks0, test0, case0) =
-    {
-        .pushSeq = case0_pushSeq,
-        .pushSeqLen = 12,
-        .maxBlkCount = 4096};
-
-static nvmos_test_testcase_t(ptrBlks0, test0) *
-    nvmos_test_cases(ptrBlks0, test0)
-        [nvmos_test_testcaseCount(ptrBlks0, test0)] =
-    {&nvmos_test_testcase(ptrBlks0, test0, case0)};
+size_t nvmos_test_getTestCases(ptrBlks0, test0)(
+    nvmos_test_testcase_t(ptrBlks0, test0) * *res);
 
 nvmos_test_testDriver(ptrBlks0, test0);
 

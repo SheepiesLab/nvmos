@@ -6,6 +6,26 @@
 
 #include <stdlib.h>
 
+size_t nvmos_test_getTestCases(ptrBlks0, test0)(
+    nvmos_test_testcase_t(ptrBlks0, test0) * *res)
+{
+    static int32_t case0_pushSeq[12] =
+        {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+
+    static nvmos_test_testcase_t(ptrBlks0, test0) nvmos_test_testcase(ptrBlks0, test0, case0) =
+        {
+            .pushSeq = case0_pushSeq,
+            .pushSeqLen = 12,
+            .maxBlkCount = 4096};
+
+    static nvmos_test_testcase_t(ptrBlks0, test0) *
+        nvmos_test_cases(ptrBlks0, test0)
+            [nvmos_test_testcaseCount(ptrBlks0, test0)] =
+        {&nvmos_test_testcase(ptrBlks0, test0, case0)};
+
+    return 1;
+}
+
 nvmos_test_testDriver(ptrBlks0, test0)
 {
     nvmos_dl_allocator_t allocator;
