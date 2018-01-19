@@ -3,6 +3,7 @@
 
 size_t nvmos_test_getTestCases(heap0, test0)(nvmos_test_testcase_t(heap0, test0) * *res)
 {
+#define testCaseCount 1
     static testSeqUnit_t case0_testSeq[] =
         {{MALLOC, 1, 0x8},
          {MALLOC, 2, 0x18},
@@ -22,11 +23,12 @@ size_t nvmos_test_getTestCases(heap0, test0)(nvmos_test_testcase_t(heap0, test0)
 
     static nvmos_test_testcase_t(heap0, test0) *
         nvmos_test_cases(heap0, test0)
-            [nvmos_test_testcaseCount(heap0, test0)] =
+            [testCaseCount] =
         {&nvmos_test_testcase(heap0, test0, case0)};
 
     *res = nvmos_test_cases(heap0, test0);
-    return 1;
+    return testCaseCount;
+#undef testCaseCount
 }
 
 nvmos_test_testDriver(heap0, test0)
