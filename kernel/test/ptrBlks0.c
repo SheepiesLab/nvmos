@@ -7,9 +7,9 @@
 #include <stdlib.h>
 
 size_t nvmos_test_getTestCases(ptrBlks0, test0)(
-    nvmos_test_testcase_t(ptrBlks0, test0) * *res)
+    nvmos_test_testcase_t(ptrBlks0, test0) * **res)
 {
-    #define testCaseCount 1
+#define testCaseCount 1
     static int32_t case0_pushSeq[12] =
         {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
 
