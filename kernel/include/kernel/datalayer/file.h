@@ -45,6 +45,15 @@ int file_discardTail(
     size_t len,
     nvmos_dl_allocator_t *alloc);
 
+/**
+ * @brief Free all blocks of a file back to allocator.
+ * 
+ * file_removeFile calls ptrBlks facility to free all blocks in file.
+ * 
+ * @param file      File meta of the file in operation.
+ * @param alloc     Datalayer allocator.
+ * @return int      Standard return code.
+ */
 int file_removeFile(
     file_meta_t *file,
     nvmos_dl_allocator_t *alloc);
