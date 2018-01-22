@@ -33,6 +33,7 @@ nvmos_test_testDriver(file0, test0)
             return -1;
         }
     }
+    printf("Write finished\n");
 
     for (size_t i = 0; i < 2500; ++i)
     {
