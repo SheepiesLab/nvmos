@@ -48,7 +48,7 @@ void nvmos_test_success(
             }                                                             \
             else                                                          \
             {                                                             \
-                nvmos_test_success(testPart, i);                          \
+                nvmos_test_success(testName, i);                          \
             }                                                             \
         }                                                                 \
         memset(availMem, 0, availMemLen);                                 \
