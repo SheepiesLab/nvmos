@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 size_t nvmos_test_getTestCases(file0, test0)(
-    nvmos_test_testcase_t(file0, test0) * *res)
+    nvmos_test_testcase_t(file0, test0) * **res)
 {
     return 1;
 }

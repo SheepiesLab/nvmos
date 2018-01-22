@@ -1,7 +1,7 @@
 #include <test/heap0.h>
 #include <test/test.h>
 
-size_t nvmos_test_getTestCases(heap0, test0)(nvmos_test_testcase_t(heap0, test0) * *res)
+size_t nvmos_test_getTestCases(heap0, test0)(nvmos_test_testcase_t(heap0, test0) * **res)
 {
 #define testCaseCount 1
     static testSeqUnit_t case0_testSeq[] =
