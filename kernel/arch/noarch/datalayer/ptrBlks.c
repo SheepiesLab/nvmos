@@ -112,7 +112,7 @@ int ptrBlks_pushBlks(
         return -1;
     }
 
-    if (ptrBlks->size == 0)
+    if (ptrBlks->size == 1)
     {
         ptrBlks->_1stBlk = (ptrBlks_dataBlk_t *)blkSeg;
         len -= 1;
