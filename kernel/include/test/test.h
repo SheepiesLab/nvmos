@@ -32,7 +32,7 @@ void nvmos_test_success(
 #define nvmos_test_defTestRunner(testPart, testNo)                        \
     nvmos_test_testRunner(testPart, testNo)                               \
     {                                                                     \
-        nvmos_test_case_##testPart##_##testNo##_t *testCase;              \
+        nvmos_test_case_##testPart##_##testNo##_t **testCase;             \
         size_t testPart##_##testNo##_TESTCASE_COUNT =                     \
             nvmos_test_getTestCases(testPart, testNo)(&testCase);         \
         char testName[] = #testPart "_" #testNo;                          \
@@ -42,7 +42,7 @@ void nvmos_test_success(
                 nvmos_test_driver_##testPart##_##testNo(                  \
                     availMem,                                             \
                     availMemLen,                                          \
-                    &(testCase[i]));                                      \
+                    testCase[i]);                                         \
             if (testResult)                                               \
             {                                                             \
             }                                                             \
