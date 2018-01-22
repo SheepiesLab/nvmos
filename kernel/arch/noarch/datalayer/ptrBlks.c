@@ -125,7 +125,7 @@ int ptrBlks_pushBlks(
 
     if (ptrBlks->size < 0x401)
     {
-        if (ptrBlks->size == 1)
+        if (ptrBlks->size == 2)
         {
             nvmos_ptr_t newPtrBlk =
                 nvmos_dl_alloc_allocateBlocks(allocator, 1);
