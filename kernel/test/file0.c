@@ -4,6 +4,8 @@
 #include <kernel/datalayer/allocator/allocator.h>
 #include <kernel/datalayer/file.h>
 
+#include <stdio.h>
+
 size_t nvmos_test_getTestCases(file0, test0)(
     nvmos_test_testcase_t(file0, test0) * *res)
 {
@@ -35,8 +37,10 @@ nvmos_test_testDriver(file0, test0)
     for (size_t i = 0; i < 2500; ++i)
     {
         char buf[8];
-        if (file_read(&fileMeta, buf, i * 8, 8) != 8)
+        size_t ret = file_read(&fileMeta, buf, i * 8, 8)
+        if (ret != 8)
         {
+            printf("Extra Info: file_read return %d\n", ret);
             nvmos_test_fail("file0", 0, "file_read not satisfied at %d", i);
             return -1;
         }
