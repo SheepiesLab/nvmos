@@ -37,7 +37,7 @@ nvmos_test_testDriver(file0, test0)
     for (size_t i = 0; i < 2500; ++i)
     {
         char buf[8];
-        size_t ret = file_read(&fileMeta, buf, i * 8, 8)
+        size_t ret = file_read(&fileMeta, buf, i * 8, 8);
         if (ret != 8)
         {
             printf("Extra Info: file_read return %d\n", ret);
