@@ -56,7 +56,7 @@ nvmos_test_testDriver(heap0, test0)
                 nvmos_test_fail(
                     testName,
                     testCaseNum,
-                    "Case failed at %d",
+                    "Case failed at %d: malloc failed...",
                     i);
                 CLEANUP_RETURN(-i);
             }
@@ -67,7 +67,7 @@ nvmos_test_testDriver(heap0, test0)
                 nvmos_test_fail(
                     testName,
                     testCaseNum,
-                    "Case failed at %d",
+                    "Case failed at %d: malloc result not match...",
                     i);
                 CLEANUP_RETURN(-i);
             }
@@ -81,7 +81,7 @@ nvmos_test_testDriver(heap0, test0)
                 nvmos_test_fail(
                     testName,
                     testCaseNum,
-                    "Case failed at %d",
+                    "Case failed at %d: cannot free...",
                     i);
                 CLEANUP_RETURN(-i);
             }
