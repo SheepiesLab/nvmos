@@ -131,6 +131,10 @@ int ptrBlks_pushBlks(
                 nvmos_dl_alloc_allocateBlocks(allocator, 1);
             if (newPtrBlk == NULL)
                 return -1;
+            memset(
+                (void *)newPtrBlk,
+                0,
+                allocator->allocationBlockSize);
             ptrBlks->_1stPtrBlk = (ptrBlks_1stBlk_t *)newPtrBlk;
         }
 
@@ -156,6 +160,10 @@ int ptrBlks_pushBlks(
                 nvmos_dl_alloc_allocateBlocks(allocator, 1);
             if (newPtrBlk == NULL)
                 return -1;
+            memset(
+                (void *)newPtrBlk,
+                0,
+                allocator->allocationBlockSize);
             ptrBlks->_2ndPtrBlk = (ptrBlks_2ndBlk_t *)newPtrBlk;
         }
 
@@ -171,6 +179,10 @@ int ptrBlks_pushBlks(
                     nvmos_dl_alloc_allocateBlocks(allocator, 1);
                 if (newPtrBlk == NULL)
                     return -1;
+                memset(
+                    (void *)newPtrBlk,
+                    0,
+                    allocator->allocationBlockSize);
                 current1stPtr = (ptrBlks_1stBlk_t *)newPtrBlk;
                 ptrBlks->_2ndPtrBlk->_1stBlkPtrs[current1st] =
                     (ptrBlks_1stBlk_t *)newPtrBlk;
@@ -200,6 +212,10 @@ int ptrBlks_pushBlks(
                 nvmos_dl_alloc_allocateBlocks(allocator, 1);
             if (newPtrBlk == NULL)
                 return -1;
+            memset(
+                (void *)newPtrBlk,
+                0,
+                allocator->allocationBlockSize);
             ptrBlks->_3rdPtrBlk = (ptrBlks_3rdBlk_t *)newPtrBlk;
         }
 
@@ -217,6 +233,11 @@ int ptrBlks_pushBlks(
                     nvmos_dl_alloc_allocateBlocks(allocator, 1);
                 if (newPtrBlk == NULL)
                     return -1;
+
+                memset(
+                    (void *)newPtrBlk,
+                    0,
+                    allocator->allocationBlockSize);
                 current2ndPtr = (ptrBlks_2ndBlk_t *)newPtrBlk;
                 ptrBlks->_3rdPtrBlk->_2ndBlkPtrs[current2nd] =
                     (ptrBlks_2ndBlk_t *)newPtrBlk;
@@ -231,6 +252,11 @@ int ptrBlks_pushBlks(
                         nvmos_dl_alloc_allocateBlocks(allocator, 1);
                     if (newPtrBlk == NULL)
                         return -1;
+
+                    memset(
+                        (void *)newPtrBlk,
+                        0,
+                        allocator->allocationBlockSize);
                     current1stPtr = (ptrBlks_1stBlk_t *)newPtrBlk;
                     ptrBlks->_2ndPtrBlk->_1stBlkPtrs[current1st] =
                         (ptrBlks_1stBlk_t *)newPtrBlk;
