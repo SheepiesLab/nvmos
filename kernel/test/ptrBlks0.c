@@ -11,37 +11,35 @@ size_t nvmos_test_getTestCases(ptrBlks0, test0)(
 {
 #define testCaseCount 2
 
-    static int32_t case0_pushSeq[28] =
+    static int32_t case0_pushSeq[24] =
         {
             0x1, 0x2, 0x4, 0x8,
             0x10, 0x20, 0x40, 0x80,
             0x100, 0x200, 0x400, 0x800,
             0x1000, 0x2000, 0x4000, 0x8000,
             0x10000, 0x20000, 0x40000, 0x80000,
-            0x100000, 0x200000, 0x400000, 0x800000,
-            0x1000000, 0x2000000, 0x4000000, 0x8000000};
+            0x100000, 0x200000, 0x400000, 0x800000};
 
     static nvmos_test_testcase_t(ptrBlks0, test0) nvmos_test_testcase(ptrBlks0, test0, case0) =
         {
             .pushSeq = case0_pushSeq,
-            .pushSeqLen = 28,
-            .maxBlkCount = 0x10000000};
+            .pushSeqLen = 24,
+            .maxBlkCount = 0x1000000};
 
-    static int32_t case1_pushSeq[28] =
+    static int32_t case1_pushSeq[24] =
         {
             0x1, 0x2, 0x4, 0x8,
             0x10, 0x20, 0x40, 0x80,
             0x100, 0x200, 0x400, 0x800,
             0x1000, 0x2000, 0x4000, 0x8000,
             0x10000, 0x20000, 0x40000, 0x80000,
-            0x100000, 0x200000, 0x400000, 0x800000,
-            0x1000000, 0x2000000, 0x4000000, 0x8000000};
+            0x100000, 0x200000, 0x400000, 0x800000};
 
     static nvmos_test_testcase_t(ptrBlks0, test0) nvmos_test_testcase(ptrBlks0, test0, case1) =
         {
             .pushSeq = case1_pushSeq,
-            .pushSeqLen = 28,
-            .maxBlkCount = 0x10000000};
+            .pushSeqLen = 24,
+            .maxBlkCount = 0x1000000};
 
     static nvmos_test_testcase_t(ptrBlks0, test0) *
         nvmos_test_cases(ptrBlks0, test0)
