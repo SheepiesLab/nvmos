@@ -145,7 +145,7 @@ int ptrBlks_pushBlks(
             len -= 1;
             blkSeg += 0x1000;
             ptrBlks->size += 1;
-            current = (ptrBlks->size - 1) % 0x400;
+            current = (ptrBlks->size - 1);
 
             if (len == 0)
                 return 0;
