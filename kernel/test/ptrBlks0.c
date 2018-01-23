@@ -11,14 +11,17 @@ size_t nvmos_test_getTestCases(ptrBlks0, test0)(
 {
 #define testCaseCount 2
 
-    static int32_t case0_pushSeq[12] =
-        {0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400, 0x800};
+    static int32_t case0_pushSeq[16] =
+        {0x1, 0x2, 0x4, 0x8,
+         0x10, 0x20, 0x40, 0x80,
+         0x100, 0x200, 0x400, 0x800,
+         0x1000, 0x2000, 0x4000, 0x8000};
 
     static nvmos_test_testcase_t(ptrBlks0, test0) nvmos_test_testcase(ptrBlks0, test0, case0) =
         {
             .pushSeq = case0_pushSeq,
-            .pushSeqLen = 12,
-            .maxBlkCount = 4096};
+            .pushSeqLen = 16,
+            .maxBlkCount = 0x10000};
 
     static int32_t case1_pushSeq[12] =
         {2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1};
