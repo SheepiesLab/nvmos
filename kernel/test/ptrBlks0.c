@@ -12,7 +12,7 @@ size_t nvmos_test_getTestCases(ptrBlks0, test0)(
 #define testCaseCount 2
 
     static int32_t case0_pushSeq[12] =
-        {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+        {0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400, 0x800};
 
     static nvmos_test_testcase_t(ptrBlks0, test0) nvmos_test_testcase(ptrBlks0, test0, case0) =
         {
@@ -251,7 +251,7 @@ nvmos_test_testDriver(ptrBlks0, test1)
                 return -1;
             }
         }
-        printf("ptrblks0_test1 i = %d finished./n", i);
+        printf("ptrblks0_test1 i = %d finished.\n", i);
     }
     return 0;
 }
