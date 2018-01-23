@@ -185,7 +185,7 @@ nvmos_test_testDriver(ptrBlks0, test1)
     nvmos_dl_alloc_createAllocator(&alloc, availMem, availMemLen, 0x1000);
 
     ptrBlks_t ptrBlks;
-    ptrBlks_construct(&ptrblks, NULL, NULL, NULL, NULL);
+    ptrBlks_construct(&ptrBlks, NULL, NULL, NULL, NULL);
 
     nvmos_ptr_t pushBlksPtr =
         nvmos_dl_alloc_allocateBlocks(
@@ -194,13 +194,21 @@ nvmos_test_testDriver(ptrBlks0, test1)
 
     if (pushBlksPtr == NULL)
     {
-        nvmos_test_fail("ptrBlks0", 1, "Allocator failed at allocating push blocks...");
+        nvmos_test_fail(
+            "ptrBlks0",
+            1,
+            "Allocator failed at allocating push blocks...",
+            0);
         return -1;
     }
 
     if (ptrBlks_pushBlks(&ptrBlks, pushBlksPtr, testCase->maxBlkCount, &alloc))
     {
-        nvmos_test_fail("ptrBlks0", 1, "Failed at pushing blocks...");
+        nvmos_test_fail(
+            "ptrBlks0",
+            1,
+            "Failed at pushing blocks...",
+            0);
         return -1;
     }
 
