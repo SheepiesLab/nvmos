@@ -142,3 +142,109 @@ nvmos_test_testDriver(ptrBlks0, test0)
 }
 
 nvmos_test_defTestRunner(ptrBlks0, test0)
+
+    size_t nvmos_test_getTestCases(ptrBlks0, test1)(
+        nvmos_test_testcase_t(ptrBlks0, test1) * **res)
+{
+#define testCaseCount 2
+
+    static int32_t case0_popSeq[12] =
+        {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+
+    static nvmos_test_testcase_t(ptrBlks0, test1) nvmos_test_testcase(ptrBlks0, test1, case0) =
+        {
+            .popSeq = case0_popSeq,
+            .popSeqLen = 12,
+            .maxBlkCount = 4096};
+
+    static int32_t case1_popSeq[12] =
+        {2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1};
+
+    static nvmos_test_testcase_t(ptrBlks0, test1) nvmos_test_testcase(ptrBlks0, test1, case1) =
+        {
+            .popSeq = case1_popSeq,
+            .popSeqLen = 12,
+            .maxBlkCount = 4096};
+
+    static nvmos_test_testcase_t(ptrBlks0, test1) *
+        nvmos_test_cases(ptrBlks0, test1)
+            [testCaseCount] =
+        {
+            &nvmos_test_testcase(ptrBlks0, test1, case0),
+            &nvmos_test_testcase(ptrBlks0, test1, case1)};
+
+    *res = nvmos_test_cases(ptrBlks0, test1);
+
+    return testCaseCount;
+#undef testCaseCount
+}
+
+nvmos_test_testDriver(ptrBlks0, test1)
+{
+    nvmos_dl_allocator_t alloc;
+    nvmos_dl_alloc_createAllocator(&alloc, availMem, availMemLen, 0x1000);
+
+    ptrBlks_t ptrBlks;
+    ptrBlks_construct(&ptrblks, NULL, NULL, NULL, NULL);
+
+    nvmos_ptr_t pushBlksPtr =
+        nvmos_dl_alloc_allocateBlocks(
+            &alloc,
+            testCase->maxBlkCount);
+
+    if (pushBlksPtr == NULL)
+    {
+        nvmos_test_fail("ptrBlks0", 1, "Allocator failed at allocating push blocks...");
+        return -1;
+    }
+
+    if (ptrBlks_pushBlks(&ptrBlks, pushBlksPtr, testCase->maxBlkCount, &alloc))
+    {
+        nvmos_test_fail("ptrBlks0", 1, "Failed at pushing blocks...");
+        return -1;
+    }
+
+    size_t i = 0;
+    size_t blkCount = testCase->maxBlkCount;
+    for (; i < testCase->popSeqLen; ++i)
+    {
+        blkCount -= testCase->popSeq[i];
+        if (ptrBlks_popBlks(&ptrBlks, testCase->popSeq[i], &alloc))
+        {
+            nvmos_test_fail(
+                "ptrBlks0",
+                1,
+                "Failed at pushing blocks at %d...",
+                i);
+            return -1;
+        }
+
+        if (blkCount != ptrBlks_getSize(&ptrBlks))
+        {
+            nvmos_test_fail(
+                "ptrBlks0",
+                1,
+                "Block size after poping not consistent at %d...",
+                i);
+            return -1;
+        }
+
+        for (size_t j = 0; j < blkCount; ++j)
+        {
+            if (ptrBlks_getDataBlkAt(&ptrBlks, i) !=
+                pushBlksPtr + j * 0x1000)
+            {
+                nvmos_test_fail(
+                    "ptrBlks0",
+                    1,
+                    "Block pointer after poping not consistent at i = %d j = %d...",
+                    i,
+                    j);
+                return -1;
+            }
+        }
+    }
+    return 0;
+}
+
+nvmos_test_defTestRunner(ptrBlks0, test1)

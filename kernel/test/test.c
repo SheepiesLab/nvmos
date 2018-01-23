@@ -17,5 +17,6 @@ int nvmos_test_runAllTests(
 {
     //nvmos_test_runTest(heap0, test0, availMem, availMemLen);
     nvmos_test_runTest(ptrBlks0, test0, availMem, availMemLen);
+    nvmos_test_runTest(ptrBlks0, test1, availMem, availMemLen);
     nvmos_test_runTest(file0, test0, availMem, availMemLen);
 }
