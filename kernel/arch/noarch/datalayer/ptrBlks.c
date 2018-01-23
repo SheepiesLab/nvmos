@@ -194,13 +194,13 @@ int ptrBlks_pushBlks(
                 len -= 1;
                 blkSeg += 0x1000;
                 ptrBlks->size += 1;
-                current = (ptrBlks->size - 0x401) % 0x400;
+                current = (ptrBlks->size - 0x401);
 
                 if (len == 0)
                     return 0;
             }
 
-            current1st = ((ptrBlks->size - 0x401) >> 10) % 0x400;
+            current1st = ((ptrBlks->size - 0x401) >> 10);
         }
     }
 
@@ -268,16 +268,16 @@ int ptrBlks_pushBlks(
                     len -= 1;
                     blkSeg += 0x1000;
                     ptrBlks->size += 1;
-                    current = (ptrBlks->size - 0x401) % 0x400;
+                    current = (ptrBlks->size - 0x401);
 
                     if (len == 0)
                         return 0;
                 }
 
-                current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
+                current1st = ((ptrBlks->size - 0x100401) >> 10);
             }
 
-            current2nd = ((ptrBlks->size - 0x100401) >> 20) % 0x400;
+            current2nd = ((ptrBlks->size - 0x100401) >> 20);
         }
     }
 
