@@ -251,7 +251,7 @@ nvmos_test_testDriver(ptrBlks0, test1)
                 return -1;
             }
         }
-        printf("ptrblks0_test1 i = %d finished./n", i);
+        printf("ptrblks0_test1 i = %d finished.\n", i);
     }
     return 0;
 }
