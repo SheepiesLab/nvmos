@@ -17,7 +17,7 @@ void ptrBlks_construct(
     {
         if (ptrBlks_getDataBlkAt(ptrBlks, i) == NULL)
         {
-            ptrBlks->size = i + 1;
+            ptrBlks->size = i;
             return;
         }
     }
@@ -38,7 +38,7 @@ void ptrBlks_constructFromFileMeta(
     {
         if (ptrBlks_getDataBlkAt(ptrBlks, i) == NULL)
         {
-            ptrBlks->size = i + 1;
+            ptrBlks->size = i;
             return;
         }
     }
@@ -112,7 +112,7 @@ int ptrBlks_pushBlks(
         return -1;
     }
 
-    if (ptrBlks->size == 1)
+    if (ptrBlks->size == 0)
     {
         ptrBlks->_1stBlk = (ptrBlks_dataBlk_t *)blkSeg;
         len -= 1;
@@ -125,7 +125,7 @@ int ptrBlks_pushBlks(
 
     if (ptrBlks->size < 0x401)
     {
-        if (ptrBlks->size == 2)
+        if (ptrBlks->size == 1)
         {
             nvmos_ptr_t newPtrBlk =
                 nvmos_dl_alloc_allocateBlocks(allocator, 1);
