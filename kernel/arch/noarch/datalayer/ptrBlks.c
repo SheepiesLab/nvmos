@@ -145,7 +145,7 @@ int ptrBlks_pushBlks(
             len -= 1;
             blkSeg += 0x1000;
             ptrBlks->size += 1;
-            current = (ptrBlks->size - 1) % 401;
+            ++current;
 
             if (len == 0)
                 return 0;
@@ -167,7 +167,6 @@ int ptrBlks_pushBlks(
             ptrBlks->_2ndPtrBlk = (ptrBlks_2ndBlk_t *)newPtrBlk;
         }
 
-        size_t current = (ptrBlks->size - 0x401) % 0x400;
         size_t current1st = ((ptrBlks->size - 0x401) >> 10) % 0x400;
         while (current1st < 0x400)
         {
@@ -188,19 +187,20 @@ int ptrBlks_pushBlks(
                     (ptrBlks_1stBlk_t *)newPtrBlk;
             }
 
+            size_t current = (ptrBlks->size - 0x401) % 0x400;
             while (current < 0x400)
             {
                 current1stPtr->_dataBlkPtrs[current] = blkSeg;
                 len -= 1;
                 blkSeg += 0x1000;
                 ptrBlks->size += 1;
-                current = (ptrBlks->size - 0x401) % 0x401;
+                ++current;
 
                 if (len == 0)
                     return 0;
             }
 
-            current1st = ((ptrBlks->size - 0x401) >> 10) % 0x401;
+            ++current1st;
         }
     }
 
@@ -219,8 +219,6 @@ int ptrBlks_pushBlks(
             ptrBlks->_3rdPtrBlk = (ptrBlks_3rdBlk_t *)newPtrBlk;
         }
 
-        size_t current = (ptrBlks->size - 0x100401) % 0x400;
-        size_t current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
         size_t current2nd = ((ptrBlks->size - 0x100401) >> 20) % 0x400;
 
         while (current2nd < 0x400)
@@ -242,6 +240,8 @@ int ptrBlks_pushBlks(
                 ptrBlks->_3rdPtrBlk->_2ndBlkPtrs[current2nd] =
                     (ptrBlks_2ndBlk_t *)newPtrBlk;
             }
+
+            size_t current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
             while (current1st < 0x400)
             {
                 ptrBlks_1stBlk_t *current1stPtr =
@@ -262,22 +262,23 @@ int ptrBlks_pushBlks(
                         (ptrBlks_1stBlk_t *)newPtrBlk;
                 }
 
+                size_t current = (ptrBlks->size - 0x100401) % 0x400;
                 while (current < 0x400)
                 {
                     current1stPtr->_dataBlkPtrs[current] = blkSeg;
                     len -= 1;
                     blkSeg += 0x1000;
                     ptrBlks->size += 1;
-                    current = (ptrBlks->size - 0x401) % 401;
+                    ++current;
 
                     if (len == 0)
                         return 0;
                 }
 
-                current1st = ((ptrBlks->size - 0x100401) >> 10) % 401;
+                ++current1st;
             }
 
-            current2nd = ((ptrBlks->size - 0x100401) >> 20) % 401;
+            ++current2nd;
         }
     }
 
