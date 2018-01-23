@@ -239,7 +239,7 @@ nvmos_test_testDriver(ptrBlks0, test1)
 
         for (size_t j = 0; j < blkCount; ++j)
         {
-            if (ptrBlks_getDataBlkAt(&ptrBlks, i) !=
+            if (ptrBlks_getDataBlkAt(&ptrBlks, j) !=
                 pushBlksPtr + j * 0x1000)
             {
                 nvmos_test_fail(
