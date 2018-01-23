@@ -78,7 +78,7 @@ nvmos_test_testDriver(ptrBlks0, test0)
 
             for (int i = 1; i < testCase->pushSeq[pushSeqPos]; ++i)
             {
-                blkList[blkCount + i] = blkList[blkCount] + 0x1000;
+                blkList[blkCount + i] = blkList[blkCount] + i * 0x1000;
             }
             blkCount += testCase->pushSeq[pushSeqPos];
         }
