@@ -304,8 +304,8 @@ int ptrBlks_popBlks(
     {
 
         size_t current = (ptrBlks->size - 0x100401) % 0x400;
-        size_t current1st = ((ptrBlks->size - 0x100401 - 1) >> 10) % 0x400;
-        size_t current2nd = ((ptrBlks->size - 0x100401 - 1) >> 20) % 0x400;
+        size_t current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
+        size_t current2nd = ((ptrBlks->size - 0x100401) >> 20) % 0x400;
 
         while (current2nd > 0)
         {
@@ -362,21 +362,21 @@ int ptrBlks_popBlks(
                     current1stPtr,
                     1);
                 ptrBlks->_2ndPtrBlk->_1stBlkPtrs[current1st] = NULL;
-                current1st = ((ptrBlks->size - 0x100401 - 1) >> 10) % 0x400;
+                current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
             }
             nvmos_dl_alloc_deallocateBlocks(
                 allocator,
                 current2ndPtr,
                 1);
             ptrBlks->_3rdPtrBlk->_2ndBlkPtrs[current2nd] = NULL;
-            current2nd = ((ptrBlks->size - 0x100401 - 1) >> 20) % 0x400;
+            current2nd = ((ptrBlks->size - 0x100401) >> 20) % 0x400;
         }
     }
 
     if (ptrBlks->size >= 0x401)
     {
         size_t current = (ptrBlks->size - 0x401) % 0x400;
-        size_t current1st = ((ptrBlks->size - 0x401 - 1) >> 10) % 0x400;
+        size_t current1st = ((ptrBlks->size - 0x401) >> 10) % 0x400;
 
         while (current1st > 0)
         {
@@ -428,7 +428,7 @@ int ptrBlks_popBlks(
                 current1stPtr,
                 1);
             ptrBlks->_2ndPtrBlk->_1stBlkPtrs[current1st] = NULL;
-            current1st = ((ptrBlks->size - 0x401 - 1) >> 10) % 0x400;
+            current1st = ((ptrBlks->size - 0x401) >> 10) % 0x400;
         }
     }
 
