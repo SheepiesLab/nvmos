@@ -222,7 +222,7 @@ nvmos_test_testDriver(ptrBlks0, test1)
             nvmos_test_fail(
                 "ptrBlks0",
                 1,
-                "Failed at pushing blocks at %d...",
+                "Failed at poping blocks at %d...",
                 i);
             return -1;
         }
