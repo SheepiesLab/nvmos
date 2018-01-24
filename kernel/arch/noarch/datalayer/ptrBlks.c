@@ -303,6 +303,8 @@ int ptrBlks_popBlks(
     if (ptrBlks->size >= 0x100401)
     {
 
+        size_t current = (ptrBlks->size - 0x100401) % 0x400;
+        size_t current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
         size_t current2nd = ((ptrBlks->size - 0x100401) >> 20) % 0x400;
 
         while (current2nd > 0)
@@ -310,7 +312,7 @@ int ptrBlks_popBlks(
             ptrBlks_2ndBlk_t *current2ndPtr =
                 (ptrBlks_2ndBlk_t *)ptrBlks->_3rdPtrBlk->_2ndBlkPtrs[current2nd];
 
-            size_t current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
+            current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
             while (current1st > 0)
             {
                 ptrBlks_1stBlk_t *current1stPtr =
@@ -320,7 +322,7 @@ int ptrBlks_popBlks(
                     ptrBlks->_1stPtrBlk->_dataBlkPtrs[current] + 0x1000;
                 size_t blkCount = 0;
 
-                size_t current = (ptrBlks->size - 0x100401) % 0x400;
+                current = (ptrBlks->size - 0x100401) % 0x400;
                 while (current > 0)
                 {
                     --current;
@@ -377,6 +379,7 @@ int ptrBlks_popBlks(
 
     if (ptrBlks->size >= 0x401)
     {
+        size_t current = (ptrBlks->size - 0x401) % 0x400;
         size_t current1st = ((ptrBlks->size - 0x401) >> 10) % 0x400;
 
         while (current1st > 0)
@@ -388,7 +391,7 @@ int ptrBlks_popBlks(
                 ptrBlks->_1stPtrBlk->_dataBlkPtrs[current] + 0x1000;
             size_t blkCount = 0;
 
-            size_t current = (ptrBlks->size - 0x401) % 0x400;
+            current = (ptrBlks->size - 0x401) % 0x400;
             while (current > 0)
             {
                 --current;
