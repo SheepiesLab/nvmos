@@ -54,11 +54,6 @@ size_t file_write(
     size_t len,
     nvmos_dl_allocator_t *alloc)
 {
-    if (pos + len > file->fileSize)
-    {
-        ;
-    }
-
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
         &ptrBlks, file);
@@ -67,17 +62,20 @@ size_t file_write(
 #define bufPos bytesWritten
 
     size_t newSize = pos + len;
-    size_t blkLen = newSize >> 12;
-    if (blkLen > ptrBlks_getSize(&ptrBlks))
+    if (newSize > file->fileSize)
     {
-        size_t blksNeeded = blkLen - ptrBlks_getSize(&ptrBlks);
-        nvmos_ptr_t newBlks =
-            nvmos_dl_alloc_allocateBlocks(alloc, blksNeeded);
-        if (ptrBlks_pushBlks(&ptrBlks, newBlks, newBlks, alloc))
+        size_t blkLen = (newSize >> 12) + 1;
+        if (blkLen > ptrBlks_getSize(&ptrBlks))
         {
-            ptrBlks_saveToFileMeta(
-                &ptrBlks, file);
-            return 0;
+            size_t blksNeeded = blkLen - ptrBlks_getSize(&ptrBlks);
+            nvmos_ptr_t newBlks =
+                nvmos_dl_alloc_allocateBlocks(alloc, blksNeeded);
+            if (ptrBlks_pushBlks(&ptrBlks, newBlks, newBlks, alloc))
+            {
+                ptrBlks_saveToFileMeta(
+                    &ptrBlks, file);
+                return 0;
+            }
         }
     }
 
