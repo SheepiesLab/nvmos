@@ -343,7 +343,7 @@ int ptrBlks_popBlks(
                     current1stPtr->_dataBlkPtrs[current] = NULL;
                     len -= 1;
                     ptrBlks->size -= 1;
-                    current = (ptrBlks->size - 0x100401) % 0x400;
+                    --current;
 
                     if (len == 0 || current == 0)
                     {
@@ -362,14 +362,14 @@ int ptrBlks_popBlks(
                     current1stPtr,
                     1);
                 ptrBlks->_2ndPtrBlk->_1stBlkPtrs[current1st] = NULL;
-                current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
+                --current1st;
             }
             nvmos_dl_alloc_deallocateBlocks(
                 allocator,
                 current2ndPtr,
                 1);
             ptrBlks->_3rdPtrBlk->_2ndBlkPtrs[current2nd] = NULL;
-            current2nd = ((ptrBlks->size - 0x100401) >> 20) % 0x400;
+            --current2nd;
         }
     }
 
@@ -409,7 +409,7 @@ int ptrBlks_popBlks(
                 current1stPtr->_dataBlkPtrs[current] = NULL;
                 len -= 1;
                 ptrBlks->size -= 1;
-                current = (ptrBlks->size - 0x401) % 0x400;
+                --current;
 
                 if (len == 0 || current == 0)
                 {
@@ -428,7 +428,7 @@ int ptrBlks_popBlks(
                 current1stPtr,
                 1);
             ptrBlks->_2ndPtrBlk->_1stBlkPtrs[current1st] = NULL;
-            current1st = ((ptrBlks->size - 0x401) >> 10) % 0x400;
+            --current1st;
         }
     }
 
