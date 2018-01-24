@@ -70,11 +70,11 @@ size_t file_write(
             size_t blksNeeded = blkLen - ptrBlks_getSize(&ptrBlks);
             nvmos_ptr_t newBlks =
                 nvmos_dl_alloc_allocateBlocks(alloc, blksNeeded);
-            if (ptrBlks_pushBlks(&ptrBlks, newBlks, newBlks, alloc))
+            if (ptrBlks_pushBlks(&ptrBlks, newBlks, blksNeeded, alloc))
             {
                 ptrBlks_saveToFileMeta(
                     &ptrBlks, file);
-                return 0;
+                return -1;
             }
         }
     }
@@ -101,7 +101,8 @@ size_t file_write(
         bytesWritten += bytesToBeCopied;
         len -= bytesToBeCopied;
         pos += bytesToBeCopied;
-        if (pos > file->fileSize){
+        if (pos > file->fileSize)
+        {
             file->fileSize = pos;
         }
     }
