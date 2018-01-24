@@ -312,6 +312,7 @@ int ptrBlks_popBlks(
             ptrBlks_2ndBlk_t *current2ndPtr =
                 (ptrBlks_2ndBlk_t *)ptrBlks->_3rdPtrBlk->_2ndBlkPtrs[current2nd];
 
+            current = (ptrBlks->size - 0x100401) % 0x400;
             current1st = ((ptrBlks->size - 0x100401) >> 10) % 0x400;
             while (current1st > 0)
             {
