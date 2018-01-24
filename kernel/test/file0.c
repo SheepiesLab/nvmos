@@ -20,6 +20,7 @@ nvmos_test_testDriver(file0, test0)
     file_meta_t fileMeta;
     fileMeta.refCount = 0;
     fileMeta.fileSize = 0;
+    fileMeta.blkSize = 0;
     fileMeta._1stBlk = NULL;
     fileMeta._1stPtrBlk = NULL;
     fileMeta._2ndPtrBlk = NULL;

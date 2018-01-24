@@ -91,6 +91,7 @@ size_t file_write(
             ptrBlks_getDataBlkAt(&ptrBlks, blkPos);
         if (blkAddr == NULL)
         {
+            return bytesWritten;
         }
         memcpy(
             &(blkAddr->dataBuff[inBlkPos]),
@@ -100,7 +101,9 @@ size_t file_write(
         bytesWritten += bytesToBeCopied;
         len -= bytesToBeCopied;
         pos += bytesToBeCopied;
-        file->fileSize += bytesToBeCopied;
+        if (pos > file->fileSize){
+            file->fileSize = pos;
+        }
     }
 
 #undef bufPos

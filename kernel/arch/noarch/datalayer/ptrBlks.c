@@ -33,17 +33,7 @@ void ptrBlks_constructFromFileMeta(
     ptrBlks->_1stPtrBlk = fileMeta->_1stPtrBlk;
     ptrBlks->_2ndPtrBlk = fileMeta->_2ndPtrBlk;
     ptrBlks->_3rdPtrBlk = fileMeta->_3rdPtrBlk;
-
-    for (size_t i = 0; i < PTRBLKS_MAXSIZE; ++i)
-    {
-        if (ptrBlks_getDataBlkAt(ptrBlks, i) == NULL)
-        {
-            ptrBlks->size = i;
-            return;
-        }
-    }
-
-    ptrBlks->size = PTRBLKS_MAXSIZE;
+    ptrBlks->size = fileMeta->blkSize;
 }
 
 void ptrBlks_saveToFileMeta(
@@ -54,6 +44,7 @@ void ptrBlks_saveToFileMeta(
     fileMeta->_1stPtrBlk = ptrBlks->_1stPtrBlk;
     fileMeta->_2ndPtrBlk = ptrBlks->_2ndPtrBlk;
     fileMeta->_3rdPtrBlk = ptrBlks->_3rdPtrBlk;
+    fileMeta->blkSize = ptrBlks->size;
 }
 
 ptrBlks_dataBlk_t *ptrBlks_getDataBlkAt(

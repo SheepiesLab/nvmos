@@ -8,6 +8,7 @@ struct file_meta
 {
     uint64_t refCount; //Fiel reference is the access point to file
     uint64_t fileSize;
+    uint64_t blkSize;
     uint32_t _1stBlk;
     uint32_t _1stPtrBlk;
     uint32_t _2ndPtrBlk;
