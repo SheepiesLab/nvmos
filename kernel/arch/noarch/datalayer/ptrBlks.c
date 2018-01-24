@@ -323,19 +323,20 @@ int ptrBlks_popBlks(
 
                 while (current > 0)
                 {
-                    current -= 1;
+                    --current;
                     if (current1stPtr->_dataBlkPtrs[current] ==
                         blkSeg - 0x1000)
                     {
-                        blkSeg = current1stPtr->_dataBlkPtrs[current];
+                        blkSeg -= 0x1000;
                         blkCount += 1;
                     }
                     else
                     {
-                        nvmos_dl_alloc_deallocateBlocks(
-                            allocator,
-                            blkSeg,
-                            blkCount);
+                        if (blkCount > 0)
+                            nvmos_dl_alloc_deallocateBlocks(
+                                allocator,
+                                blkSeg,
+                                blkCount);
                         blkSeg = current1stPtr->_dataBlkPtrs[current];
                         blkCount = 1;
                     }
@@ -347,10 +348,11 @@ int ptrBlks_popBlks(
 
                     if (len == 0 || current == 0)
                     {
-                        nvmos_dl_alloc_deallocateBlocks(
-                            allocator,
-                            blkSeg,
-                            blkCount);
+                        if (blkCount > 0)
+                            nvmos_dl_alloc_deallocateBlocks(
+                                allocator,
+                                blkSeg,
+                                blkCount);
                     }
 
                     if (len == 0)
@@ -389,19 +391,20 @@ int ptrBlks_popBlks(
 
             while (current > 0)
             {
-                current -= 1;
+                --current;
                 if (current1stPtr->_dataBlkPtrs[current] ==
                     blkSeg - 0x1000)
                 {
-                    blkSeg = current1stPtr->_dataBlkPtrs[current];
+                    blkSeg -= 0x1000;
                     blkCount += 1;
                 }
                 else
                 {
-                    nvmos_dl_alloc_deallocateBlocks(
-                        allocator,
-                        blkSeg,
-                        blkCount);
+                    if (blkCount > 0)
+                        nvmos_dl_alloc_deallocateBlocks(
+                            allocator,
+                            blkSeg,
+                            blkCount);
                     blkSeg = current1stPtr->_dataBlkPtrs[current];
                     blkCount = 1;
                 }
@@ -409,14 +412,14 @@ int ptrBlks_popBlks(
                 current1stPtr->_dataBlkPtrs[current] = NULL;
                 len -= 1;
                 ptrBlks->size -= 1;
-                --current;
 
                 if (len == 0 || current == 0)
                 {
-                    nvmos_dl_alloc_deallocateBlocks(
-                        allocator,
-                        blkSeg,
-                        blkCount);
+                    if (blkCount > 0)
+                        nvmos_dl_alloc_deallocateBlocks(
+                            allocator,
+                            blkSeg,
+                            blkCount);
                 }
 
                 if (len == 0)
@@ -442,19 +445,20 @@ int ptrBlks_popBlks(
 
         while (current > 0)
         {
-            current -= 1;
+            --current;
             if (ptrBlks->_1stPtrBlk->_dataBlkPtrs[current] ==
                 blkSeg - 0x1000)
             {
-                blkSeg = ptrBlks->_1stPtrBlk->_dataBlkPtrs[current];
+                blkSeg -= 0x1000;
                 blkCount += 1;
             }
             else
             {
-                nvmos_dl_alloc_deallocateBlocks(
-                    allocator,
-                    blkSeg,
-                    blkCount);
+                if (blkCount > 0)
+                    nvmos_dl_alloc_deallocateBlocks(
+                        allocator,
+                        blkSeg,
+                        blkCount);
                 blkSeg = ptrBlks->_1stPtrBlk->_dataBlkPtrs[current];
                 blkCount = 1;
             }
@@ -462,14 +466,14 @@ int ptrBlks_popBlks(
             ptrBlks->_1stPtrBlk->_dataBlkPtrs[current] = NULL;
             len -= 1;
             ptrBlks->size -= 1;
-            current = (ptrBlks->size - 1) % 0x400;
 
             if (len == 0 || current == 0)
             {
-                nvmos_dl_alloc_deallocateBlocks(
-                    allocator,
-                    blkSeg,
-                    blkCount);
+                if (blkCount > 0)
+                    nvmos_dl_alloc_deallocateBlocks(
+                        allocator,
+                        blkSeg,
+                        blkCount);
             }
 
             if (len == 0)
