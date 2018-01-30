@@ -9,7 +9,7 @@
 #include <string.h>
 
 size_t nvmos_test_getTestCases(directory0, test0)(
-    nvmos_test_testcase_t(ptrdirectory0Blks0, test0) * **res)
+    nvmos_test_testcase_t(directory0, test0) * **res)
 {
 #define testCaseCount 1
 
