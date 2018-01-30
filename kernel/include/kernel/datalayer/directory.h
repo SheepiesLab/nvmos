@@ -21,7 +21,7 @@ struct fileRefBlock
 typedef struct fileRefBlock dir_fileRefBlk_t;
 
 typedef uint32_t dir_fileRefId_t;
-const dir_fileRefId_t dir_fileRefId_inval = 0xFFFFFFFF;
+#define dir_fileRefId_inval 0xFFFFFFFF
 
 bool dir_isDir(meta_meta_t *dir);
 
