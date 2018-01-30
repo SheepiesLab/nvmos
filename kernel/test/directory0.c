@@ -43,13 +43,61 @@ nvmos_test_testDriver(directory0, test0)
     dir_addFileRef(&(dirs[0].metaContent.fileMeta), "1", &(dirs[1])), &allocator);
     dir_addFileRef(&(dirs[0].metaContent.fileMeta), "2", &(dirs[2])), &allocator);
     dir_addFileRef(&(dirs[0].metaContent.fileMeta), "3", &(dirs[3])), &allocator);
-    
+
     dir_addFileRef(&(dirs[1].metaContent.fileMeta), "4", &(dirs[4])), &allocator);
     dir_addFileRef(&(dirs[1].metaContent.fileMeta), "5", &(dirs[5])), &allocator);
-    
+
     dir_addFileRef(&(dirs[2].metaContent.fileMeta), "6", &(dirs[6])), &allocator);
-    
+
     dir_addFileRef(&(dirs[4].metaContent.fileMeta), "7", &(dirs[7])), &allocator);
+
+    if (!dir_fileNameUsed(&(dirs[0].metaContent.fileMeta), "1"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 1 not detected", 0);
+    }
+    if (!dir_fileNameUsed(&(dirs[0].metaContent.fileMeta), "2"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 2 not detected", 0);
+    }
+    if (!dir_fileNameUsed(&(dirs[0].metaContent.fileMeta), "3"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 3 not detected", 0);
+    }
+    if (dir_fileNameUsed(&(dirs[0].metaContent.fileMeta), "4"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 4 detected", 0);
+    }
+
+    if (dir_fileNameUsed(&(dirs[1].metaContent.fileMeta), "4"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 4 not detected", 0);
+    }
+    if (dir_fileNameUsed(&(dirs[1].metaContent.fileMeta), "5"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 5 not detected", 0);
+    }
+    if (dir_fileNameUsed(&(dirs[1].metaContent.fileMeta), "6"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 6 detected", 0);
+    }
+
+    if (dir_fileNameUsed(&(dirs[2].metaContent.fileMeta), "6"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 6 not detected", 0);
+    }
+    if (dir_fileNameUsed(&(dirs[2].metaContent.fileMeta), "7"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 7 detected", 0);
+    }
+
+    if (dir_fileNameUsed(&(dirs[4].metaContent.fileMeta), "7"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 7 not detected", 0);
+    }
+    if (dir_fileNameUsed(&(dirs[4].metaContent.fileMeta), "8"))
+    {
+        nvmos_test_fail("directory0", 0, "Directory Name 8 detected", 0);
+    }
 
     return 0;
 }
