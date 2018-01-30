@@ -28,6 +28,7 @@ struct meta_meta
 		proc_meta_t processMeta;
 		meta_freeMeta_t freeMeta;
 	} metaContent;
+	uint32_t parentMetaPtr;
 	uint32_t flags;
 };
 typedef struct meta_meta meta_meta_t;

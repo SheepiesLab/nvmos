@@ -137,9 +137,10 @@ int file_discardTail(
         &ptrBlks, file);
 
     size_t newFileSize = file->fileSize - len;
-    size_t oldBlkLen = file->fileSize >> 12;
-    size_t newBlkLen = file->fileSize >> 12;
+    size_t oldBlkLen = file->blkSize;
+    size_t newBlkLen = (newFileSize >> 12) + 1;
     file->fileSize = newFileSize;
+    file->blkSize = newBlkLen;
     size_t blksToBePoped = oldBlkLen - newBlkLen;
     if (blksToBePoped > 0)
     {
@@ -157,11 +158,9 @@ int file_removeFile(
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
         &ptrBlks, file);
-
-    size_t blkLen = ptrBlks_getSize(&ptrBlks);
-    if (blkLen != 0)
+    if (file->blkSize != 0)
     {
-        ptrBlks_popBlks(&ptrBlks, blkLen, alloc);
+        ptrBlks_popBlks(&ptrBlks, file->blkSize, alloc);
     }
     return 0;
 }
@@ -172,6 +171,9 @@ size_t file_getMap(
     size_t fromBlk,
     size_t len)
 {
+    if (fromBlk + len > file->blkSize)
+        len = file->blkSize - fromBlk;
+
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(
         &ptrBlks, file);

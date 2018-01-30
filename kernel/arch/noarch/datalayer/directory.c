@@ -15,9 +15,9 @@ void swapFileRef(dir_fileRef_t *a, dir_fileRef_t *b)
             a->fileName[i] = b->fileName[i];
             b->fileName[i] = tmpFN;
         }
-        tmpFMP = a->fileMetaPtr;
-        a->fileMetaPtr = b->fileMetaPtr;
-        b->fileMetaPtr = tmpFMP;
+        tmpFMP = a->metaPtr;
+        a->metaPtr = b->metaPtr;
+        b->metaPtr = tmpFMP;
     }
 }
 
@@ -56,7 +56,7 @@ dir_fileRefId_t dir_addFileRef(
     dir_fileRef_t *newFileRef = dir_getFileRefById(dir, newFileRefId);
 
     memcpy(newFileRef->fileName, fileName, 252);
-    newFileRef->fileMetaPtr = (uint32_t)fileMeta;
+    newFileRef->metaPtr = (uint32_t)fileMeta;
     ptrBlks_saveToFileMeta(&ptrBlks, dir);
     return dir_rePosFileRef(dir, newFileRefId);
 }
@@ -239,7 +239,7 @@ int dir_delFileRef(
         return -1;
 
     memset(fileRef->fileName, 0, 252);
-    fileRef->fileMetaPtr = NULL;
+    fileRef->metaPtr = NULL;
     dir->fileSize -= 0x100;
 
     size_t fileRefsLen = dir->fileSize / 0x100;

@@ -10,7 +10,7 @@
 struct fileRef
 {
 	uint8_t fileName[252];
-	uint32_t fileMetaPtr;
+	uint32_t metaPtr;
 };
 typedef struct fileRef dir_fileRef_t;
 

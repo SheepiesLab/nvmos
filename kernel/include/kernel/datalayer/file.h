@@ -24,9 +24,9 @@ size_t file_read(
     size_t pos,
     size_t len);
 
-uint8_t file_getByteAt(
-    file_meta_t *file,
-    size_t pos);
+// uint8_t file_getByteAt(
+//     file_meta_t *file,
+//     size_t pos);
 
 size_t file_write(
     file_meta_t *filemeta,
