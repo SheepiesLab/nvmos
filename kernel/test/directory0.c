@@ -40,16 +40,16 @@ nvmos_test_testDriver(directory0, test0)
     meta_setDir(&(dirs[6]));
     meta_setDir(&(dirs[7]));
 
-    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "1", &(dirs[1])), &allocator);
-    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "2", &(dirs[2])), &allocator);
-    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "3", &(dirs[3])), &allocator);
+    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "1", &(dirs[1]), &allocator);
+    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "2", &(dirs[2]), &allocator);
+    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "3", &(dirs[3]), &allocator);
 
-    dir_addFileRef(&(dirs[1].metaContent.fileMeta), "4", &(dirs[4])), &allocator);
-    dir_addFileRef(&(dirs[1].metaContent.fileMeta), "5", &(dirs[5])), &allocator);
+    dir_addFileRef(&(dirs[1].metaContent.fileMeta), "4", &(dirs[4]), &allocator);
+    dir_addFileRef(&(dirs[1].metaContent.fileMeta), "5", &(dirs[5]), &allocator);
 
-    dir_addFileRef(&(dirs[2].metaContent.fileMeta), "6", &(dirs[6])), &allocator);
+    dir_addFileRef(&(dirs[2].metaContent.fileMeta), "6", &(dirs[6]), &allocator);
 
-    dir_addFileRef(&(dirs[4].metaContent.fileMeta), "7", &(dirs[7])), &allocator);
+    dir_addFileRef(&(dirs[4].metaContent.fileMeta), "7", &(dirs[7]), &allocator);
 
     if (!dir_fileNameUsed(&(dirs[0].metaContent.fileMeta), "1"))
     {
