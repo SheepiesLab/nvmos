@@ -191,7 +191,7 @@ bool dir_fileNameUsed(
     file_meta_t *dir,
     char *fileName)
 {
-    return dir_searchFileRef(dir, fileName) != dir_fileRefId_inval;
+    return dir_searchFileRef(dir, fileName) == dir_fileRefId_inval;
 }
 
 dir_fileRefId_t dir_renameFileRef(
