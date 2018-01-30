@@ -23,33 +23,33 @@ nvmos_test_testDriver(directory0, test0)
     nvmos_dl_alloc_createAllocator(&allocator, availMem, availMemLen, 0x1000);
 
     /*
-        /   ->  aaa     ->  dd      ->  ffff
-                        ->  eeeee
-            ->  bbbb    ->  gggg
-            ->  ccccc   
+        0   ->  1   ->  4   ->  7
+                    ->  5
+            ->  2   ->  6
+            ->  3   
     */
 
-    meta_meta_t root, aaa, bbbb, ccccc, dd, eeeee, ffff, gggg;
+    meta_meta_t dirs[8];
 
-    meta_setDir(&root);
-    meta_setDir(&aaa);
-    meta_setDir(&bbbb);
-    meta_setDir(&ccccc);
-    meta_setDir(&dd);
-    meta_setDir(&eeeee);
-    meta_setDir(&ffff);
-    meta_setDir(&gggg);
+    meta_setDir(&(dirs[0]));
+    meta_setDir(&(dirs[1]));
+    meta_setDir(&(dirs[2]));
+    meta_setDir(&(dirs[3]));
+    meta_setDir(&(dirs[4]));
+    meta_setDir(&(dirs[5]));
+    meta_setDir(&(dirs[6]));
+    meta_setDir(&(dirs[7]));
 
-    dir_addFileRef(&(root.metaContent.fileMeta), "aaa", &aaa, &allocator);
-    dir_addFileRef(&(root.metaContent.fileMeta), "bbbb", &bbbb, &allocator);
-    dir_addFileRef(&(root.metaContent.fileMeta), "ccccc", &ccccc, &allocator);
-
-    dir_addFileRef(&(aaa.metaContent.fileMeta), "dd", &dd, &allocator);
-    dir_addFileRef(&(aaa.metaContent.fileMeta), "eeeee", &eeeee, &allocator);
-
-    dir_addFileRef(&(dd.metaContent.fileMeta), "ffff", &ffff, &allocator);
-
-    dir_addFileRef(&(bbbb.metaContent.fileMeta), "gggg", &gggg, &allocator);
+    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "1", &(dirs[1])), &allocator);
+    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "2", &(dirs[2])), &allocator);
+    dir_addFileRef(&(dirs[0].metaContent.fileMeta), "3", &(dirs[3])), &allocator);
+    
+    dir_addFileRef(&(dirs[1].metaContent.fileMeta), "4", &(dirs[4])), &allocator);
+    dir_addFileRef(&(dirs[1].metaContent.fileMeta), "5", &(dirs[5])), &allocator);
+    
+    dir_addFileRef(&(dirs[2].metaContent.fileMeta), "6", &(dirs[6])), &allocator);
+    
+    dir_addFileRef(&(dirs[4].metaContent.fileMeta), "7", &(dirs[7])), &allocator);
 
     return 0;
 }
