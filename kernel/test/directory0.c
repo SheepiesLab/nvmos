@@ -31,30 +31,6 @@ nvmos_test_testDriver(directory0, test0)
 
     meta_meta_t root, aaa, bbbb, ccccc, dd, eeeee, ffff, gggg;
 
-    strcpy(root.fileName, "root");
-    root.metaPtr = (uint32_t)&root;
-
-    strcpy(aaa.fileName, "aaa");
-    aaa.metaPtr = (uint32_t)&aaa;
-
-    strcpy(bbbb.fileName, "bbbb");
-    bbbb.metaPtr = (uint32_t)&bbbb;
-
-    strcpy(ccccc.fileName, "ccccc");
-    ccccc.metaPtr = (uint32_t)&ccccc;
-
-    strcpy(dd.fileName, "dd");
-    dd.metaPtr = (uint32_t)&dd;
-
-    strcpy(eeeee.fileName, "eeeee");
-    eeeee.metaPtr = (uint32_t)&eeeee;
-
-    strcpy(ffff.fileName, "ffff");
-    ffff.metaPtr = (uint32_t)&ffff;
-
-    strcpy(gggg.fileName, "gggg");
-    gggg.metaPtr = (uint32_t)&gggg;
-
     meta_setDir(&root);
     meta_setDir(&aaa);
     meta_setDir(&bbbb);
