@@ -70,10 +70,12 @@ nvmos_test_testDriver(directory0, test0)
 
     dir_addFileRef(&(aaa.metaContent.fileMeta), "dd", &dd, &allocator);
     dir_addFileRef(&(aaa.metaContent.fileMeta), "eeeee", &eeeee, &allocator);
-    
+
     dir_addFileRef(&(dd.metaContent.fileMeta), "ffff", &ffff, &allocator);
 
     dir_addFileRef(&(bbbb.metaContent.fileMeta), "gggg", &gggg, &allocator);
+
+    return 0;
 }
 
 nvmos_test_defTestRunner(directory0, test0)
