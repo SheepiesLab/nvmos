@@ -132,8 +132,9 @@ dir_fileRefId_t fileRefBinSearch(
     if (from > to)
         return dir_fileRefId_inval;
     dir_fileRefId_t mid = (from + to) / 2;
-    char *targetFN = dir_getFileRefById(dir, mid)->fileName;
-    int cmpRes = strcmp(targetFN, fileName);
+    dir_fileRef_t *targetFileRef = dir_getFileRefById(dir, mid)->fileName;
+    const char *targetFileName = targetFileRef->fileName;
+    int cmpRes = strcmp(targetFileName, fileName);
     if (cmpRes == 0)
     {
         return mid;
