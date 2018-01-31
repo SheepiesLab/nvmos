@@ -133,6 +133,10 @@ dir_fileRefId_t fileRefBinSearch(
         return dir_fileRefId_inval;
     dir_fileRefId_t mid = (from + to) / 2;
     dir_fileRef_t *targetFileRef = dir_getFileRefById(dir, mid)->fileName;
+    if (targetFileRef == NULL)
+    {
+        return dir_fileRefId_inval;
+    }
     const char *targetFileName = targetFileRef->fileName;
     int cmpRes = strcmp(targetFileName, fileName);
     if (cmpRes == 0)
