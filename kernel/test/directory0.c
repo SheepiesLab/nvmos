@@ -31,14 +31,17 @@ nvmos_test_testDriver(directory0, test0)
 
     meta_meta_t dirs[8];
 
-    meta_setDir(&(dirs[0]));
-    meta_setDir(&(dirs[1]));
-    meta_setDir(&(dirs[2]));
-    meta_setDir(&(dirs[3]));
-    meta_setDir(&(dirs[4]));
-    meta_setDir(&(dirs[5]));
-    meta_setDir(&(dirs[6]));
-    meta_setDir(&(dirs[7]));
+    for (int i = 0; i < 8; ++i)
+    {
+    meta_setDir(&(dirs[i]));
+    dirs[i].metaContent.fileMeta.refCount = 0;
+    dirs[i].metaContent.fileMeta.fileSize = 0;
+    dirs[i].metaContent.fileMeta.blkSize = 0;
+    dirs[i].metaContent.fileMeta._1stBlk = NULL;
+    dirs[i].metaContent.fileMeta._1stPtrBlk = NULL;
+    dirs[i].metaContent.fileMeta._2ndPtrBlk = NULL;
+    dirs[i].metaContent.fileMeta._3rdPtrBlk = NULL;
+    }
 
     dir_addFileRef(&(dirs[0].metaContent.fileMeta), "1", &(dirs[1]), &allocator);
     dir_addFileRef(&(dirs[0].metaContent.fileMeta), "2", &(dirs[2]), &allocator);
