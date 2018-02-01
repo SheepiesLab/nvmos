@@ -112,7 +112,7 @@ nvmos_test_testDriver(directory0, test0)
     else
     {
         meta_meta_t *meta01 = (meta_meta_t *)(fref01->metaPtr);
-        if (meta01 != dirs[1])
+        if (meta01 != &(dirs[1]))
         {
             nvmos_test_fail("directory0", 0, "Directory Search 0->1 is not consistent", 0);
         }
@@ -128,7 +128,7 @@ nvmos_test_testDriver(directory0, test0)
     else
     {
         meta_meta_t *meta02 = (meta_meta_t *)(fref02->metaPtr);
-        if (meta02 != dirs[2])
+        if (meta02 != &(dirs[2]))
         {
             nvmos_test_fail("directory0", 0, "Directory Search 0->2 is not consistent", 0);
         }
@@ -144,7 +144,7 @@ nvmos_test_testDriver(directory0, test0)
     else
     {
         meta_meta_t *meta03 = (meta_meta_t *)(fref03->metaPtr);
-        if (meta03 != dirs[3])
+        if (meta03 != &(dirs[3]))
         {
             nvmos_test_fail("directory0", 0, "Directory Search 0->3 is not consistent", 0);
         }
