@@ -80,6 +80,7 @@ dir_fileRefId_t dir_rePosFileRef(
     while (fileRefId != 0)
     {
         prev = dir_getFileRefById(dir, fileRefId - 1);
+        this = dir_getFileRefById(dir, fileRefId);
         InvalidCases(prev);
         int cmpRes = strcmp(this->fileName, prev->fileName);
         if (cmpRes == 0)
@@ -101,6 +102,7 @@ dir_fileRefId_t dir_rePosFileRef(
     while (fileRefId != dir->fileSize / 256 - 1)
     {
         next = dir_getFileRefById(dir, fileRefId + 1);
+        this = dir_getFileRefById(dir, fileRefId);
         InvalidCases(next);
         int cmpRes = strcmp(next->fileName, this->fileName);
         if (cmpRes == 0)
