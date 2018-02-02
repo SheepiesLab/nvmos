@@ -154,6 +154,8 @@ nvmos_test_testDriver(directory0, test0)
     dir_fileRefId_t fid0 = dir_searchFileRef(&(dirs[0].metaContent.fileMeta), "0");
     printf("fid00: %d, fid0: %d\n", fid00, fid0);
 
+    
+
     return 0;
 }
 

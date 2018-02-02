@@ -15,8 +15,10 @@ int mman_construct(MemoryManager *mman, multiboot_info_t *mbt)
 	gd_fillEntry(&gdt[0], 0, 0, 0);
 	gd_fillEntry(&gdt[1], 0, 0xffffffff, 0x9A);
 	gd_fillEntry(&gdt[2], 0, 0xffffffff, 0x92);
+	gd_fillEntry(&gdt[3], 0, 0xffffffff, 0xFA);
+	gd_fillEntry(&gdt[4], 0, 0xffffffff, 0xF2);
 	gd_fillEntry(
-		&gdt[3],
+		&gdt[5],
 		(uint32_t)ksects[KSECTION_SECTION_TSS].addr,
 		(uint32_t)ksects[KSECTION_SECTION_TSS].len,
 		0x89
