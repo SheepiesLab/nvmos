@@ -159,7 +159,7 @@ void kernel_main(multiboot_info_t *mbt)
             5);
 
     printf("FirstAlloc: %p\n", firstAlloc);
-    printf("SecondAlloc: %p\n", sec ondAlloc);
+    printf("SecondAlloc: %p\n", secondAlloc);
 
     nvmos_dl_alloc_deallocateBlocks(
         &datalayerBlockAllocator,
