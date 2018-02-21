@@ -1,7 +1,6 @@
 #ifndef _FILE_H_
 #define _FILE_H_
 
-#include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/allocator/allocator.h>
 
 struct file_meta
