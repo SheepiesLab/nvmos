@@ -52,7 +52,7 @@ int datalayer_createDatalayer(
     kroot->metaContent.fileMeta._3rdPtrBlk = NULL;
     dlmeta->kroot = (nvmos_ptr_t)kroot;
 
-    meta_meta_t *uroot = meta_getNextFreeMeta(&firstMetaBlock);
+    meta_meta_t *uroot = meta_getNextFreeMeta(&firstMetaBlock, &allocator);
     if (uroot == NULL)
         return NULL;
     meta_setDir(uroot);
