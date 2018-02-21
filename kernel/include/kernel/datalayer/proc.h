@@ -1,7 +1,6 @@
 #ifndef _PROC_H_
 #define _PROC_H_
 
-#include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/file.h>
 #include <kernel/datalayer/pageDir.h>
 #include <kernel/datalayer/allocator/allocator.h>

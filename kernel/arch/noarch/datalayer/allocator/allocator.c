@@ -189,7 +189,7 @@ int nvmos_dl_alloc_deallocateBlocks(
             if (found)
             {
                 length += previousSegmentLength;
-                newNode = targetNode;
+                newNode = (nvmos_dl_freeBlockNode_t *)targetNode;
             }
         }
     }
