@@ -37,7 +37,7 @@ int datalayer_createDatalayer(
 
     meta_metaBlk_t *firstMetaBlock = NULL;
 
-    meta_meta_t *kroot = meta_getNextFreeMeta(&firstMetaBlock);
+    meta_meta_t *kroot = meta_getNextFreeMeta(&firstMetaBlock, &allocator);
     if (kroot == NULL)
         return NULL;
     meta_setDir(kroot);
