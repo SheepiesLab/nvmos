@@ -7,7 +7,6 @@
 #define META_FLAG_LOCKED 0x8
 
 #include <stdint.h>
-#include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/file.h>
 #include <kernel/datalayer/proc.h>
 #include <kernel/datalayer/allocator/allocator.h>
