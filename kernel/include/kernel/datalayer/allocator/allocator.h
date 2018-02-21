@@ -1,7 +1,6 @@
 #ifndef NVMOS_DL_ALLOCATOR_H
 #define NVMOS_DL_ALLOCATOR_H
 
-#include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/allocator/redBlackTree/rbt.h>
 #include <stdint.h>
 

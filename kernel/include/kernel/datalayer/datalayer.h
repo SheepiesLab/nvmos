@@ -1,6 +1,5 @@
-
-#ifndef NVMOS_DATALAYER_H_
-#define NVMOS_DATALAYER_H_
+#ifndef _NVMOS_DATALAYER_H_
+#define _NVMOS_DATALAYER_H_
 
 #include <stdint.h>
 #include <kernel/kdef.h>
