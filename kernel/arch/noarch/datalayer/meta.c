@@ -19,20 +19,28 @@ meta_meta_t *meta_getNextFreeMeta(
         currentMetaBlk =
             (meta_metaBlk_t *)currentMetaBlk->next;
     }
+
     nvmos_ptr_t newBlk =
         nvmos_dl_alloc_allocateBlocks(alloc, 1);
     if (newBlk == NULL)
         return NULL;
 
-    if (lastMetaBlk == NULL)
+    if (lastMetaBlk != NULL)
+    {
+        lastMetaBlk->next = (uint32_t)newBlk;
+    }
+    else
     {
         *metaBlk = (meta_metaBlk_t *)newBlk;
-        return &((*metaBlk)->metas[0]);
     }
 
-    lastMetaBlk->next = (uint32_t)newBlk;
-    currentMetaBlk =
-            (meta_metaBlk_t *)lastMetaBlk->next;
+    currentMetaBlk = (meta_metaBlk_t *)newBlk;
+    for (size_t i = 0; i < 93; ++i)
+    {
+        meta_meta_t *nextMeta =
+            &(currentMetaBlk->metas[i]);
+        meta_setFree(nextMeta);
+    }
     return &(currentMetaBlk->metas[0]);
 }
 

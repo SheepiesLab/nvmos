@@ -15,6 +15,7 @@
 #include <kernel/mman/heap/Heap.h>
 #include <kernel/datalayer/allocator/allocator.h>
 #include <kernel/datalayer/meta.h>
+#include <kernel/datalayer/datalayer.h>
 
 void kernel_main(multiboot_info_t *mbt)
 {
@@ -93,6 +94,9 @@ void kernel_main(multiboot_info_t *mbt)
     printf("\n");
     printf("\n");
 
+    // Init Datalayer
+    
+
     {
         InterruptDescriptor id;
         id.type = ID_TYPE_386_TRAP;
@@ -136,47 +140,6 @@ void kernel_main(multiboot_info_t *mbt)
 
     asm("int $0x30");
     printf("After interrupt!\n");
-
-    // Datalayer Allocator
-
-    nvmos_dl_allocator_t datalayerBlockAllocator;
-    nvmos_dl_alloc_createAllocator(
-        &datalayerBlockAllocator,
-        0x110000,
-        0xbfed0000,
-        0x1000);
-    printf(
-        "First Node Addr: %p\n",
-        (datalayerBlockAllocator.head->content));
-
-    nvmos_ptr_t firstAlloc =
-        nvmos_dl_alloc_allocateBlocks(
-            &datalayerBlockAllocator,
-            5);
-    nvmos_ptr_t secondAlloc =
-        nvmos_dl_alloc_allocateBlocks(
-            &datalayerBlockAllocator,
-            5);
-
-    printf("FirstAlloc: %p\n", firstAlloc);
-    printf("SecondAlloc: %p\n", secondAlloc);
-
-    nvmos_dl_alloc_deallocateBlocks(
-        &datalayerBlockAllocator,
-        firstAlloc,
-        5);
-    nvmos_dl_alloc_deallocateBlocks(
-        &datalayerBlockAllocator,
-        secondAlloc,
-        5);
-
-    nvmos_ptr_t thirdAlloc =
-        nvmos_dl_alloc_allocateBlocks(
-            &datalayerBlockAllocator,
-            5);
-    printf("ThirdAlloc: %p\n", thirdAlloc);
-
-    printf("Sizeof meta_meta_t: %d\n", sizeof(meta_meta_t));
 
     while (1)
     {
