@@ -95,7 +95,17 @@ void kernel_main(multiboot_info_t *mbt)
     printf("\n");
 
     // Init Datalayer
+    nvmos_ptr_t dlstart = 
+        ksects[KSECTION_SECTION_HEAP].addr + 
+        ksects[KSECTION_SECTION_HEAP].len);
+    dlstart += 0x1000;
+    dlstart &= 0xfffff000;
     nvmos_dl_datalayerMeta_t *dlmeta;
+    if ((dlmeta = datalayer_createDatalayer(
+             dlstart, 0x40000000, 0x1000)) == NULL)
+    {
+        printf("Datalayer Creation Failed!\n");
+    }
     
 
     {
