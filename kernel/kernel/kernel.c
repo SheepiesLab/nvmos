@@ -137,9 +137,13 @@ void kernel_main(multiboot_info_t *mbt)
     meta_setProc(proc0);
     dir_addFileRef(&krootDir, "proc0", proc0, &allocator);
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
+    if (proc_createProc(proc0Meta, &allocator))
+    {
+        printf("Error creating proc0\n");
+    }
     if (proc_mapKernel(proc0Meta, 0, 0, 0x114000, &allocator))
     {
-        printf("Error mapping kernel memory to proc0");
+        printf("Error mapping kernel memory to proc0\n");
     }
 
 endProc:
