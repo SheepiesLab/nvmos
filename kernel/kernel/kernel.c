@@ -133,9 +133,9 @@ void kernel_main(multiboot_info_t *mbt)
     file_meta_t *krootDir = &(kroot->metaContent.fileMeta);
     meta_meta_t *proc0 = meta_getNextFreeMeta(
         (meta_metaBlk_t **)&(dlMeta->metaBlockList),
-        allocator);
+        &allocator);
     meta_setProc(proc0);
-    dir_addFileRef(&krootDir, "proc0", proc0, allocator);
+    dir_addFileRef(&krootDir, "proc0", proc0, &allocator);
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
     if (proc_mapKernel(proc0Meta, 0, 0, 0x114000, &allocator))
     {
