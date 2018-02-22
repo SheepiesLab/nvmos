@@ -81,6 +81,7 @@ void kernel_main(multiboot_info_t *mbt)
         printf("\n");
     }
 
+    // Tests
     // printf("\n");
     // printf("\n");
     // printf("Test Memory Address: %p\n",
@@ -116,40 +117,66 @@ void kernel_main(multiboot_info_t *mbt)
         printf("DL length:      0x%p\n",
                (uint64_t)dlSize);
     }
+    nvmos_dl_allocator_t allocator;
+    nvmos_dl_alloc_retrieveAllocator(
+        &alloator,
+        nvmos_ptr_t(dlMeta->freeBlockList),
+        dlMeta->allocationBlockSize);
 
+    // Add a process to kroot
+    meta_meta_t *kroot = datalayer_getKRoot(dlMeta);
+    if (kroot == NULL)
     {
-        InterruptDescriptor id;
-        id.type = ID_TYPE_386_TRAP;
-        id.isrAddr = (nvmos_ptr_t)&exceptionHandler;
-        id.present = 1;
-        id.privilegeLevel = 0;
-        for (int i = 0; i < 0x20; ++i)
-        {
-            interruptDescriptor_Encode(
-                &id,
-                idtBuffer + 8 * i);
-        }
-        id.type = ID_TYPE_386_INT;
-        id.isrAddr = (nvmos_ptr_t)&irqHandler;
-        id.present = 1;
-        id.privilegeLevel = 0;
-        for (int i = 0x20; i < 0x30; ++i)
-        {
-            interruptDescriptor_Encode(
-                &id,
-                idtBuffer + 8 * i);
-        }
-        id.type = ID_TYPE_386_INT;
-        id.isrAddr = (nvmos_ptr_t)&interruptHandler;
-        id.present = 1;
-        id.privilegeLevel = 0;
-        for (int i = 0x30; i <= 0xFF; ++i)
-        {
-            interruptDescriptor_Encode(
-                &id,
-                idtBuffer + 8 * i);
-        }
+        printf("K Root is corrupted...\n");
+        goto endProc;
     }
+    file_meta_t *krootDir = &(kroot->metaContent.fileMeta);
+    meta_meta_t *proc0 = meta_getNextFreeMeta(
+        (mata_metaBlk_t **)&(dlMeta->metaBlockList),
+        allocator);
+    meta_setProc(proc0);
+    dir_addFileRef(&krootDir, "proc0", proc0, allocator);
+    proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
+    if (proc_mapKernel(proc0Meta, 0, 0, 0x114000, allocator))
+    {
+        printf("Error mapping kernel memory to proc0");
+    }
+
+endProc:
+
+{
+    InterruptDescriptor id;
+    id.type = ID_TYPE_386_TRAP;
+    id.isrAddr = (nvmos_ptr_t)&exceptionHandler;
+    id.present = 1;
+    id.privilegeLevel = 0;
+    for (int i = 0; i < 0x20; ++i)
+    {
+        interruptDescriptor_Encode(
+            &id,
+            idtBuffer + 8 * i);
+    }
+    id.type = ID_TYPE_386_INT;
+    id.isrAddr = (nvmos_ptr_t)&irqHandler;
+    id.present = 1;
+    id.privilegeLevel = 0;
+    for (int i = 0x20; i < 0x30; ++i)
+    {
+        interruptDescriptor_Encode(
+            &id,
+            idtBuffer + 8 * i);
+    }
+    id.type = ID_TYPE_386_INT;
+    id.isrAddr = (nvmos_ptr_t)&interruptHandler;
+    id.present = 1;
+    id.privilegeLevel = 0;
+    for (int i = 0x30; i <= 0xFF; ++i)
+    {
+        interruptDescriptor_Encode(
+            &id,
+            idtBuffer + 8 * i);
+    }
+}
     setIDT((uint32_t)idtBuffer, 256 * 8);
     PIC_remap(0x20, 0x28);
     for (int i = 0; i < 16; ++i)
