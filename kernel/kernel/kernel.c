@@ -112,9 +112,9 @@ void kernel_main(multiboot_info_t *mbt)
     else
     {
         printf("DL start:       0x%p\t",
-               dlStart);
+               (uint64_t)dlStart);
         printf("DL length:      0x%p\n",
-               dlSize);
+               (uint64_t)dlSize);
     }
 
     {
