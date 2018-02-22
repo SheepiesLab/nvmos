@@ -119,8 +119,8 @@ void kernel_main(multiboot_info_t *mbt)
     }
     nvmos_dl_allocator_t allocator;
     nvmos_dl_alloc_retrieveAllocator(
-        &alloator,
-        nvmos_ptr_t(dlMeta->freeBlockList),
+        &allocator,
+        (nvmos_ptr_t)(dlMeta->freeBlockList),
         dlMeta->allocationBlockSize);
 
     // Add a process to kroot
@@ -132,12 +132,12 @@ void kernel_main(multiboot_info_t *mbt)
     }
     file_meta_t *krootDir = &(kroot->metaContent.fileMeta);
     meta_meta_t *proc0 = meta_getNextFreeMeta(
-        (mata_metaBlk_t **)&(dlMeta->metaBlockList),
+        (meta_metaBlk_t **)&(dlMeta->metaBlockList),
         allocator);
     meta_setProc(proc0);
     dir_addFileRef(&krootDir, "proc0", proc0, allocator);
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
-    if (proc_mapKernel(proc0Meta, 0, 0, 0x114000, allocator))
+    if (proc_mapKernel(proc0Meta, 0, 0, 0x114000, &allocator))
     {
         printf("Error mapping kernel memory to proc0");
     }
