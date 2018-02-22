@@ -25,9 +25,9 @@ typedef struct
 	uint32_t flags;
 } nvmos_dl_datalayerMeta_t;
 
-int datalayer_loadDatalayer(nvmos_ptr_t start);
+nvmos_dl_datalayerMeta_t *datalayer_loadDatalayer(nvmos_ptr_t start);
 
-int datalayer_createDatalayer(
+nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
 	nvmos_ptr_t start,
 	size_t size,
 	size_t allocationBlockSize);
@@ -43,14 +43,13 @@ int datalayer_resizeDatalayer(
 	size_t newSize);
 
 int datalayer_getAllocator(
-    nvmos_dl_allocator_t *allocator,
-    nvmos_dl_datalayerMeta_t *dlmeta);
+	nvmos_dl_allocator_t *allocator,
+	nvmos_dl_datalayerMeta_t *dlmeta);
 
 meta_meta_t *datalayer_getURoot(
 	nvmos_dl_datalayerMeta_t *dlmeta);
 
 meta_meta_t *datalayer_getKRoot(
 	nvmos_dl_datalayerMeta_t *dlmeta);
-
 
 #endif

@@ -95,6 +95,7 @@ void kernel_main(multiboot_info_t *mbt)
     printf("\n");
 
     // Init Datalayer
+    nvmos_dl_datalayerMeta_t *dlmeta;
     
 
     {

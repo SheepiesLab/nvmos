@@ -1,6 +1,6 @@
 #include <kernel/datalayer/datalayer.h>
 
-int datalayer_loadDatalayer(nvmos_ptr_t start)
+nvmos_dl_datalayerMeta_t *int datalayer_loadDatalayer(nvmos_ptr_t start)
 {
     nvmos_dl_datalayerMeta_t *dlmeta = (nvmos_dl_datalayerMeta_t *)start;
     if (dlmeta->magic == NVMOS_DL_MAGIC)
@@ -10,7 +10,7 @@ int datalayer_loadDatalayer(nvmos_ptr_t start)
     return NULL;
 }
 
-int datalayer_createDatalayer(
+nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
     nvmos_ptr_t start,
     size_t size,
     size_t allocationBlockSize)
