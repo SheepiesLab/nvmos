@@ -102,7 +102,8 @@ void kernel_main(multiboot_info_t *mbt)
     dlstart &= 0xfffff000;
     nvmos_dl_datalayerMeta_t *dlmeta;
     if ((dlmeta = datalayer_createDatalayer(
-             dlstart, 0x40000000, 0x1000)) == NULL)
+             dlstart, 0x40000000, 0x1000)) == NULL ||
+        (nvmos_ptr_t)dlmeta != dlstart)
     {
         printf("Datalayer Creation Failed!\n");
     }
