@@ -28,7 +28,7 @@ nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
     if (nvmos_dl_alloc_createAllocator(
             &allocator,
             start + allocationBlockSize,
-            dlmeta->blockCount - 1,
+            (dlmeta->blockCount - 1) * dlmeta->allocationBlockSize,
             allocationBlockSize))
     {
         return NULL;
