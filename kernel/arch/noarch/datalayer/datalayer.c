@@ -44,7 +44,7 @@ nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
         printf("Test Allocatoion: 0x%p\n", (uint64_t)testAlloc[i]);
     }
 
-    dlmeta->freeBlockList = (nvmos_ptr_t)allocator.head;
+    dlmeta->freeBlockList = (nvmos_ptr_t)(allocator.head);
 
     meta_metaBlk_t *firstMetaBlock = NULL;
 
