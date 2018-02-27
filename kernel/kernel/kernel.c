@@ -123,6 +123,8 @@ void kernel_main(multiboot_info_t *mbt)
         (nvmos_ptr_t)(dlMeta->freeBlockList),
         dlMeta->allocationBlockSize);
 
+    printf("Allocator Address: 0x%p\n", (uint64_t)dlMeta->freeBlockList);
+
     nvmos_ptr_t testAlloc[16];
     for (int i = 0; i < 16; ++i)
     {
