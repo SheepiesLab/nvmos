@@ -67,7 +67,7 @@ int nvmos_dl_alloc_retrieveAllocator(
 {
     allocator->allocationBlockSize = allocationBlockSize;
     allocator->head =
-        &((rbt_node_t *)head);
+        (rbt_node_t *)head;
     return 0;
 }
 
