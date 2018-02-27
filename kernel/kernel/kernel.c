@@ -123,7 +123,7 @@ void kernel_main(multiboot_info_t *mbt)
         (nvmos_ptr_t)(dlMeta->freeBlockList),
         dlMeta->allocationBlockSize);
 
-    printf("Datalayer fbl: 0x%p\n", (uint64_t)dlMeta->freeBlockList);
+    printf("Datalayer fbl: 0x%p\n", (uint64_t)(dlMeta->freeBlockList));
     printf("Allocator head: 0x%p\n", (uint64_t)(allocator.head));
 
     nvmos_ptr_t testAlloc[16];

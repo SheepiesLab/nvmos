@@ -33,6 +33,8 @@ nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
     {
         return NULL;
     }
+    
+    printf("Allocator head: 0x%p\n", (uint64_t)(allocator.head));
 
     dlmeta->freeBlockList = (nvmos_ptr_t)allocator.head;
 
