@@ -30,7 +30,8 @@ nvmos_dl_datalayerMeta_t *datalayer_loadDatalayer(nvmos_ptr_t start);
 nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
 	nvmos_ptr_t start,
 	size_t size,
-	size_t allocationBlockSize);
+	size_t allocationBlockSize,
+	nvmos_dl_allocator *allocator);
 
 size_t datalayer_getSizeOfDatalayer(
 	nvmos_dl_datalayerMeta_t *dlmeta);

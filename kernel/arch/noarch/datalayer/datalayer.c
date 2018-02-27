@@ -13,7 +13,8 @@ nvmos_dl_datalayerMeta_t *datalayer_loadDatalayer(nvmos_ptr_t start)
 nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
     nvmos_ptr_t start,
     size_t size,
-    size_t allocationBlockSize)
+    size_t allocationBlockSize,
+    nvmos_dl_allocator_t *allocator)
 {
     if (start % allocationBlockSize != 0)
         return NULL;
@@ -24,19 +25,14 @@ nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
     dlmeta->startAddress = start;
     dlmeta->blockCount = size / allocationBlockSize;
     dlmeta->allocationBlockSize = allocationBlockSize;
-    nvmos_dl_allocator_t allocator;
     if (nvmos_dl_alloc_createAllocator(
-            &allocator,
+            allocator,
             start + allocationBlockSize,
             (dlmeta->blockCount - 1) * dlmeta->allocationBlockSize,
             allocationBlockSize))
     {
         return NULL;
     }
-    printf("Allocator head: 0x%p\n", (uint64_t)(allocator.head));
-    printf(
-        "Allocator allocBlockSize: 0x%p\n",
-        (uint64_t)(allocator.allocationBlockSize));
 
     dlmeta->freeBlockList = (nvmos_ptr_t)(allocator.head);
 

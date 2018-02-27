@@ -104,8 +104,9 @@ void kernel_main(multiboot_info_t *mbt)
     size_t dlSize = 0x80000000;
     size_t dlBlkSize = 0x1000;
     nvmos_dl_datalayerMeta_t *dlMeta;
+    nvmos_dl_allocator_t allocator;
     if ((dlMeta = datalayer_createDatalayer(
-             dlStart, dlSize, dlBlkSize)) == NULL ||
+             dlStart, dlSize, dlBlkSize, &allocator)) == NULL ||
         (nvmos_ptr_t)dlMeta != dlStart)
     {
         printf("Datalayer Creation Failed!\n");
@@ -117,16 +118,6 @@ void kernel_main(multiboot_info_t *mbt)
         printf("DL length:      0x%p\n",
                (uint64_t)dlSize);
     }
-    nvmos_dl_allocator_t allocator;
-    nvmos_dl_alloc_retrieveAllocator(
-        &allocator,
-        (nvmos_ptr_t)(dlMeta->freeBlockList),
-        dlMeta->allocationBlockSize);
-
-    printf("Allocator head: 0x%p\n", (uint64_t)(allocator.head));
-    printf(
-        "Allocator allocBlockSize: 0x%p\n",
-        (uint64_t)(allocator.allocationBlockSize));
 
     nvmos_ptr_t testAlloc[16];
     for (int i = 0; i < 16; ++i)
