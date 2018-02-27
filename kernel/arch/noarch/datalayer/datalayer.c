@@ -34,11 +34,11 @@ nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
         return NULL;
     }
 
-    dlmeta->freeBlockList = (nvmos_ptr_t)(allocator.head);
+    dlmeta->freeBlockList = (nvmos_ptr_t)(allocator->head);
 
     meta_metaBlk_t *firstMetaBlock = NULL;
 
-    meta_meta_t *kroot = meta_getNextFreeMeta(&firstMetaBlock, &allocator);
+    meta_meta_t *kroot = meta_getNextFreeMeta(&firstMetaBlock, allocator);
     if (kroot == NULL)
         return NULL;
     meta_setDir(kroot);
@@ -53,7 +53,7 @@ nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
     kroot->metaContent.fileMeta._3rdPtrBlk = NULL;
     dlmeta->kroot = (nvmos_ptr_t)kroot;
 
-    meta_meta_t *uroot = meta_getNextFreeMeta(&firstMetaBlock, &allocator);
+    meta_meta_t *uroot = meta_getNextFreeMeta(&firstMetaBlock, allocator);
     if (uroot == NULL)
         return NULL;
     meta_setDir(uroot);
