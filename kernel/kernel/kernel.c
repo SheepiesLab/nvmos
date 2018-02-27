@@ -126,14 +126,14 @@ void kernel_main(multiboot_info_t *mbt)
     printf("Datalayer fbl: 0x%p\n", (uint64_t)dlMeta->freeBlockList);
     printf("Allocator head: 0x%p\n", (uint64_t)(allocator.head));
 
-    nvmos_ptr_t testAlloc[16];
-    for (int i = 0; i < 16; ++i)
-    {
-        testAlloc[i] = nvmos_dl_alloc_allocateBlocks(
-            &allocator,
-            (i + 1) * 2);
-        printf("Test Allocatoion: 0x%p\n", (uint64_t)testAlloc[i]);
-    }
+    // nvmos_ptr_t testAlloc[16];
+    // for (int i = 0; i < 16; ++i)
+    // {
+    //     testAlloc[i] = nvmos_dl_alloc_allocateBlocks(
+    //         &allocator,
+    //         (i + 1) * 2);
+    //     printf("Test Allocatoion: 0x%p\n", (uint64_t)testAlloc[i]);
+    // }
 
     // Add a process to kroot
     meta_meta_t *kroot = datalayer_getKRoot(dlMeta);
