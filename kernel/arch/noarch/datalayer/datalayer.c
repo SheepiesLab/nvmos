@@ -33,16 +33,10 @@ nvmos_dl_datalayerMeta_t *datalayer_createDatalayer(
     {
         return NULL;
     }
-    
     printf("Allocator head: 0x%p\n", (uint64_t)(allocator.head));
-    nvmos_ptr_t testAlloc[16];
-    for (int i = 0; i < 16; ++i)
-    {
-        testAlloc[i] = nvmos_dl_alloc_allocateBlocks(
-            &allocator,
-            (i + 1) * 2);
-        printf("Test Allocatoion: 0x%p\n", (uint64_t)testAlloc[i]);
-    }
+    printf(
+        "Allocator allocBlockSize: 0x%p\n",
+        (uint64_t)(allocator.allocationBlockSize));
 
     dlmeta->freeBlockList = (nvmos_ptr_t)(allocator.head);
 
