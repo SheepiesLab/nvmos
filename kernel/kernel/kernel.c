@@ -120,9 +120,9 @@ void kernel_main(multiboot_info_t *mbt)
                (uint64_t)dlSize);
     }
 
+    uint32_t testCount = 1;
+    nvmos_ptr_t testAlloc[testCount];
     #define allocTest \
-    uint32_t testCount = 1;\
-    nvmos_ptr_t testAlloc[testCount];\
     for (int i = 0; i < testCount; ++i){\
         testAlloc[i] = nvmos_dl_alloc_allocateBlocks(&allocator, 1);\
         printf("Test Alloc:     0x%p\n",\
