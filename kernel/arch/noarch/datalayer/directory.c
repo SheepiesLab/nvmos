@@ -31,14 +31,14 @@ bool dir_isDir(meta_meta_t *dir)
 uint32_t testCount = 3;
 nvmos_ptr_t testAlloc[testCount];
 #define allocTest                                                    \
-    printf("Allocator.head: 0x%p\n", allocator->head);                \
+    printf("X Allocator.head: 0x%p\n", allocator->head);                \
     for (int i = 0; i < testCount; ++i)                              \
     {                                                                \
         testAlloc[i] = nvmos_dl_alloc_allocateBlocks(allocator, 1); \
         printf("Test Alloc:     0x%p\n",                             \
                (uint64_t)testAlloc[i]);                              \
     }                                                                \
-    printf("Allocator.head: 0x%p\n", allocator->head);
+    printf("X Allocator.head: 0x%p\n", allocator->head);
 
 dir_fileRefId_t dir_addFileRef(
     file_meta_t *dir,
