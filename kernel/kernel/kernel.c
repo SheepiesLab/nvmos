@@ -129,7 +129,7 @@ void kernel_main(multiboot_info_t *mbt)
                (uint64_t)testAlloc[i]);\
     }
     printf ("Allocator.head: 0x%p\n", allocator.head);
-    allocTest;
+    allocTest
 
     // Add a process to kroot
     meta_meta_t *kroot = datalayer_getKRoot(dlMeta);
@@ -145,7 +145,10 @@ void kernel_main(multiboot_info_t *mbt)
     printf ("Allocator.head: 0x%p\n", allocator.head);
     allocTest
     meta_setProc(proc0);
-    dir_addFileRef(&krootDir, "proc0", proc0, &allocator);
+    if (dir_addFileRef(&krootDir, "proc0", proc0, &allocator) == dir_fileRefId_inval){
+        printf("New file ref bad...\n");
+        goto endProc;
+    }
     printf ("Allocator.head: 0x%p\n", allocator.head);
     allocTest
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);

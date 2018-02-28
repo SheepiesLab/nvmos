@@ -47,6 +47,9 @@ dir_fileRefId_t dir_addFileRef(
     {
         nvmos_ptr_t newBlk =
             nvmos_dl_alloc_allocateBlocks(allocator, 1);
+        if (newBlk == NULL){
+            return dir_fileRefId_inval;
+        }
         memset((void *)newBlk, 0, 0x1000);
         ptrBlks_pushBlks(&ptrBlks, newBlk, 1, allocator);
         ptrBlks_saveToFileMeta(&ptrBlks, dir);
