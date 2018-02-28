@@ -13,6 +13,7 @@
 #include <kernel/mman/MemoryManager.h>
 #include <kernel/mman/KernelSection.h>
 #include <kernel/mman/heap/Heap.h>
+#include <kernel/mman/paging.h>
 #include <kernel/datalayer/allocator/allocator.h>
 #include <kernel/datalayer/meta.h>
 #include <kernel/datalayer/datalayer.h>
@@ -143,6 +144,7 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error mapping kernel memory to proc0\n");
         goto endProc;
     }
+    nvmos_pagingOn(Proc0Meta->pageDir);
 
 endProc:
 
