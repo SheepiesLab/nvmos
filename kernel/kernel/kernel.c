@@ -148,6 +148,8 @@ void kernel_main(multiboot_info_t *mbt)
     dir_addFileRef(&krootDir, "proc0", proc0, &allocator);
     printf ("Allocator.head: 0x%p\n", allocator.head);
     allocTest
+    allocTest
+    allocTest
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
     if (proc_createProc(proc0Meta, &allocator))
     {
