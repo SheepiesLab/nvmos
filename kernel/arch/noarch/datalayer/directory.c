@@ -79,13 +79,17 @@ dir_fileRefId_t dir_addFileRef(
         ptrBlks_saveToFileMeta(&ptrBlks, dir);
     }
 
+    allocTest;
     dir->fileSize += 0x100;
 
     dir_fileRef_t *newFileRef = dir_getFileRefById(dir, newFileRefId);
 
+    allocTest;
     memcpy(newFileRef->fileName, fileName, 252);
     newFileRef->metaPtr = (uint32_t)fileMeta;
+    allocTest;
     ptrBlks_saveToFileMeta(&ptrBlks, dir);
+    allocTest;
     return dir_rePosFileRef(dir, newFileRefId);
 }
 #undef allocTest
