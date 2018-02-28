@@ -120,7 +120,7 @@ void kernel_main(multiboot_info_t *mbt)
                (uint64_t)dlSize);
     }
 
-    uint32_t testCount = 1;
+    uint32_t testCount = 3;
     nvmos_ptr_t testAlloc[testCount];
     #define allocTest \
     for (int i = 0; i < testCount; ++i){\
@@ -147,8 +147,6 @@ void kernel_main(multiboot_info_t *mbt)
     meta_setProc(proc0);
     dir_addFileRef(&krootDir, "proc0", proc0, &allocator);
     printf ("Allocator.head: 0x%p\n", allocator.head);
-    allocTest
-    allocTest
     allocTest
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
     if (proc_createProc(proc0Meta, &allocator))
