@@ -16,6 +16,7 @@
 #include <kernel/mman/paging.h>
 #include <kernel/datalayer/allocator/allocator.h>
 #include <kernel/datalayer/meta.h>
+#include <kernel/datalayer/directory.h>
 #include <kernel/datalayer/datalayer.h>
 
 void kernel_main(multiboot_info_t *mbt)
