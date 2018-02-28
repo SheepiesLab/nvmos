@@ -148,6 +148,7 @@ void kernel_main(multiboot_info_t *mbt)
     meta_setProc(proc0);
     if (dir_addFileRef(&krootDir, "proc0", proc0, &allocator) == dir_fileRefId_inval){
         printf("New file ref bad...\n");
+        allocTest
         goto endProc;
     }
     printf ("Allocator.head: 0x%p\n", allocator.head);
