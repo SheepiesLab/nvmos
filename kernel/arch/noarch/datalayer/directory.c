@@ -33,7 +33,6 @@ bool dir_isDir(meta_meta_t *dir)
     for (int i = 0; i < testCount; ++i)                             \
     {                                                               \
         testAlloc[i] = nvmos_dl_alloc_allocateBlocks(allocator, 1); \
-        memset(testAlloc[i], 0, 0x1000);\
         printf("Test Alloc:     0x%p\n",                            \
                (uint64_t)testAlloc[i]);                             \
     }                                                               \
