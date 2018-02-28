@@ -144,7 +144,7 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error mapping kernel memory to proc0\n");
         goto endProc;
     }
-    nvmos_pagingOn(Proc0Meta->pageDir);
+    nvmos_pagingOn(proc0Meta->pageDir);
 
 endProc:
 
