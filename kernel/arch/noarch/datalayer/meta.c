@@ -1,7 +1,7 @@
 #include <kernel/datalayer/meta.h>
 
 void meta_cleanMeta(meta_meta_t *meta){
-    memset(meta, 0, sizeof(meta_meta_t));
+    // memset(meta, 0, sizeof(meta_meta_t));
 }
 
 meta_meta_t *meta_getNextFreeMeta(
