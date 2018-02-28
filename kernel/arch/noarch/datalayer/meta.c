@@ -1,5 +1,9 @@
 #include <kernel/datalayer/meta.h>
 
+void meta_cleanMeta(meta_meta_t *meta){
+    memset(meta, 0, sizeof(meta_meta_t));
+}
+
 meta_meta_t *meta_getNextFreeMeta(
     meta_metaBlk_t **metaBlk,
     nvmos_dl_allocator_t *alloc)
@@ -69,24 +73,28 @@ bool meta_isFree(meta_meta_t *meta)
 
 void meta_setFile(meta_meta_t *meta)
 {
+    meta_cleanMeta(meta);
     meta->flags |= META_FLAG_ISFILE;
     meta->flags &= ~META_FLAG_ISDIR;
     meta->flags &= ~META_FLAG_FREE;
 }
 void meta_setDir(meta_meta_t *meta)
 {
+    meta_cleanMeta(meta);
     meta->flags |= META_FLAG_ISFILE;
     meta->flags |= META_FLAG_ISDIR;
     meta->flags &= ~META_FLAG_FREE;
 }
 void meta_setProc(meta_meta_t *meta)
 {
+    meta_cleanMeta(meta);
     meta->flags &= ~META_FLAG_ISFILE;
     meta->flags &= ~META_FLAG_ISDIR;
     meta->flags &= ~META_FLAG_FREE;
 }
 void meta_setFree(meta_meta_t *meta)
 {
+    meta_cleanMeta(meta);
     meta->flags &= ~META_FLAG_ISFILE;
     meta->flags &= ~META_FLAG_ISDIR;
     meta->flags |= META_FLAG_FREE;
