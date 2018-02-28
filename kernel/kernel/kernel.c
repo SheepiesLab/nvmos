@@ -119,15 +119,6 @@ void kernel_main(multiboot_info_t *mbt)
                (uint64_t)dlSize);
     }
 
-    nvmos_ptr_t testAlloc[16];
-    for (int i = 0; i < 16; ++i)
-    {
-        testAlloc[i] = nvmos_dl_alloc_allocateBlocks(
-            &allocator,
-            (i + 1) * 2);
-        printf("Test Allocatoion: 0x%p\n", (uint64_t)testAlloc[i]);
-    }
-
     // Add a process to kroot
     meta_meta_t *kroot = datalayer_getKRoot(dlMeta);
     if (kroot == NULL)
@@ -145,10 +136,12 @@ void kernel_main(multiboot_info_t *mbt)
     if (proc_createProc(proc0Meta, &allocator))
     {
         printf("Error creating proc0\n");
+        goto endProc;
     }
-    if (proc_mapKernel(proc0Meta, 0, 0, 0x114000, &allocator))
+    if (proc_mapKernel(proc0Meta, 0, 0, 0x114000 / 0x1000, &allocator))
     {
         printf("Error mapping kernel memory to proc0\n");
+        goto endProc;
     }
 
 endProc:
