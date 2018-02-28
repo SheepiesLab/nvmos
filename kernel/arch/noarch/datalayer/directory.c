@@ -49,11 +49,13 @@ dir_fileRefId_t dir_addFileRef(
             nvmos_dl_alloc_allocateBlocks(allocator, 1);
         if (newBlk == NULL)
         {
+            printf("Cannot allocate memory for file ref...\n");
             return dir_fileRefId_inval;
         }
         memset((void *)newBlk, 0, 0x1000);
         if (ptrBlks_pushBlks(&ptrBlks, newBlk, 1, allocator))
         {
+            printf("ptrBlks push block failed...\n");
             return dir_fileRefId_inval;
         }
         ptrBlks_saveToFileMeta(&ptrBlks, dir);
