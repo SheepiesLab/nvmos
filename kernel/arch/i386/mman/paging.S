@@ -1,13 +1,8 @@
-.section .data
-
-pageDirPtr:
-    .int 0x0
-
 .section .text
 .global nvmos_pagingOn
 .type nvmos_pagingOn,   @function
 
-setGDT:
+nvmos_pagingOn:
     mov     4(%esp),    %eax
     mov     %eax,       %cr3
     mov     %cr0,       %eax
