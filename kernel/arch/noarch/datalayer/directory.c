@@ -47,21 +47,21 @@ dir_fileRefId_t dir_addFileRef(
 
     uint32_t testCount = 3;
     nvmos_ptr_t testAlloc[testCount];
-    allocTest;
+    allocTest(0);
     if (dir_fileNameUsed(dir, (char *)fileName))
         return dir_fileRefId_inval;
-    allocTest;
+    allocTest(1);
 
     size_t fileRefsLen = dir->fileSize / 0x100;
     dir_fileRefId_t newFileRefId = (dir_fileRefId_t)fileRefsLen;
-    allocTest;
+    allocTest(2);
 
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(&ptrBlks, dir);
 
     if (newFileRefId % 16 == 0)
     {
-        allocTest;
+        allocTest(3);
         nvmos_ptr_t newBlk =
             nvmos_dl_alloc_allocateBlocks(allocator, 1);
         if (newBlk == NULL)
@@ -70,7 +70,7 @@ dir_fileRefId_t dir_addFileRef(
             return dir_fileRefId_inval;
         }
         memset((void *)newBlk, 0, 0x1000);
-        allocTest;
+        allocTest(4);
         if (ptrBlks_pushBlks(&ptrBlks, newBlk, 1, allocator))
         {
             printf("ptrBlks push block failed...\n");
@@ -79,17 +79,17 @@ dir_fileRefId_t dir_addFileRef(
         ptrBlks_saveToFileMeta(&ptrBlks, dir);
     }
 
-    allocTest;
+    allocTest(5);
     dir->fileSize += 0x100;
 
     dir_fileRef_t *newFileRef = dir_getFileRefById(dir, newFileRefId);
 
-    allocTest;
+    allocTest(6);
     memcpy(newFileRef->fileName, fileName, 252);
     newFileRef->metaPtr = (uint32_t)fileMeta;
-    allocTest;
+    allocTest(7);
     ptrBlks_saveToFileMeta(&ptrBlks, dir);
-    allocTest;
+    allocTest(8);
     return dir_rePosFileRef(dir, newFileRefId);
 }
 #undef allocTest
