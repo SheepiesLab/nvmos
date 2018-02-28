@@ -50,9 +50,11 @@ dir_fileRefId_t dir_addFileRef(
     allocTest;
     if (dir_fileNameUsed(dir, (char *)fileName))
         return dir_fileRefId_inval;
+    allocTest;
 
     size_t fileRefsLen = dir->fileSize / 0x100;
     dir_fileRefId_t newFileRefId = (dir_fileRefId_t)fileRefsLen;
+    allocTest;
 
     ptrBlks_t ptrBlks;
     ptrBlks_constructFromFileMeta(&ptrBlks, dir);
