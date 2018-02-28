@@ -119,12 +119,14 @@ void kernel_main(multiboot_info_t *mbt)
         printf("DL length:      0x%p\n",
                (uint64_t)dlSize);
     }
-    nvmos_ptr_t testAlloc[16];
-    for (int i = 0; i < 16; ++i){
+    uint32_t testCount = 16
+    nvmos_ptr_t testAlloc[testCount];
+    for (int i = 0; i < testCount; ++i){
         testAlloc[i] = nvmos_dl_alloc_allocateBlocks(&allocator, 1);
         printf("Test Alloc:     0x%p\n",
                (uint64_t)testAlloc[i]);
     }
+    printf ("Allocator.head: 0x%p\n", allocator.head);
 
     // Add a process to kroot
     meta_meta_t *kroot = datalayer_getKRoot(dlMeta);
@@ -137,29 +139,35 @@ void kernel_main(multiboot_info_t *mbt)
     meta_meta_t *proc0 = meta_getNextFreeMeta(
         (meta_metaBlk_t **)&(dlMeta->metaBlockList),
         &allocator);
+    printf ("Allocator.head: 0x%p\n", allocator.head);
     meta_setProc(proc0);
     dir_addFileRef(&krootDir, "proc0", proc0, &allocator);
+    printf ("Allocator.head: 0x%p\n", allocator.head);
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
     if (proc_createProc(proc0Meta, &allocator))
     {
         printf("Error creating proc0\n");
         goto endProc;
     }
+    printf ("Allocator.head: 0x%p\n", allocator.head);
     if (proc_mapKernel(proc0Meta, 0, 0, 0x114000 / 0x1000, &allocator))
     {
         printf("Error mapping kernel memory to proc0\n");
         goto endProc;
     }
+    printf ("Allocator.head: 0x%p\n", allocator.head);
     nvmos_ptr_t twoBlocks = nvmos_dl_alloc_allocateBlocks(&allocator, 2);
     if (twoBlocks == NULL){
         printf("Error allocating two blocks for testing\n");
         goto endProc;
     }
+    printf ("Allocator.head: 0x%p\n", allocator.head);
     memset(twoBlocks, 0xdb, 0x2000);
     if (proc_mapKernel(proc0Meta, 0x40000000, twoBlocks, 0x2000, &allocator)){
         printf("Error mapping test memory to proc0\n");
         goto endProc;
     }
+    printf ("Allocator.head: 0x%p\n", allocator.head);
     nvmos_pagingOn(proc0Meta->pageDir);
     printf("Test Mem 1: %p\n", *(uint32_t*)0x40000000);
     printf("Test Mem 2: %p\n", *(uint32_t*)0x40001ffc);
