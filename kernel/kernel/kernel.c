@@ -144,7 +144,20 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error mapping kernel memory to proc0\n");
         goto endProc;
     }
+    nvmos_ptr_t twoBlocks = nvmos_dl_alloc_allocateBlocks(&allocator, 2);
+    if (twoBlocks == NULL){
+        printf("Error allocating two blocks for testing\n");
+        goto endProc;
+    }
+    memset(twoBlocks, 0xdb, 0x2000);
+    if (proc_mapKernel(proc0Meta, 0x40000000, twoBlocks, 0x2000, &allocator)){
+        printf("Error mapping test memory to proc0\n");
+        goto endProc;
+    }
     nvmos_pagingOn(proc0Meta->pageDir);
+    printf("Test Mem 1: %p\n", *(uint32_t*)0x40000000);
+    printf("Test Mem 2: %p\n", *(uint32_t*)0x40001ffc);
+
 
 endProc:
 
