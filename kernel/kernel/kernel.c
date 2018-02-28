@@ -138,6 +138,10 @@ void kernel_main(multiboot_info_t *mbt)
         goto endProc;
     }
     file_meta_t *krootDir = &(kroot->metaContent.fileMeta);
+    
+    printf ("Allocator.head: 0x%p\n", allocator.head);
+    allocTest
+    printf ("Allocator.head: 0x%p\n", allocator.head);
     meta_meta_t *proc0 = meta_getNextFreeMeta(
         (meta_metaBlk_t **)&(dlMeta->metaBlockList),
         &allocator);
