@@ -28,16 +28,14 @@ bool dir_isDir(meta_meta_t *dir)
            (flags & META_FLAG_ISDIR);
 }
 
-uint32_t testCount = 3;
-nvmos_ptr_t testAlloc[testCount];
-#define allocTest                                                    \
-    printf("X Allocator.head: 0x%p\n", allocator->head);                \
-    for (int i = 0; i < testCount; ++i)                              \
-    {                                                                \
+#define allocTest                                                   \
+    printf("X Allocator.head: 0x%p\n", allocator->head);            \
+    for (int i = 0; i < testCount; ++i)                             \
+    {                                                               \
         testAlloc[i] = nvmos_dl_alloc_allocateBlocks(allocator, 1); \
-        printf("Test Alloc:     0x%p\n",                             \
-               (uint64_t)testAlloc[i]);                              \
-    }                                                                \
+        printf("Test Alloc:     0x%p\n",                            \
+               (uint64_t)testAlloc[i]);                             \
+    }                                                               \
     printf("X Allocator.head: 0x%p\n", allocator->head);
 
 dir_fileRefId_t dir_addFileRef(
@@ -46,6 +44,9 @@ dir_fileRefId_t dir_addFileRef(
     meta_meta_t *fileMeta,
     nvmos_dl_allocator_t *allocator)
 {
+
+    uint32_t testCount = 3;
+    nvmos_ptr_t testAlloc[testCount];
     allocTest;
     if (dir_fileNameUsed(dir, (char *)fileName))
         return dir_fileRefId_inval;
