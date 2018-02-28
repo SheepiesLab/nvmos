@@ -119,7 +119,7 @@ void kernel_main(multiboot_info_t *mbt)
         printf("DL length:      0x%p\n",
                (uint64_t)dlSize);
     }
-    uint32_t testCount = 16
+    uint32_t testCount = 16;
     nvmos_ptr_t testAlloc[testCount];
     for (int i = 0; i < testCount; ++i){
         testAlloc[i] = nvmos_dl_alloc_allocateBlocks(&allocator, 1);
