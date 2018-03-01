@@ -6,7 +6,7 @@ nvmos_pagingOn:
     mov     4(%esp),    %eax
     mov     %eax,       %cr3
     mov     %cr0,       %eax
-    or      0x80000001, %eax
+    or      %eax,       0x80000001
     mov     %eax,       %cr0
     ret
 
