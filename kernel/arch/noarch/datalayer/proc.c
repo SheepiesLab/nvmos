@@ -503,6 +503,7 @@ int proc_mapKernel(
         {
             nvmos_ptr_t newTableBlk =
                 nvmos_dl_alloc_allocateBlocks(alloc, 1);
+            memset(newTableBlk, 0, 0x1000);
             *pageDirEntry =
                 (uint32_t)newTableBlk & PAGEDIR_ADDR_MASK;
             pageTable_t *pageTable =
