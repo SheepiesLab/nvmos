@@ -488,7 +488,7 @@ int proc_mapKernel(
     i = procAddr;
     term = procAddr + len * 0x1000;
     pageDir = (pageDir_t *)meta->pageDir;
-    for (; i < term; i += 0x1000)
+    for (; i < term; i += 0x1000, newBlks += 0x1000)
     {
         size_t pageDirIndex = i >> 22;
         size_t pageTableIndex = (i >> 12) % 0x400;
