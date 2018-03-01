@@ -6,7 +6,7 @@ nvmos_pagingOn:
     mov     4(%esp),    %eax
     mov     %eax,       %cr3
     mov     %cr0,       %eax
-    or      %eax,       0x80000001
+    orl     %eax,       0x80000001
     mov     %eax,       %cr0
     ret
 
@@ -14,7 +14,7 @@ nvmos_pagingOn:
 .type nvmos_pagingOff,   @function
 nvmos_pagingOff:
     mov     %cr0,       %eax
-    and     0x7fffffff, %eax
+    andl    0x7fffffff, %eax
     mov     %eax,       %cr0
     ret
     
