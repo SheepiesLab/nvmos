@@ -239,7 +239,7 @@ void kernel_main(multiboot_info_t *mbt)
         goto endProc;
     }
     for (int i = 0; i < fileMapLen; ++i)
-        printf("File map ptr %d: 0x%p", i, (uint64_t)(fileMap[i]));
+        printf("File map ptr %d: 0x%p\n", i, (uint64_t)(fileMap[i]));
     if (proc_mapFile(
             proc0Meta,
             file0Meta,
@@ -252,10 +252,10 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error mapping file0 to proc0\n\n");
         goto endProc;
     }
-    
+
     nvmos_pagingOn(proc0Meta->pageDir);
-    printf("Test Mem 1: %p\n", *(uint32_t *)0x40000000);
-    printf("Test Mem 2: %p\n", *(uint32_t *)0x40001ffc);
+    // printf("Test Mem 1: %p\n", *(uint32_t *)0x40000000);
+    // printf("Test Mem 2: %p\n", *(uint32_t *)0x40001ffc);
 
 #undef allocTest
 endProc:
