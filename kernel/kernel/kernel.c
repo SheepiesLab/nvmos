@@ -203,7 +203,7 @@ void kernel_main(multiboot_info_t *mbt)
         goto endProc;
     }
     memset(twoBlocks, 0xdb, 0x2000);
-    if (proc_mapKernel(proc0Meta, 0x40000000, twoBlocks, 0x2000, &allocator))
+    if (proc_mapKernel(proc0Meta, 0x40000000, twoBlocks, 2, &allocator))
     {
         printf("Error mapping test memory to proc0\n");
         goto endProc;
