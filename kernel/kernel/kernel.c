@@ -252,9 +252,7 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error mapping file0 to proc0\n\n");
         goto endProc;
     }
-
-    printf("Test Mem 1: %p\n", *(uint32_t *)twoBlocks);
-    printf("Test Mem 2: %p\n", *(uint32_t *)(twoBlocks + 0x2000 - 4));
+    
     nvmos_pagingOn(proc0Meta->pageDir);
     printf("Test Mem 1: %p\n", *(uint32_t *)0x40000000);
     printf("Test Mem 2: %p\n", *(uint32_t *)0x40001ffc);
