@@ -97,6 +97,51 @@ void kernel_main(multiboot_info_t *mbt)
     // printf("\n");
     // printf("\n");
 
+    // Interrupt Setup
+    {
+        InterruptDescriptor id;
+        id.type = ID_TYPE_386_TRAP;
+        id.isrAddr = (nvmos_ptr_t)&exceptionHandler;
+        id.present = 1;
+        id.privilegeLevel = 0;
+        for (int i = 0; i < 0x20; ++i)
+        {
+            interruptDescriptor_Encode(
+                &id,
+                idtBuffer + 8 * i);
+        }
+        id.type = ID_TYPE_386_INT;
+        id.isrAddr = (nvmos_ptr_t)&irqHandler;
+        id.present = 1;
+        id.privilegeLevel = 0;
+        for (int i = 0x20; i < 0x30; ++i)
+        {
+            interruptDescriptor_Encode(
+                &id,
+                idtBuffer + 8 * i);
+        }
+        id.type = ID_TYPE_386_INT;
+        id.isrAddr = (nvmos_ptr_t)&interruptHandler;
+        id.present = 1;
+        id.privilegeLevel = 0;
+        for (int i = 0x30; i <= 0xFF; ++i)
+        {
+            interruptDescriptor_Encode(
+                &id,
+                idtBuffer + 8 * i);
+        }
+    }
+    setIDT((uint32_t)idtBuffer, 256 * 8);
+    PIC_remap(0x20, 0x28);
+    for (int i = 0; i < 16; ++i)
+    {
+        IRQ_set_mask(i);
+    }
+    IRQ_clear_mask(0x04);
+
+    asm("int $0x30");
+    printf("After interrupt!\n");
+
     // Init Datalayer
     nvmos_ptr_t dlStart =
         (ksects[KSECTION_SECTION_HEAP].addr +
@@ -130,11 +175,10 @@ void kernel_main(multiboot_info_t *mbt)
     }
     file_meta_t *krootDir = &(kroot->metaContent.fileMeta);
 
-    
     meta_meta_t *proc0 = meta_getNextFreeMeta(
         (meta_metaBlk_t **)&(dlMeta->metaBlockList),
         &allocator);
-    
+
     meta_setProc(proc0);
     if (dir_addFileRef(krootDir, "proc0", proc0, &allocator) == dir_fileRefId_inval)
     {
@@ -164,7 +208,7 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error mapping test memory to proc0\n");
         goto endProc;
     }
-    
+
     printf("Test Mem 1: %p\n", *(uint32_t *)twoBlocks);
     printf("Test Mem 2: %p\n", *(uint32_t *)(twoBlocks + 0x2000 - 4));
     nvmos_pagingOn(proc0Meta->pageDir);
@@ -173,50 +217,6 @@ void kernel_main(multiboot_info_t *mbt)
 
 #undef allocTest
 endProc:
-
-{
-    InterruptDescriptor id;
-    id.type = ID_TYPE_386_TRAP;
-    id.isrAddr = (nvmos_ptr_t)&exceptionHandler;
-    id.present = 1;
-    id.privilegeLevel = 0;
-    for (int i = 0; i < 0x20; ++i)
-    {
-        interruptDescriptor_Encode(
-            &id,
-            idtBuffer + 8 * i);
-    }
-    id.type = ID_TYPE_386_INT;
-    id.isrAddr = (nvmos_ptr_t)&irqHandler;
-    id.present = 1;
-    id.privilegeLevel = 0;
-    for (int i = 0x20; i < 0x30; ++i)
-    {
-        interruptDescriptor_Encode(
-            &id,
-            idtBuffer + 8 * i);
-    }
-    id.type = ID_TYPE_386_INT;
-    id.isrAddr = (nvmos_ptr_t)&interruptHandler;
-    id.present = 1;
-    id.privilegeLevel = 0;
-    for (int i = 0x30; i <= 0xFF; ++i)
-    {
-        interruptDescriptor_Encode(
-            &id,
-            idtBuffer + 8 * i);
-    }
-}
-    setIDT((uint32_t)idtBuffer, 256 * 8);
-    PIC_remap(0x20, 0x28);
-    for (int i = 0; i < 16; ++i)
-    {
-        IRQ_set_mask(i);
-    }
-    IRQ_clear_mask(0x04);
-
-    asm("int $0x30");
-    printf("After interrupt!\n");
 
     while (1)
     {
