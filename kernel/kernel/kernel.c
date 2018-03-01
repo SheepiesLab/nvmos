@@ -166,6 +166,41 @@ void kernel_main(multiboot_info_t *mbt)
                (uint64_t)dlSize);
     }
 
+    // Add a test file to uroot
+    meta_meta_t *uroot = datalayer_getURoot(dlMeta);
+    if (uroot == NULL)
+    {
+        printf("U Root is corrupted...\n");
+        goto endProc;
+    }
+    file_meta_t *urootDir = &(uroot->metaContent.fileMeta);
+    meta_meta_t *file0 = meta_getNextFreeMeta(
+        (meta_metaBlk_t **)&(dlMeta->metaBlockList),
+        &allocator);
+
+    meta_setFile(file0);
+    if (
+        dir_addFileRef(urootDir, "file0", file0, &allocator) ==
+        dir_fileRefId_inval)
+    {
+        printf("New file ref bad: file0...\n");
+        goto endProc;
+    }
+    file_meta_t *file0Meta = &(file0->metaContent.fileMeta);
+    file0Meta->refCount = 0;
+    file0Meta->fileSize = 0;
+    file0Meta->blkSize = 0;
+    file0Meta->_1stBlk = NULL;
+    file0Meta->_1stPtrBlk = NULL;
+    file0Meta->_2ndPtrBlk = NULL;
+    file0Meta->_3rdPtrBlk = NULL;
+    for (int i = 0; i < 0x1000; i += 8)
+        if (file_append(file0Meta, "JOJOJOJO", 8, &allocator) != 8)
+        {
+            printf("Append file bad: file0...\n");
+            goto endProc;
+        }
+
     // Add a process to kroot
     meta_meta_t *kroot = datalayer_getKRoot(dlMeta);
     if (kroot == NULL)
@@ -182,7 +217,7 @@ void kernel_main(multiboot_info_t *mbt)
     meta_setProc(proc0);
     if (dir_addFileRef(krootDir, "proc0", proc0, &allocator) == dir_fileRefId_inval)
     {
-        printf("New file ref bad...\n");
+        printf("New file ref bad: proc0...\n");
         goto endProc;
     }
     proc_meta_t *proc0Meta = &(proc0->metaContent.processMeta);
@@ -196,16 +231,25 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error mapping kernel memory to proc0\n");
         goto endProc;
     }
-    nvmos_ptr_t twoBlocks = nvmos_dl_alloc_allocateBlocks(&allocator, 2);
-    if (twoBlocks == NULL)
+    nvmos_ptr_t fileMap[2];
+    int fileMapLen = file_getMap(file0Meta, fileMap, 0, 2);
+    if (fileMapLen != 2)
     {
-        printf("Error allocating two blocks for testing\n");
+        printf("Error getting ptr map of file0\n");
         goto endProc;
     }
-    memset(twoBlocks, 0xdb, 0x2000);
-    if (proc_mapKernel(proc0Meta, 0x40000000, twoBlocks, 2, &allocator))
+    for (int i = 0; i < fileMapLen; ++i)
+        printf("File map ptr %d: 0x%p", i, (uint64_t)(fileMap[i]));
+    if (proc_mapFile(
+            proc0Meta,
+            file0Meta,
+            0,
+            fileMapLen,
+            0,
+            0x40000000,
+            &allocator))
     {
-        printf("Error mapping test memory to proc0\n");
+        printf("Error mapping file0 to proc0\n\n");
         goto endProc;
     }
 
