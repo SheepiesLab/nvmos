@@ -142,10 +142,15 @@ void kernel_main(multiboot_info_t *mbt)
     asm("int $0x30");
     printf("After interrupt!\n");
 
+    printf("\n\nNVMTEST: dlstart: 0x%x\n", dlstart);
+
     // Init Datalayer
     nvmos_ptr_t dlStart =
         (ksects[KSECTION_SECTION_HEAP].addr +
          ksects[KSECTION_SECTION_HEAP].len);
+
+    printf("\n\nNVMTEST: dlstart: 0x%x\n\n", *(uint32_t *)dlstart);
+
     dlStart += 0x1000;
     dlStart &= 0xfffff000;
     size_t dlSize = 0x40000000;
