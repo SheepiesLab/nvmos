@@ -147,7 +147,7 @@ void kernel_main(multiboot_info_t *mbt)
         (ksects[KSECTION_SECTION_HEAP].addr +
          ksects[KSECTION_SECTION_HEAP].len);
 
-    printf("\n\nNVMTEST: dlstart: 0x%x\n\n", *(uint32_t *)dlstart);
+    printf("\n\nNVMTEST: dlstart: 0x%x\n\n", *(uint32_t *)dlStart);
 
     dlStart += 0x1000;
     dlStart &= 0xfffff000;
