@@ -9,3 +9,4 @@ debug.sym
 CMakeLists.txt
 \cmake-build-debug/
 \.vscode/
+\c-freestanding-include/

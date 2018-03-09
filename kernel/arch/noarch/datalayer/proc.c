@@ -19,128 +19,31 @@ int proc_allocBlks(
 	size_t len,
 	nvmos_dl_allocator_t *alloc)
 {
-	if (procAddr % 0x1000 != 0)
-	{
-		procAddr = procAddr & 0xFFFFF000;
-		procAddr += 0x1000;
-	}
-
-	size_t i = procAddr;
-	size_t term = procAddr + len * 0x1000;
 	pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
-	for (; i < term; i += 0x1000)
+	uint32_t pageDirFlags =
+		PAGEDIR_PRESENT |
+		PAGEDIR_RW |
+		PAGEDIR_USER;
+	uint32_t pageTableFlags =
+		PAGETABLE_PRESENT |
+		PAGETABLE_RW |
+		PAGETABLE_USER;
+	procAddr =
+		(procAddr % 0x1000 == 0) ? procAddr : (procAddr & 0xFFFFF000) + 0x1000;
+	nvmos_ptr_t blocks[len];
+	blocks[0] = nvmos_dl_alloc_allocateBlocks(alloc, len);
+	for (size_t i = 1; i < len; ++i)
 	{
-		size_t pageDirIndex = i >> 22;
-		size_t pageTableIndex = (i >> 12) % 0x400;
-
-		uint32_t pageDirEntry =
-			pageDir->page_tbs[pageDirIndex];
-
-		if (pageDirEntry & PAGEDIR_FILEMAPPED ||
-			pageDirEntry & PAGEDIR_KERNEL)
-		{
-			return -1;
-		}
-
-		pageTable_t *pageTable =
-			(pageTable_t *)((pageDir->page_tbs
-								 [pageDirIndex]) &
-							PAGEDIR_ADDR_MASK);
-		if (!(pageDirEntry & PAGEDIR_PRESENT) ||
-			pageTable == NULL)
-		{
-			i = i & 0xFFC00000;
-			i += 1 << 22;
-			i -= 0x1000;
-			continue;
-		}
-
-		uint32_t pageTableEntry =
-			pageTable->pages[pageTableIndex];
-
-		if (pageTableEntry & PAGETABLE_PRESENT)
-		{
-			return -1;
-		}
+		blocks[i] = blocks[i - 1] + 0x1000;
 	}
-
-	nvmos_ptr_t newBlks =
-		nvmos_dl_alloc_allocateBlocks(alloc, len);
-	if (newBlks == NULL)
-		return -1;
-
-	i = procAddr;
-	term = procAddr + len * 0x1000;
-	pageDir = (pageDir_t *)meta->pageDir;
-	for (; i < term; i += 0x1000)
-	{
-		size_t pageDirIndex = i >> 22;
-		size_t pageTableIndex = (i >> 12) % 0x400;
-
-		uint32_t *pageDirEntry =
-			&(pageDir->page_tbs[pageDirIndex]);
-		pageTable_t *pageTable =
-			(pageTable_t *)(*pageDirEntry &
-							PAGEDIR_ADDR_MASK);
-
-		if (pageTable == NULL)
-		{
-			nvmos_ptr_t newTableBlk =
-				nvmos_dl_alloc_allocateBlocks(alloc, 1);
-			*pageDirEntry =
-				(uint32_t)newTableBlk & PAGEDIR_ADDR_MASK;
-			pageTable_t *pageTable =
-				(pageTable_t *)(*pageDirEntry &
-								PAGEDIR_ADDR_MASK);
-		}
-		if (!(*pageDirEntry & PAGEDIR_PRESENT))
-		{
-			*pageDirEntry =
-				*pageDirEntry | PAGEDIR_PRESENT;
-			*pageDirEntry =
-				*pageDirEntry | PAGEDIR_RW;
-			*pageDirEntry =
-				*pageDirEntry | PAGEDIR_USER;
-			*pageDirEntry =
-				*pageDirEntry & ~PAGEDIR_WRITETHROUGH;
-			*pageDirEntry =
-				*pageDirEntry & ~PAGEDIR_NOCACHE;
-			*pageDirEntry =
-				*pageDirEntry & ~PAGEDIR_ACCESSED;
-			*pageDirEntry =
-				*pageDirEntry & ~PAGEDIR_BIGPAGE;
-			*pageDirEntry =
-				*pageDirEntry & ~PAGEDIR_FILEMAPPED;
-			*pageDirEntry =
-				*pageDirEntry & ~PAGEDIR_KERNEL;
-		}
-
-		uint32_t *pageTableEntry =
-			&(pageTable->pages[pageTableIndex]);
-		*pageTableEntry = newBlks & PAGEDIR_ADDR_MASK;
-		*pageTableEntry =
-			*pageTableEntry | PAGETABLE_PRESENT;
-		*pageTableEntry =
-			*pageTableEntry | PAGETABLE_RW;
-		*pageTableEntry =
-			*pageTableEntry | PAGETABLE_USER;
-		*pageTableEntry =
-			*pageTableEntry & ~PAGETABLE_WRITETHROUGH;
-		*pageTableEntry =
-			*pageTableEntry & ~PAGETABLE_NOCACHE;
-		*pageTableEntry =
-			*pageTableEntry & ~PAGETABLE_ACCESSED;
-		*pageTableEntry =
-			*pageTableEntry & ~PAGETABLE_DIRTY;
-		*pageTableEntry =
-			*pageTableEntry & ~PAGETABLE_GLOBAL;
-		*pageTableEntry =
-			*pageTableEntry & ~PAGETABLE_FILEMAPPED;
-		*pageTableEntry =
-			*pageTableEntry & ~PAGETABLE_KERNEL;
-	}
-
-	return 0;
+	return pageDir_mapSegment(
+		pageDir,
+		procAddr,
+		len,
+		blocks,
+		alloc,
+		pageDirFlags,
+		pageTableFlags);
 }
 
 int proc_freeBlks(

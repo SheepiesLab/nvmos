@@ -109,7 +109,7 @@ int printf(const char *restrict format, ...)
             format++;
             uint64_t ptr = va_arg(parameters, const uint64_t);
             uint64_t oriptr = ptr;
-            size_t len = sizeof(ptr) * 2;
+            const size_t len = sizeof(ptr) * 2;
             if (maxrem < len)
             {
                 // TODO: Set errno to EOVERFLOW.

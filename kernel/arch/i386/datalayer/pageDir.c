@@ -5,8 +5,8 @@ bool pageDir_isSegmentUnmapped(
 	nvmos_ptr_t start,
 	size_t blockLength)
 {
-	size_t i;
 	start = start & 0xFFFFF000;
+	nvmos_ptr_t addr = start;
 
 	for (; addr < addr + blockLength * 0x1000;)
 	{
@@ -75,6 +75,39 @@ int pageDir_mapSegment(
 			pageDir->page_tbs[pageTableIdx] =
 				nvmos_dl_alloc_allocateBlocks(allocator, 1);
 			pageDir->page_tbs[pageTableIdx] |= PAGEDIR_PRESENT;
+		}
+	}
+
+	// Map physical memory to virtual memory
+	current = start;
+	size_t i = 0;
+	for (; current < end; current += 0x1000, ++i)
+	{
+		size_t pageTableIdx = current >> 22 % 0x400;
+		size_t pageIdx = current >> 12 % 0x400;
+		if (pageDir->page_tbs[pageTableIdx] & PAGEDIR_PRESENT)
+		{
+			pageDir->page_tbs[pageTableIdx] &= PAGEDIR_ADDR_MASK;
+			pageDir->page_tbs[pageTableIdx] |= pageDirFlags;
+			pageDir->page_tbs[pageTableIdx] |= PAGEDIR_PRESENT;
+			pageTable_t *pageTable =
+				(pageTable_t *)((pageDir->page_tbs[pageTableIdx]) &
+								PAGEDIR_ADDR_MASK);
+			if (pageTable->pages[pageIdx] & PAGETABLE_PRESENT)
+			{
+				return -1;
+			}
+			else
+			{
+				pageTable->pages[pageIdx] =
+					physicalBlocks[i] & PAGEDIR_ADDR_MASK;
+				pageTable->pages[pageIdx] |= pageTableFlags;
+				pageTable->pages[pageIdx] |= PAGETABLE_PRESENT;
+			}
+		}
+		else
+		{
+			return -1;
 		}
 	}
 
