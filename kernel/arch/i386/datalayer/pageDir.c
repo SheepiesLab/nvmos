@@ -99,7 +99,7 @@ int pageDir_mapSegment(
 			pageDir_setFlag(&(pageDir->page_tbs[pageTableIdx]), PAGEDIR_PRESENT);
 
 			pageTable_t *pageTable =
-				(pageTable_t *)(pageDir_addressOfEntry(pageDir->page_tbs[pageTableIdx]);
+				(pageTable_t *)(pageDir_addressOfEntry(pageDir->page_tbs[pageTableIdx]));
 			if (pageDir_isPageFlagSet(
 					pageTable->pages[pageIdx],
 					PAGETABLE_PRESENT))
