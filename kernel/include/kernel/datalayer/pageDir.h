@@ -41,7 +41,7 @@ typedef struct
 #define PAGETABLE_FILEMAPPED 0x200
 #define PAGETABLE_KERNEL 0x400
 
-bool isSegmentUnmapped(
+bool pageDir_isSegmentUnmapped(
 	pageDir_t *pageDir,
 	nvmos_ptr_t start,
 	size_t blockLength);
@@ -49,10 +49,56 @@ bool isSegmentUnmapped(
 int pageDir_mapSegment(
 	pageDir_t *pageDir,
 	nvmos_ptr_t start,
-	nvmos_ptr_t blockLength,
+	size_t blockLength,
 	const nvmos_ptr_t *physicalBlocks,
 	nvmos_dl_allocator_t *allocator,
 	uint32_t pageDirFlags,
 	uint32_t pageTableFlags);
+
+int pageDir_getMap(
+	pageDir_t *pageDir,
+	nvmos_ptr_t start,
+	size_t blockLength,
+	nvmos_ptr_t *buffer);
+
+inline int pageDir_entryIdxOf(
+	nvmos_ptr_t pageAddr,
+	size_t *pageDirIdx,
+	size_t *pageTableIdx)
+{
+	if (pageDirIdx != NULL)
+	{
+		*pageDirIdx = (pageAddr >> 22) % 0x400;
+	}
+	if (pageTableIdx != NULL)
+	{
+		*pageTableIdx = (pageAddr >> 12) % 0x400;
+	}
+	return 0;
+}
+
+inline bool pageDir_isPageTableFlagSet(
+	uint32_t pageDirEntry,
+	uint32_t flag)
+{
+	return pageDirEntry & flag;
+}
+
+inline bool pageDir_isPageFlagSet(
+	uint32_t pageTableEntry,
+	uint32_t flag)
+{
+	return pageTableEntry & flag;
+}
+
+inline void pageDir_setFlag(uint32_t *entry, uint32_t flags)
+{
+	*entry |= flags;
+}
+
+inline void *pageDir_addressOfEntry(uint32_t entry)
+{
+	return (void *)(entry & PAGEDIR_ADDR_MASK);
+}
 
 #endif
