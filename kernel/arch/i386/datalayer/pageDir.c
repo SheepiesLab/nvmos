@@ -158,3 +158,22 @@ int pageDir_getMap(
 	}
 	return 0;
 }
+
+int pageDir_free(
+	pageDir_t *pageDir,
+	nvmos_dl_allocator_t *allocator)
+{
+	for (size_t i = 0; i < 0x400; ++i)
+	{
+		uint32_t *pageTableEntry = &(pageDir->page_tbs[i]);
+		if (pageDir_isPageTableFlagSet(*pageTableEntry, PAGEDIR_PRESENT))
+		{
+			nvmos_ptr_t blockToBeFreed = pageDir_addressOfEntry(*pageTableEntry);
+			if (blockToBeFreed != NULL)
+			{
+				nvmos_dl_alloc_deallocateBlocks(allocator, blockToBeFreed, 1);
+				*pageTableEntry = 0;
+			}
+		}
+	}
+}

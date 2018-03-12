@@ -256,9 +256,9 @@ void kernel_main(multiboot_info_t *mbt)
         goto endProc;
     }
 
-        // nvmos_pagingOn(proc0Meta->pageDir);
-        // printf("Test Mem 1: %p\n", *(uint32_t *)0x40000000);
-        // printf("Test Mem 2: %p\n", *(uint32_t *)0x40001ffc);
+    nvmos_pagingOn(proc0Meta->pageDir);
+    printf("Test Mem 1: %p\n", *(uint32_t *)0x40000000);
+    printf("Test Mem 2: %p\n", *(uint32_t *)0x40001ffc);
 
 #undef allocTest
 endProc:

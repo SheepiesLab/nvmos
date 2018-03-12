@@ -61,6 +61,11 @@ int pageDir_getMap(
 	size_t blockLength,
 	nvmos_ptr_t *buffer);
 
+// Process should have all allocated memory blocks freed before calling pageDir_free
+int pageDir_free(
+	pageDir_t *pageDir,
+	nvmos_dl_allocator_t *allocator);
+
 inline int pageDir_entryIdxOf(
 	nvmos_ptr_t pageAddr,
 	size_t *pageDirIdx,

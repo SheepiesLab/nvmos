@@ -10,6 +10,14 @@ struct proc_meta
     uint32_t pageDir;
 };
 
+#define PROC_ALLOC_FLAGS_PAGETB 0x7
+#define PROC_KMAP_FLAGS_PAGETB 0x401
+#define PROC_FMAP_FLAGS_PAGETB 0x207
+
+#define PROC_ALLOC_FLAGS_PAGE 0x7
+#define PROC_KMAP_FLAGS_PAGE 0x401
+#define PROC_FMAP_FLAGS_PAGE 0x207
+
 typedef struct proc_meta proc_meta_t;
 
 int proc_createProc(
