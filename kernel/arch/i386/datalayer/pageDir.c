@@ -1,4 +1,5 @@
 #include <kernel/datalayer/pageDir.h>
+#include <string.h>
 
 bool pageDir_isSegmentUnmapped(
 	pageDir_t *pageDir,
@@ -56,10 +57,10 @@ int pageDir_mapSegment(
 {
 	// Check if the paging space is used currently
 	// to avoid corrupting old pages
-	// if (!pageDir_isSegmentUnmapped(pageDir, start, blockLength))
-	// {
-	// 	return -1;
-	// }
+	if (!pageDir_isSegmentUnmapped(pageDir, start, blockLength))
+	{
+		return -1;
+	}
 
 	start = pageDir_addressOfEntry(start);
 	const nvmos_ptr_t end = start + blockLength * 0x1000;
@@ -79,6 +80,10 @@ int pageDir_mapSegment(
 		{
 			pageDir->page_tbs[pageTableIdx] =
 				nvmos_dl_alloc_allocateBlocks(allocator, 1);
+			memset(
+				(void *)(pageDir->page_tbs[pageTableIdx]),
+				0,
+				0x1000);
 			pageDir_setFlag(
 				&(pageDir->page_tbs[pageTableIdx]),
 				PAGEDIR_PRESENT);

@@ -229,7 +229,7 @@ void kernel_main(multiboot_info_t *mbt)
         printf("Error creating proc0\n");
         goto endProc;
     }
-    if (proc_mapKernel(proc0Meta, 0, 0, 0x114000 / 0x1000, &allocator) != 0)
+    if (proc_mapKernel(proc0Meta, 0, 0, 0x114000 / 0x1000, &allocator))
     {
         printf("Error mapping kernel memory to proc0\n");
         goto endProc;
