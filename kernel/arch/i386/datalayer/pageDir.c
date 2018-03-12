@@ -5,23 +5,26 @@ bool pageDir_isSegmentUnmapped(
 	nvmos_ptr_t start,
 	size_t blockLength)
 {
-	start = start & 0xFFFFF000;
+	start = pageDir_addressOfEntry(start);
 	nvmos_ptr_t addr = start;
+	const nvmos_ptr_t end = start + blockLength * 0x1000;
 
-	for (; addr < start + blockLength * 0x1000;)
+	while (addr < end)
 	{
 		// Disassemble block address into page table / page index
-		size_t dirIdx = (addr >> 22) % 0x400;
-		size_t tableIdx = (addr >> 12) % 0x400;
+		size_t dirIdx, tableIdx;
+		pageDir_entryIdxOf(addr, &dirIdx, tableIdx);
 
 		// If this page table is present
-		if (pageDir->page_tbs[dirIdx] & PAGEDIR_PRESENT)
+		if (pageDir_isPageTableFlagSet(
+				pageDir->page_tbs[dirIdx],
+				PAGEDIR_PRESENT))
 		{
 			//If this page is present
-			pageTable_t *pageTable =
-				(pageTable_t *)(pageDir->page_tbs[dirIdx] &
-								PAGEDIR_ADDR_MASK);
-			if (pageTable->pages[tableIdx] & PAGETABLE_PRESENT)
+			pageTable_t *pageTable = pageDir_addressOfEntry(pageDir->page_tbs[dirIdx]);
+			if (pageDir_isPageFlagSet(
+					pageTable->pages[tableIdx],
+					PAGETABLE_PRESENT))
 			{
 				return false;
 			}
@@ -58,7 +61,7 @@ int pageDir_mapSegment(
 		return -1;
 	}
 
-	start &= 0xFFFFF000;
+	start = pageDir_addressOfEntry(start);
 	const nvmos_ptr_t end = start + blockLength * 0x1000;
 	nvmos_ptr_t current = start;
 
