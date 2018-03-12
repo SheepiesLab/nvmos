@@ -56,10 +56,10 @@ int pageDir_mapSegment(
 {
 	// Check if the paging space is used currently
 	// to avoid corrupting old pages
-	if (!pageDir_isSegmentUnmapped(pageDir, start, blockLength))
-	{
-		return -1;
-	}
+	// if (!pageDir_isSegmentUnmapped(pageDir, start, blockLength))
+	// {
+	// 	return -1;
+	// }
 
 	start = pageDir_addressOfEntry(start);
 	const nvmos_ptr_t end = start + blockLength * 0x1000;
