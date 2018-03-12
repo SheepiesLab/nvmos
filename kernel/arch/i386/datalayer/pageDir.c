@@ -8,7 +8,7 @@ bool pageDir_isSegmentUnmapped(
 	start = start & 0xFFFFF000;
 	nvmos_ptr_t addr = start;
 
-	for (; addr < addr + blockLength * 0x1000;)
+	for (; addr < start + blockLength * 0x1000;)
 	{
 		// Disassemble block address into page table / page index
 		size_t dirIdx = (addr >> 22) % 0x400;
