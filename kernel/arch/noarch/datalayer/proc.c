@@ -77,7 +77,7 @@ int proc_freeBlks(
 				pageDir->page_tbs[pageTbIdx],
 				PAGEDIR_PRESENT))
 		{
-			pageTable_t *pageTable = pageDir_addressOfEntry(
+			pageTable_t *pageTable = pageDir_ptrOfEntry(
 				pageDir->page_tbs[pageTbIdx]);
 			uint32_t *pageEntry = &(pageTable->pages[pageIdx]);
 			if (pageDir_isPageFlagSet(*pageEntry, PAGETABLE_PRESENT) &&
@@ -148,7 +148,7 @@ int proc_unmapFile(
 				pageDir->page_tbs[pageTbIdx],
 				PAGEDIR_PRESENT))
 		{
-			pageTable_t *pageTable = pageDir_addressOfEntry(
+			pageTable_t *pageTable = pageDir_ptrOfEntry(
 				pageDir->page_tbs[pageTbIdx]);
 			uint32_t *pageEntry = &(pageTable->pages[pageIdx]);
 			if (pageDir_isPageFlagSet(*pageEntry, PAGETABLE_PRESENT) &&
@@ -217,7 +217,7 @@ int proc_unmapKernel(
 				pageDir->page_tbs[pageTbIdx],
 				PAGEDIR_PRESENT))
 		{
-			pageTable_t *pageTable = pageDir_addressOfEntry(
+			pageTable_t *pageTable = pageDir_ptrOfEntry(
 				pageDir->page_tbs[pageTbIdx]);
 			uint32_t *pageEntry = &(pageTable->pages[pageIdx]);
 			if (pageDir_isPageFlagSet(*pageEntry, PAGETABLE_PRESENT) &&

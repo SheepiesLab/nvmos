@@ -101,9 +101,14 @@ inline void pageDir_setFlag(uint32_t *entry, uint32_t flags)
 	*entry |= flags;
 }
 
-inline void *pageDir_addressOfEntry(uint32_t entry)
+inline void *pageDir_ptrOfEntry(uint32_t entry)
 {
 	return (void *)(entry & PAGEDIR_ADDR_MASK);
+}
+
+inline nvmos_ptr_t pageDir_addressOfEntry(uint32_t entry)
+{
+	return (nvmos_ptr_t)(entry & PAGEDIR_ADDR_MASK);
 }
 
 #endif
