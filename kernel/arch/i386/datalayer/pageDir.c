@@ -59,7 +59,7 @@ int pageDir_mapSegment(
 	}
 
 	start &= 0xFFFFF000;
-	nvmos_ptr_t end = start + blockLength * 0x1000;
+	const nvmos_ptr_t end = start + blockLength * 0x1000;
 	nvmos_ptr_t current = start;
 
 	// Pre-allocate page tables
