@@ -197,7 +197,7 @@ void kernel_main(multiboot_info_t *mbt)
     file0Meta->_1stPtrBlk = NULL;
     file0Meta->_2ndPtrBlk = NULL;
     file0Meta->_3rdPtrBlk = NULL;
-    for (int i = 0; i < 0x1000; i += 8)
+    for (int i = 0; i < 0x2000; i += 8)
         if (file_append(file0Meta, "JOJOJOJO", 8, &allocator) != 8)
         {
             printf("Append file bad: file0...\n");
@@ -258,7 +258,7 @@ void kernel_main(multiboot_info_t *mbt)
 
     nvmos_pagingOn(proc0Meta->pageDir);
     printf("Test Mem 1: %p\n", *(uint32_t *)0x40000000);
-    printf("Test Mem 2: %p\n", *(uint32_t *)0x40000ffc);
+    printf("Test Mem 2: %p\n", *(uint32_t *)0x40001ffc);
 
 #undef allocTest
 endProc:
