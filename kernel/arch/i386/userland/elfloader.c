@@ -31,4 +31,6 @@ int elf_loadExec(
 		return -1;
 	}
 
+	nvmos_ptr_t programHeaders =
+		(uint32_t)elfHeader + elfHeader->e_phoff;
 }
