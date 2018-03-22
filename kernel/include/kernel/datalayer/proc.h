@@ -36,6 +36,10 @@ int proc_freeBlks(
     size_t len,
     nvmos_dl_allocator_t *alloc);
 
+#define PROC_X 0x1
+#define PROC_W 0x2
+#define PROC_R 0x4
+
 int proc_mapFile(
     proc_meta_t *meta,
     file_meta_t *file,

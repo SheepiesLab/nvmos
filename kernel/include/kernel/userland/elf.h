@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 // Reference: https://wiki.osdev.org/ELF_Tutorial
+// ELF Specs: https://docs.oracle.com/cd/E23824_01/html/819-0690/glcfv.html#scrolltoc
 
 typedef uint16_t Elf32_Half; // Unsigned half int
 typedef uint32_t Elf32_Off;  // Unsigned offset
@@ -40,8 +41,8 @@ enum Elf_Ident
 {
 	EI_MAG0 = 0,	   // 0x7F
 	EI_MAG1 = 1,	   // 'E'
-	EI_MAG3 = 3,	   // 'F'
 	EI_MAG2 = 2,	   // 'L'
+	EI_MAG3 = 3,	   // 'F'
 	EI_CLASS = 4,	  // Architecture (32/64)
 	EI_DATA = 5,	   // Byte Order
 	EI_VERSION = 6,	// ELF Version
@@ -163,3 +164,35 @@ typedef struct
 	Elf32_Word p_flags;
 	Elf32_Word p_align;
 } Elf32_Phdr;
+
+enum PT_Types
+{
+	PT_NULL = 0,
+	PT_LOAD = 1,
+	PT_DYNAMIC = 2,
+	PT_INTERP = 3,
+	PT_NOTE = 4,
+	PT_SHLIB = 5,
+	PT_PHDR = 6,
+	PT_TLS = 7,
+	PT_LOOS = 0x60000000,
+	PT_SUNW_UNWIND = 0x6464e550,
+	PT_SUNW_EH_FRAME = 0x6474e550,
+	PT_LOSUNW = 0x6ffffffa,
+	PT_SUNWBSS = 0x6ffffffa,
+	PT_SUNWSTACK = 0x6ffffffb,
+	PT_SUNWDTRACE = 0x6ffffffc,
+	PT_SUNWCAP = 0x6ffffffd,
+	PT_HISUNW = 0x6fffffff,
+	PT_HIOS = 0x6fffffff,
+	PT_LOPROC = 0x70000000,
+	PT_HIPROC = 0x7fffffff
+};
+
+enum PT_Flags
+{
+	PF_X = 0x1,				 //Execute
+	PF_W = 0x2,				 //Write
+	PF_R = 0x4,				 //Read
+	PF_MASKPROC = 0xf0000000 //Unspecified
+}

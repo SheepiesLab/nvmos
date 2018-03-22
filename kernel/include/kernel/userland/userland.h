@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
-extern void nvmos_exitKernel(uint32_t userESP, uint32_t userEIP);
+extern void asm_exitkernel(
+	uint32_t userESP,
+	uint32_t userEIP);
 
 #endif

@@ -110,9 +110,14 @@ int proc_mapFile(
 		PAGEDIR_RW;
 	uint32_t pageTableFlags =
 		PAGETABLE_PRESENT |
-		PAGETABLE_RW |
-		PAGETABLE_USER |
 		PAGETABLE_FILEMAPPED;
+
+	if (rwx & PROC_R)
+		pageTableFlags |= PAGETABLE_USER;
+
+	if (rwx & PROC_W)
+		pageTableFlags |= PAGETABLE_RW;
+
 	procAddr =
 		(procAddr % 0x1000 == 0) ? procAddr : (procAddr & 0xFFFFF000) + 0x1000;
 	nvmos_ptr_t blocks[len];
