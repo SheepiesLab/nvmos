@@ -24,85 +24,78 @@
 
 typedef struct heapAllocationHeader HeapAllocationHeader;
 struct heapAllocationHeader {
-    size_t blocksAllocated;
+	size_t blocksAllocated;
 };
 
-size_t heap_blockSize(){
-    size_t blockSize;
-    if (sizeof(HeapFreeBlockNode) < sizeof(HeapAllocationHeader)) {
-        blockSize = sizeof(HeapAllocationHeader);
-    }
-    else{
-        blockSize = sizeof(HeapFreeBlockNode);
-    }
-    return blockSize;
+size_t heap_blockSize()
+{
+	size_t blockSize;
+
+	if (sizeof(HeapFreeBlockNode) < sizeof(HeapAllocationHeader))
+		blockSize = sizeof(HeapAllocationHeader);
+	else
+		blockSize = sizeof(HeapFreeBlockNode);
+	return blockSize;
 }
 
 int heap_construct(
-        Heap *heap,
-        kptr_t heapStart,
-        kptr_t heapEnd) {
+	Heap *			heap,
+	nvmos_ptr_t heapStart,
+	nvmos_ptr_t heapEnd)
+{
+	if (heap == NULL)
+		return -1;
 
-    if (heap == NULL) {
-        return -1;
-    }
+	// Block cannot hold free block list node
+	size_t blockSize = heap_blockSize();
 
-    // Block cannot hold free block list node
-    size_t blockSize = heap_blockSize();
+	// Fill metadata
+	heap->heapFreeBlockListHead = (HeapFreeBlockNode *)heapStart;
+	heap->heapStart = heapStart;
+	heap->heapEnd = heapEnd;
+	heap->blockSize = blockSize;
+	heap->blockCount = (heapEnd - heapStart) / blockSize;
 
-    // Fill metadata
-    heap->heapFreeBlockListHead = heapStart;
-    heap->heapStart = heapStart;
-    heap->heapEnd = heapEnd;
-    heap->blockSize = blockSize;
-    heap->blockCount = (heapEnd - heapStart) / blockSize;
-
-    return heapfbll_construct(heap);
-
+	return heapfbll_construct(heap);
 }
 
-kptr_t heap_malloc(Heap *heap, size_t size) {
+nvmos_ptr_t heap_malloc(Heap *heap, size_t size)
+{
+	if (heap == NULL)
+		return NULL;
 
-    if (heap == NULL) {
-        return NULL;
-    }
+	size_t blocksNeeded =
+		(size + sizeof(HeapAllocationHeader)) / heap->blockSize;
+	if ((size + sizeof(HeapAllocationHeader)) % heap->blockSize != 0)
+		++blocksNeeded;
+	++blocksNeeded; // For allocation header
 
-    size_t blocksNeeded =
-            (size + sizeof(HeapAllocationHeader)) / heap->blockSize;
-    if ((size + sizeof(HeapAllocationHeader)) % heap->blockSize != 0)
-        ++blocksNeeded;
-    ++blocksNeeded; // For allocation header
+	nvmos_ptr_t allocAddr = heapfbll_pop(heap, blocksNeeded);
+	if (allocAddr == NULL) return NULL;
 
-    kptr_t allocAddr = heapfbll_pop(heap,blocksNeeded);
-    if(allocAddr == NULL) return NULL;
+	HeapAllocationHeader *header = (HeapAllocationHeader *)allocAddr;
+	header->blocksAllocated = blocksNeeded - 1;
 
-    HeapAllocationHeader *header = (HeapAllocationHeader *)allocAddr;
-    header->blocksAllocated = blocksNeeded - 1;
-
-    return allocAddr + heap->blockSize;
-
+	return allocAddr + heap->blockSize;
 }
 
-kptr_t heap_calloc(Heap *heap, size_t len, size_t size) {
-
-    return heap_malloc(heap, len * size);
-
+nvmos_ptr_t heap_calloc(Heap *heap, size_t len, size_t size)
+{
+	return heap_malloc(heap, len * size);
 }
 
-int heap_free(Heap *heap, kptr_t loc) {
+int heap_free(Heap *heap, nvmos_ptr_t loc)
+{
+	if (heap == NULL)
+		return -1;
 
-    if (heap == NULL) {
-        return -1;
-    }
+	if (loc == NULL)
+		return -1;
 
-    if (loc == NULL) {
-        return -1;
-    }
+	HeapAllocationHeader *header =
+		(HeapAllocationHeader *)(loc - heap->blockSize);
+	size_t blocksReleased = header->blocksAllocated + 1;
+	nvmos_ptr_t releaseStartAddr = (nvmos_ptr_t)header;
 
-    HeapAllocationHeader *header = loc - heap->blockSize;
-    size_t blocksReleased = header->blocksAllocated + 1;
-    kptr_t releaseStartAddr = (kptr_t)header;
-
-    return heapfbll_insert(heap, releaseStartAddr, blocksReleased);
-
+	return heapfbll_insert(heap, releaseStartAddr, blocksReleased);
 }

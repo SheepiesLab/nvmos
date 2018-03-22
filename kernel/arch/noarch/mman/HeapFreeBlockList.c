@@ -18,7 +18,7 @@ int heapfbll_construct(Heap *heap) {
     currentFBN->last = NULL;
 
     for (size_t i = 0; i < heap->blockCount - 1; ++i) {
-        currentFBN->next = (kptr_t) currentFBN + blockSize;
+        currentFBN->next = (nvmos_ptr_t) currentFBN + blockSize;
         currentFBN->next->last = currentFBN;
         currentFBN = currentFBN->next;
     }
@@ -50,7 +50,7 @@ HeapFreeBlockNode *heapfbll_last(HeapFreeBlockNode *this) {
     return this;
 }
 
-int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
+int heapfbll_insert(Heap *heap, nvmos_ptr_t start, size_t blocks) {
 
     Heap dummyHeap;
     dummyHeap.heapFreeBlockListHead = start;
@@ -61,7 +61,7 @@ int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
     heapfbll_construct(&dummyHeap);
 
     // See if insert before head
-    if ((kptr_t) (heap->heapFreeBlockListHead) > start) {
+    if ((nvmos_ptr_t) (heap->heapFreeBlockListHead) > start) {
         HeapFBN *newListLast = heapfbll_last(
                 dummyHeap.heapFreeBlockListHead);
         newListLast->next = heap->heapFreeBlockListHead;
@@ -76,7 +76,7 @@ int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
     while (currentfbn->next != NULL) {
         currentfbn = currentfbn->next;
 
-        if ((kptr_t) currentfbn > start) {
+        if ((nvmos_ptr_t) currentfbn > start) {
 
         }
     }
@@ -91,18 +91,18 @@ int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks) {
 
 }
 
-kptr_t heapfbll_pop(Heap *heap, size_t blocks) {
+nvmos_ptr_t heapfbll_pop(Heap *heap, size_t blocks) {
 
     // Find consecutive free blocks
-    HeapFBN *currentPtr = (kptr_t) heap->heapFreeBlockListHead;
+    HeapFBN *currentPtr = (nvmos_ptr_t) heap->heapFreeBlockListHead;
     while (true) {
         bool allocated = true;
-        kptr_t allocAddr = (kptr_t) currentPtr;
+        nvmos_ptr_t allocAddr = (nvmos_ptr_t) currentPtr;
         for (int i = 0; i < blocks - 1; ++i) {
             if (currentPtr->next == NULL) {
                 return NULL;
             }
-            if ((kptr_t) currentPtr->next - (kptr_t) currentPtr !=
+            if ((nvmos_ptr_t) currentPtr->next - (nvmos_ptr_t) currentPtr !=
                 heap_blockSize()) {
                 allocated = false;
                 break;

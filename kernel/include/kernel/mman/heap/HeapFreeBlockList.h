@@ -20,8 +20,8 @@ HeapFreeBlockNode *heapfbll_first(HeapFreeBlockNode *this);
 
 HeapFreeBlockNode *heapfbll_last(HeapFreeBlockNode *this);
 
-int heapfbll_insert(Heap *heap, kptr_t start, size_t blocks);
+int heapfbll_insert(Heap *heap, nvmos_ptr_t start, size_t blocks);
 
-kptr_t heapfbll_pop(Heap *heap, size_t blocks);
+nvmos_ptr_t heapfbll_pop(Heap *heap, size_t blocks);
 
 #endif //NVMOS_HEAPFREEBLOCKLIST_H

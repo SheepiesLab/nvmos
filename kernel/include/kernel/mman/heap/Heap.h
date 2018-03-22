@@ -12,8 +12,8 @@ typedef struct heapFreeBlockNode HeapFreeBlockNode;
 
 typedef struct heap {
     HeapFreeBlockNode *heapFreeBlockListHead;
-    kptr_t heapStart;
-    kptr_t heapEnd;
+    nvmos_ptr_t heapStart;
+    nvmos_ptr_t heapEnd;
     size_t blockSize;
     size_t blockCount;
 } Heap;
@@ -22,13 +22,13 @@ size_t heap_blockSize();
 
 int heap_construct(
         Heap *heap,
-        kptr_t heapStart,
-        kptr_t heapEnd);
+        nvmos_ptr_t heapStart,
+        nvmos_ptr_t heapEnd);
 
-kptr_t heap_malloc(Heap *heap, size_t size);
+nvmos_ptr_t heap_malloc(Heap *heap, size_t size);
 
-kptr_t heap_calloc(Heap *heap, size_t len, size_t size);
+nvmos_ptr_t heap_calloc(Heap *heap, size_t len, size_t size);
 
-int heap_free(Heap *heap, kptr_t loc);
+int heap_free(Heap *heap, nvmos_ptr_t loc);
 
 #endif //NVMOS_HEAP_H

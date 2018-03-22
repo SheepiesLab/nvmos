@@ -1,104 +1,97 @@
-/*
+#include <test/heap0.h>
+#include <test/test.h>
 
-seq explained:
-	Parameter  "seq"  is  the  sequence  of  heap memory
-	allocation  or  deallocation.  "seq"  is an array of
-	integer.  An allocation is represented by a positive
-	integer   in   "seq".   Value   indicates   size  of
-	allocation.  An  deallocation  is  represented  by a
-	negtive integer. Value indicates index of allocation
-	to be freed.
+size_t nvmos_test_getTestCases(heap0, test0)(nvmos_test_testcase_t(heap0, test0) * **res)
+{
+#define testCaseCount 1
+    static testSeqUnit_t case0_testSeq[] =
+        {{MALLOC, 1, 0x8},
+         {MALLOC, 2, 0x18},
+         {MALLOC, 3, 0x30},
+         {MALLOC, 4, 0x50},
+         {FREE, 0x18, 0},
+         {FREE, 0x30, 0},
+         {MALLOC, 3, 0x18},
+         {MALLOC, 2, 0x38},
+         {FREE, 0x8, 0},
+         {MALLOC, 1, 0x8}};
 
-seq example:
-8,8,8,8,-2,16
+    static nvmos_test_testcase_t(heap0, test0) nvmos_test_testcase(heap0, test0, case0) =
+        {
+            10,
+            case0_testSeq};
 
-res explained:
-	Parameter  "res"  is the desired resulting allocated
-	location  of  the corresponding allocation in "seq".
+    static nvmos_test_testcase_t(heap0, test0) *
+        nvmos_test_cases(heap0, test0)
+            [testCaseCount] =
+        {&nvmos_test_testcase(heap0, test0, case0)};
 
-n explained:
-	Parameter  "n"  is the number of member in "seq" and 
-	"res".
-
-*/
-
-#include <kernel/mman/heap/Heap.h>
-
-int testcases_heap0(kptr_t heapStart,kptr_t heapEnd){
-	const int TESTCASE_COUNT = 1;
-	
-	int *testCases_seq[TESTCASE_COUNT];
-	int *testCases_res[TESTCASE_COUNT];
-	int testCases_n[TESTCASE_COUNT];
-
-	// Test Case 0
-	{
-		const int TESTCASE_ID = 0;
-		testCases_n[TESTCASE_ID] = 2;
-		int seq[testCases_n[TESTCASE_ID]] = {8, 8};
-		int res[testCases_n[TESTCASE_ID]] = {0x8, 0x18};
-		testCases_seq[TESTCASE_ID] = seq;
-		testCases_res[TESTCASE_ID] = res;
-	}
-
-	// Run all test cases
-	for(int i = 0;i < TESTCASE_COUNT; ++i){
-		if (testDriver_heap0(
-						testCases_seq[i],
-						testCases_res[i],
-						testCases_n[i],
-						heapStart,
-						heapEnd)){
-			printf("Failed: Test Case %d\n", i);				
-		}
-		else{
-			printf("Passed: Test Case %d\n", i);
-		}
-	}
-
-	return 0;
+    *res = nvmos_test_cases(heap0, test0);
+    return testCaseCount;
+#undef testCaseCount
 }
 
-int testDriver_heap0(
-		int *seq, 
-		kptr_t *res, 
-		int n, 
-		kptr_t heapStart,
-		kptr_t heapEnd){
-	Heap heap;
-	heap_construct(&heap, heapStart, heapEnd);
-	
-	kptr_t allocs[n];
+nvmos_test_testDriver(heap0, test0)
+{
+#define CLEANUP_RETURN(x)             \
+    memset(availMem, 0, availMemLen); \
+    return (x);
 
-	for (int i = 0; i < n; ++i){
-		if (seq[i]>0){
-			allocs[i] = heap_malloc(&heap, seq[i]);
-			if (allocs[i] != res[i]){
-				return -1;
-			}
-			else{
-				continue;
-			}
-		}
-		else{
-			if (allocs[-seq[i]] != NULL){
-				heap_free(&heap, allocs[-seq[i]]);
-				allocs[-seq[i]] = NULL;
-				continue;
-			}
-			else{
-				continue;
-			}
-		}
-	}
+#define testName "heap0_test0"
+#define testCaseNum 0
 
-	return 0;
+    Heap heap;
+    heap_construct(&heap, availMem, availMem + availMemLen);
+
+    for (size_t i = 0; i < testCase->actionLen; ++i)
+    {
+        if (testCase->testSeq[i].action == MALLOC)
+        {
+            nvmos_ptr_t result =
+                heap_malloc(
+                    &heap,
+                    testCase->testSeq[i].sizeOrLoc);
+            if (result == NULL)
+            {
+                nvmos_test_fail(
+                    testName,
+                    testCaseNum,
+                    "Case failed at %d: malloc failed...",
+                    i);
+                CLEANUP_RETURN(-i);
+            }
+
+            if (result !=
+                testCase->testSeq[i].result + availMem)
+            {
+                nvmos_test_fail(
+                    testName,
+                    testCaseNum,
+                    "Case failed at %d: malloc result not match...",
+                    i);
+                CLEANUP_RETURN(-i);
+            }
+        }
+        else
+        {
+            if (heap_free(
+                    &heap,
+                    testCase->testSeq[i].sizeOrLoc + availMem))
+            {
+                nvmos_test_fail(
+                    testName,
+                    testCaseNum,
+                    "Case failed at %d: cannot free...",
+                    i);
+                CLEANUP_RETURN(-i);
+            }
+        }
+    }
+    CLEANUP_RETURN(0);
+
+#undef CLEANUP_RETURN
+#undef testName
+#undef testCaseNum
 }
 
-
-
-
-
-
-
-
+nvmos_test_defTestRunner(heap0, test0)

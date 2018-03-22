@@ -10,7 +10,7 @@
 #include <kernel/mman/heap/Heap.h>
 #include <stddef.h>
 
-#define GDT_LEN 4
+#define GDT_LEN 6
 
 typedef struct mman {
     multiboot_info_t *mbt;
