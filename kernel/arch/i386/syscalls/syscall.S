@@ -6,7 +6,7 @@
 asm_setsyscall:
     mov $0x174, %ecx
     mov $0x0,   %edx
-    mov $0x40,   %eax
+    mov $0x08,   %eax
     wrmsr
 
     mov $0x175, 	%ecx
