@@ -11,7 +11,7 @@ asm_exitkernel:
 .global asm_testUserSpace
 .type asm_testUserSpace, @function
 asm_testUserSpace:
-	mov		%ss,		%ax
+	mov		$0x23,		%ax
     mov     %ax,        %ds
     mov     %ax,        %es
     mov     %ax,        %gs
