@@ -1,3 +1,5 @@
+#ifndef _NVMOS_SYSCALL_H
+#define _NVMOS_SYSCALL_H
 #include <stdint.h>
 
 extern void asm_setsyscall(
@@ -7,3 +9,5 @@ extern void asm_setsyscall(
 extern void asm_syscall();
 
 void nvmos_syscall();
+
+#endif

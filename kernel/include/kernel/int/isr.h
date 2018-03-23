@@ -5,15 +5,16 @@
 #ifndef NVMOS_ISR_H
 #define NVMOS_ISR_H
 
+extern void asm_inthand();
 
-typedef unsigned int uword_t;
+extern void asm_irqhand();
 
-struct interrupt_frame;
+extern void asm_execpthand();
 
-void irqHandler(struct interrupt_frame *frame);
+void irqHandler();
 
-void interruptHandler(struct interrupt_frame *frame);
+void interruptHandler();
 
-void exceptionHandler(struct interrupt_frame *frame, uword_t error_code);
+void exceptionHandler();
 
 #endif //NVMOS_ISR_H

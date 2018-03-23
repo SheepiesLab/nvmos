@@ -1,6 +1,6 @@
 #include <math.h>
 
-inline long roundup(long num, unsigned long base)
+long roundup(long num, unsigned long base)
 {
 	unsigned long r = num % base;
 	if (r == 0)
@@ -14,7 +14,7 @@ inline long roundup(long num, unsigned long base)
 	}
 }
 
-inline long rounddown(long num, unsigned long base)
+long rounddown(long num, unsigned long base)
 {
 	unsigned long r = num % base;
 	if (r == 0)

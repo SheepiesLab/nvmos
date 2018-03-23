@@ -7,4 +7,6 @@ extern void asm_exitkernel(
 	uint32_t userESP,
 	uint32_t userEIP);
 
+extern void asm_testUserSpace();
+
 #endif

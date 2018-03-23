@@ -6,19 +6,18 @@
 #include <kernel/io/serial.h>
 #include <stdio.h>
 
-
-void irqHandler(struct interrupt_frame *frame)
+void irqHandler()
 {
 	printf("IRQ4");
 	PIC_sendEOI(4);
 }
 
-void interruptHandler(struct interrupt_frame *frame)
+void interruptHandler()
 {
 	printf("IH\n");
 }
 
-void exceptionHandler(struct interrupt_frame *frame, uword_t error_code)
+void exceptionHandler()
 {
 	printf("EH\n");
 }

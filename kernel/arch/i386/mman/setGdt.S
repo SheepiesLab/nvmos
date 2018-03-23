@@ -17,6 +17,7 @@ setGDT:
     LGDT    gdtr
     RET
 
+.extern __start_tss
 .global reloadGDT
 .type reloadGDT,   @function
 
@@ -27,6 +28,12 @@ reloadGDT:
     MOV     %ax,        %fs
     MOV     %ax,        %gs
     MOV     %ax,        %ss
+	lea		__start_tss,	%ebx
+	movw	$0x10,		8(%ebx)
+	movw	$0x10,		16(%ebx)
+	movw	$0x10,		24(%ebx)
+	movw	$0x28,		%ax
+	ltr		%ax
     JMP     $0x08,      $1f
 1:
     RET

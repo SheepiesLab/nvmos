@@ -1,3 +1,5 @@
+#ifndef _NVMOS_ELF_H_
+#define _NVMOS_ELF_H_
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -13,11 +15,12 @@ typedef uint32_t Elf32_Addr; // Unsigned address
 typedef uint32_t Elf32_Word; // Unsigned int
 typedef int32_t Elf32_Sword; // Signed int
 
-#define ERROR(str) printf(str);
+#define ERROR(...) printf(__VA_ARGS__);
 
 // ELF Header
 
 #define ELF_NIDENT 16
+#define ELF_RELOC_ERROR -1
 
 typedef struct
 {
@@ -73,9 +76,9 @@ bool elf_check_file(Elf32_Ehdr *hdr);
 
 bool elf_check_supported(Elf32_Ehdr *hdr);
 
-static inline void *elf_load_rel(Elf32_Ehdr *hdr);
+// static inline void *elf_load_rel(Elf32_Ehdr *hdr);
 
-void *elf_load_file(void *file);
+// void *elf_load_file(void *file);
 
 // ELF Section Header
 
@@ -112,13 +115,13 @@ enum ShT_Attributes
 	SHF_ALLOC = 0x02  // Exists in memory
 };
 
-static inline Elf32_Shdr *elf_sheader(Elf32_Ehdr *hdr);
+// static inline Elf32_Shdr *elf_sheader(Elf32_Ehdr *hdr);
 
-static inline Elf32_Shdr *elf_section(Elf32_Ehdr *hdr, int idx);
+// static inline Elf32_Shdr *elf_section(Elf32_Ehdr *hdr, int idx);
 
-static inline char *elf_str_table(Elf32_Ehdr *hdr);
+// static inline char *elf_str_table(Elf32_Ehdr *hdr);
 
-static inline char *elf_lookup_string(Elf32_Ehdr *hdr, int offset);
+// static inline char *elf_lookup_string(Elf32_Ehdr *hdr, int offset);
 
 // ELF Symbol Table
 
@@ -149,7 +152,7 @@ enum StT_Types
 	STT_FUNC = 2	// Methods or functions
 };
 
-static int elf_get_symval(Elf32_Ehdr *hdr, int table, uint idx);
+// static int elf_get_symval(Elf32_Ehdr *hdr, int table, uint idx);
 
 // ELF Program Header
 
@@ -195,4 +198,6 @@ enum PT_Flags
 	PF_W = 0x2,				 //Write
 	PF_R = 0x4,				 //Read
 	PF_MASKPROC = 0xf0000000 //Unspecified
-}
+};
+
+#endif

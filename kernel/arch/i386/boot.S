@@ -15,7 +15,7 @@
 .section .tss
 .align 4
 tss_bottom:
-.skip 208
+.skip 104
 tss_top:
 
 # Reserve a stack for the initial thread.
