@@ -11,6 +11,10 @@ asm_exitkernel:
 .global asm_testUserSpace
 .type asm_testUserSpace, @function
 asm_testUserSpace:
+	mov		%ss,		%ds
+    mov     %ss,        %es
+    mov     %ss,        %gs
+    mov     %ss,        %fs
     sysenter
 	sysenter
 	sysenter
