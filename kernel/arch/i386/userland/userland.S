@@ -21,4 +21,4 @@ asm_testUserSpace:
 	sysenter
 
 end:
-	hlt
+	jmp		end
