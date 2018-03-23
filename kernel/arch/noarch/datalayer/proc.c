@@ -179,10 +179,11 @@ int proc_mapKernel(
 	pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
 	uint32_t pageDirFlags =
 		PAGEDIR_PRESENT |
+		PAGEDIR_USER | ////TODO test syscall only
 		PAGEDIR_RW;
 	uint32_t pageTableFlags =
 		PAGETABLE_PRESENT |
-		PAGETABLE_USER |
+		PAGETABLE_USER | //TODO test syscall only
 		PAGETABLE_RW |
 		PAGETABLE_KERNEL;
 	procAddr =
