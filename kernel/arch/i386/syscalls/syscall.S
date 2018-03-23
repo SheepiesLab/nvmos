@@ -4,12 +4,10 @@
 .global asm_setsyscall
 .type asm_setsyscall, @function
 asm_setsyscall:
-    mov $0x1,   %eax
-    cpuid
 
     mov $0x174, %ecx
     mov $0x0,   %edx
-    mov $0x7,   %eax
+    mov $0x40,   %eax
     wrmsr
 
     mov $0x175, 	%ecx
