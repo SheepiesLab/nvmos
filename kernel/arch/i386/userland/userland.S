@@ -4,6 +4,8 @@
 .type asm_exitkernel, @function
 asm_exitkernel:
 	pop %ebx
+	mov $0x174, %ecx
+	rdmsr
     pop %ecx
     pop %edx
     sysexit
