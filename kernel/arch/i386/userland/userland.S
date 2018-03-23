@@ -16,7 +16,9 @@ asm_testUserSpace:
     mov     %ax,        %es
     mov     %ax,        %gs
     mov     %ax,        %fs
-    sysenter
+    lea		end,		%edx
+	mov		%esp,		%ecx
 	sysenter
-	sysenter
+
+end:
 	hlt
