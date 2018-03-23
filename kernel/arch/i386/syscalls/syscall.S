@@ -4,7 +4,6 @@
 .global asm_setsyscall
 .type asm_setsyscall, @function
 asm_setsyscall:
-
     mov $0x174, %ecx
     mov $0x0,   %edx
     mov $0x40,   %eax
