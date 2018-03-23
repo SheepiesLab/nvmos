@@ -182,6 +182,7 @@ int proc_mapKernel(
 		PAGEDIR_RW;
 	uint32_t pageTableFlags =
 		PAGETABLE_PRESENT |
+		PAGETABLE_USER |
 		PAGETABLE_RW |
 		PAGETABLE_KERNEL;
 	procAddr =
