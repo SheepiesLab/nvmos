@@ -12,6 +12,7 @@ set default=0
 set timeout=1
 menuentry "nvramos" {
 	multiboot /boot/nvramos.kernel
+	module /boot/demo
 }
 EOF
 grub-mkrescue -o nvramos.iso isodir

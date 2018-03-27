@@ -36,6 +36,19 @@ void kernel_main(multiboot_info_t *mbt)
 	init_serial();
 	printf("Hello, kernel World!\n\n");
 
+	// Get demo program position
+	if (mbt->mods_count > 0)
+	{
+		printf("Demo program found!\n");
+	}
+	multiboot_module_t *module = mbt->mods_addr;
+	printf("Demo start:     0x%p\t", (uint64_t)module->mod_start);
+	printf("Demo length:    0x%p\n\n",
+		   (uint64_t)(module->mod_end - module->mod_start));
+
+	uint8_t demoBuf[module->mod_end - module->mod_start];
+	memcpy(demoBuf, module->mod_start, module->mod_end - module->mod_start);
+
 	//Kernel Code Sections
 	KernelSection *ksects = ksection_getKsections();
 	if (PRINT_DEBUG)
@@ -212,6 +225,36 @@ void kernel_main(multiboot_info_t *mbt)
 			printf("Append file bad: file0...\n");
 			goto endProc;
 		}
+
+	// Add demo program file
+	meta_meta_t *demoFile = meta_getNextFreeMeta(
+		(meta_metaBlk_t **)&(dlMeta->metaBlockList),
+		&allocator);
+	meta_setFile(demoFile);
+	if (
+		dir_addFileRef(urootDir, "demo", demoFile, &allocator) ==
+		dir_fileRefId_inval)
+	{
+		printf("New file ref bad: demo...\n");
+		goto endProc;
+	}
+	file_meta_t *demoMeta = &(demoFile->metaContent.fileMeta);
+	demoMeta->refCount = 0;
+	demoMeta->fileSize = 0;
+	demoMeta->blkSize = 0;
+	demoMeta->_1stBlk = NULL;
+	demoMeta->_1stPtrBlk = NULL;
+	demoMeta->_2ndPtrBlk = NULL;
+	demoMeta->_3rdPtrBlk = NULL;
+	if (file_append(
+			demoMeta,
+			demoBuf,
+			module->mod_end - module->mod_start,
+			&allocator) != module->mod_end - module->mod_start)
+	{
+		printf("Append file bad: demo...\n");
+		goto endProc;
+	}
 
 	// Add a process to kroot
 	meta_meta_t *kroot = datalayer_getKRoot(dlMeta);
