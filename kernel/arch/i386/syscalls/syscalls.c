@@ -177,6 +177,8 @@ uint32_t nvmos_syscall(
 		if (fdtable[fd].mmapped_blks != 0)
 			RET(0)
 		file_meta_t *file = fdtable[fd].fileMeta;
+		if (length > file->fileSize)
+			length = file->fileSize;
 		length = roundup(length, 0x1000);
 		length /= 0x1000;
 		offset /= 0x1000;
