@@ -1,7 +1,11 @@
+#ifndef _NVMOS_ELFLOADER_H_
+#define _NVMOS_ELFLOADER_H_
+
 #include <kernel/datalayer/file.h>
 #include <kernel/datalayer/proc.h>
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/datalayer/allocator/allocator.h>
+#include <kernel/userland/userland.h>
 
 #include <stdint.h>
 
@@ -23,3 +27,5 @@ int elf_exec(
 	proc_meta_t *proc,
 	nvmos_dl_allocator_t *alloc,
 	nvmos_dl_datalayerMeta_t *dlmeta);
+
+#endif

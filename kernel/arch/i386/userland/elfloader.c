@@ -96,10 +96,6 @@ size_t elf_loadExec(
 	return res;
 }
 
-#define PROC_EXEC_ADDR 0x40000000
-#define PROC_KSTACK_ADDR 0xefffe000
-#define PROC_USTACK_ADDR 0xefffc000
-
 int elf_exec(
 	file_meta_t *exec,
 	proc_meta_t *proc,
@@ -112,11 +108,12 @@ int elf_exec(
 		return -1;
 	}
 
-	nvmos_ptr_t kstack = nvmos_dl_alloc_allocateBlocks(
-		alloc,
-		2);
+	nvmos_ptr_t kstack = PROC_KSTACK_ADDR;
 
 	*(uint32_t *)kstack = (uint32_t)dlmeta;
+	*(uint32_t *)(kstack + 4) = (uint32_t)proc;
+	*(uint32_t *)(kstack + 8) = (uint32_t)alloc;
+	*(uint32_t *)(kstack + 12) = 0;
 
 	if (kstack == NULL)
 	{

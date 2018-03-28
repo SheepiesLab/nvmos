@@ -176,7 +176,7 @@ void kernel_main(multiboot_info_t *mbt)
 
 	dlStart += 0x1000;
 	dlStart &= 0xfffff000;
-	size_t dlSize = 0xbffe0000 - dlStart;
+	size_t dlSize = 0xbffc0000 - dlStart;
 	size_t dlBlkSize = 0x1000;
 	nvmos_dl_datalayerMeta_t *dlMeta;
 	nvmos_dl_allocator_t allocator;
