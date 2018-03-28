@@ -60,7 +60,8 @@ uint32_t nvmos_syscall(
 		nvmos_dl_allocator_t *allocator =
 			*(nvmos_dl_allocator_t **)(PROC_KSTACK_ADDR + 8);
 		uint32_t *openedFiles = PROC_KSTACK_ADDR + 12;
-		proc_fdtable_t *fdtable = PROC_KSTACK_ADDR + 16;
+		uint32_t *nextMmapAddr = PROC_KSTACK_ADDR + 16;
+		proc_fdtable_t *fdtable = PROC_KSTACK_ADDR + 20;
 
 		meta_meta_t *uroot = dlmeta->uroot;
 		file_meta_t *urootMeta = &(uroot->metaContent.fileMeta);
@@ -85,6 +86,8 @@ uint32_t nvmos_syscall(
 			newFileMeta->_3rdPtrBlk = 0;
 			dir_addFileRef(urootMeta, pathname, newFile, allocator);
 			fdtable[*openedFiles].fileMeta = newFileMeta;
+			fdtable[*openedFiles].mmap_addr = 0;
+			fdtable[*openedFiles].mmapped_blks = 0;
 		}
 
 		nvmos_pagingOn(proc->pageDir);
@@ -105,7 +108,8 @@ uint32_t nvmos_syscall(
 		nvmos_dl_allocator_t *allocator =
 			*(nvmos_dl_allocator_t **)(PROC_KSTACK_ADDR + 8);
 		uint32_t *openedFiles = PROC_KSTACK_ADDR + 12;
-		proc_fdtable_t *fdtable = PROC_KSTACK_ADDR + 16;
+		uint32_t *nextMmapAddr = PROC_KSTACK_ADDR + 16;
+		proc_fdtable_t *fdtable = PROC_KSTACK_ADDR + 20;
 
 #define RET(retres)                    \
 	{                                  \
@@ -142,6 +146,55 @@ uint32_t nvmos_syscall(
 			else
 				RET(999)
 		}
+		break;
+#undef RET
+	}
+	// mmap
+	case 0x14:
+	{
+		nvmos_pagingOff();
+
+		// void *addr = paramsBuf[1];
+		size_t length = paramsBuf[2];
+		int fd = paramsBuf[5];
+		size_t offset = paramBuf[6];
+
+		nvmos_dl_datalayerMeta_t *dlmeta =
+			*(nvmos_dl_datalayerMeta_t **)(PROC_KSTACK_ADDR);
+		proc_meta_t *proc = *(proc_meta_t **)(PROC_KSTACK_ADDR + 4);
+		nvmos_dl_allocator_t *allocator =
+			*(nvmos_dl_allocator_t **)(PROC_KSTACK_ADDR + 8);
+		uint32_t *openedFiles = PROC_KSTACK_ADDR + 12;
+		uint32_t *nextMmapAddr = PROC_KSTACK_ADDR + 16;
+		proc_fdtable_t *fdtable = PROC_KSTACK_ADDR + 20;
+
+#define RET(retres)                    \
+	{                                  \
+		nvmos_pagingOn(proc->pageDir); \
+		return retres;                 \
+	}
+
+		if (fdtable[fd].mmapped_blks != 0)
+			RET(0)
+		file_meta_t *file = fdtable[fd].fileMeta;
+		length = roundup(length, 0x1000);
+		length /= 0x1000;
+		offset /= 0x1000;
+		if (proc_mapFile(
+				proc,
+				file,
+				offset,
+				length,
+				0,
+				*nextMmapAddr,
+				allocator))
+		{
+			RET(0)
+		}
+		*nextMmapAddr += length * 0x1000;
+		RET(*nextMmapAddr - length * 0x1000)
+
+#undef RET
 	}
 	case 0xdeadbeef:
 		printf("HALT!\n");

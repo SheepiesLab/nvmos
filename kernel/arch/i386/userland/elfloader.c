@@ -114,6 +114,7 @@ int elf_exec(
 	*(uint32_t *)(kstack + 4) = (uint32_t)proc;
 	*(uint32_t *)(kstack + 8) = (uint32_t)alloc;
 	*(uint32_t *)(kstack + 12) = 0;
+	*(uint32_t *)(kstack + 16) = PROC_INIT_MMAP_ADDR;
 
 	if (kstack == NULL)
 	{
