@@ -191,8 +191,10 @@ uint32_t nvmos_syscall(
 		{
 			RET(0)
 		}
+		fdtable[fd].mmap_addr = *nextMmapAddr;
+		fdtable[fd].mmapped_blks = length;
 		*nextMmapAddr += length * 0x1000;
-		RET(*nextMmapAddr - length * 0x1000)
+		RET(fdtable[fd].mmap_addr)
 
 #undef RET
 	}
