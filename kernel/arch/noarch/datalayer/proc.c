@@ -6,11 +6,11 @@
 
 	The page directory structure has two layers: Page directory and page table.
 
-	The page directory is a 4KB structure, containing 1024 entries. Each entry has a 
-	physical address to either the page table or the page (big page enabled). Each 
-	entry also has flags controlling the access to those tables or the page. The 
-	flags of page table entries should be set to kernel read/write present, regardless 
-	of the page access privilege. This is to make sure that no user process can modify 
+	The page directory is a 4KB structure, containing 1024 entries. Each entry has a
+	physical address to either the page table or the page (big page enabled). Each
+	entry also has flags controlling the access to those tables or the page. The
+	flags of page table entries should be set to kernel read/write present, regardless
+	of the page access privilege. This is to make sure that no user process can modify
 	the memory mapping and tamper with the restricted access part of the memory.
 */
 
@@ -35,7 +35,8 @@ int proc_allocBlks(
 	pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
 	uint32_t pageDirFlags =
 		PAGEDIR_PRESENT |
-		PAGEDIR_RW;
+		PAGEDIR_RW |
+		PAGETABLE_USER;
 	uint32_t pageTableFlags =
 		PAGETABLE_PRESENT |
 		PAGETABLE_RW |
@@ -107,9 +108,12 @@ int proc_mapFile(
 	pageDir_t *pageDir = (pageDir_t *)meta->pageDir;
 	uint32_t pageDirFlags =
 		PAGEDIR_PRESENT |
+		PAGEDIR_USER |
 		PAGEDIR_RW;
 	uint32_t pageTableFlags =
 		PAGETABLE_PRESENT |
+		PAGEDIR_USER |
+		PAGEDIR_RW |
 		PAGETABLE_FILEMAPPED;
 
 	if (rwx & PROC_R)

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include <kernel/io/tty.h>
 #include <kernel/io/serial.h>
 #include <kernel/int/idt.h>
@@ -20,6 +21,7 @@
 #include <kernel/datalayer/datalayer.h>
 #include <kernel/syscalls/syscalls.h>
 #include <kernel/userland/userland.h>
+#include <kernel/userland/elfloader.h>
 
 void kernel_main(multiboot_info_t *mbt)
 {
@@ -42,12 +44,13 @@ void kernel_main(multiboot_info_t *mbt)
 		printf("Demo program found!\n");
 	}
 	multiboot_module_t *module = mbt->mods_addr;
+	size_t demoSize = module->mod_end - module->mod_start;
 	printf("Demo start:     0x%p\t", (uint64_t)module->mod_start);
 	printf("Demo length:    0x%p\n\n",
-		   (uint64_t)(module->mod_end - module->mod_start));
+		   (uint64_t)(demoSize));
 
-	uint8_t demoBuf[module->mod_end - module->mod_start];
-	memcpy(demoBuf, module->mod_start, module->mod_end - module->mod_start);
+	uint8_t demoBuf[demoSize];
+	memcpy(demoBuf, module->mod_start, demoSize);
 
 	//Kernel Code Sections
 	KernelSection *ksects = ksection_getKsections();
@@ -173,7 +176,7 @@ void kernel_main(multiboot_info_t *mbt)
 
 	dlStart += 0x1000;
 	dlStart &= 0xfffff000;
-	size_t dlSize = 0x40000000;
+	size_t dlSize = 0xbffe0000 - dlStart;
 	size_t dlBlkSize = 0x1000;
 	nvmos_dl_datalayerMeta_t *dlMeta;
 	nvmos_dl_allocator_t allocator;
@@ -249,8 +252,8 @@ void kernel_main(multiboot_info_t *mbt)
 	if (file_append(
 			demoMeta,
 			demoBuf,
-			module->mod_end - module->mod_start,
-			&allocator) != module->mod_end - module->mod_start)
+			demoSize,
+			&allocator) != demoSize)
 	{
 		printf("Append file bad: demo...\n");
 		goto endProc;
@@ -323,8 +326,32 @@ void kernel_main(multiboot_info_t *mbt)
 	nvmos_pagingOn(proc0Meta->pageDir);
 	printf("Test Mem 1: %p\n", (uint64_t) * (uint32_t *)0x40000000);
 	printf("Test Mem 2: %p\n", (uint64_t) * (uint32_t *)0x40001ffc);
-	asm_setsyscall(0xe0000000 + 0x1FFC, (uint32_t)&asm_syscall);
-	asm_exitkernel(proc0esp, (uint32_t)&asm_testUserSpace);
+	// asm_setsyscall(0xe0000000 + 0x1FFC, (uint32_t)&asm_syscall);
+	// asm_exitkernel(proc0esp, (uint32_t)&asm_testUserSpace);
+	nvmos_pagingOff();
+
+	meta_meta_t *demoProc = meta_getNextFreeMeta(
+		(meta_metaBlk_t **)&(dlMeta->metaBlockList),
+		&allocator);
+
+	meta_setProc(demoProc);
+	if (dir_addFileRef(krootDir, "demoProc", demoProc, &allocator) == dir_fileRefId_inval)
+	{
+		printf("New file ref bad: demoProc...\n");
+		goto endProc;
+	}
+	proc_meta_t *demoProcMeta = &(demoProc->metaContent.processMeta);
+	if (proc_createProc(demoProcMeta, &allocator))
+	{
+		printf("Error creating demoProc\n");
+		goto endProc;
+	}
+
+	if (elf_exec(demoMeta, demoProcMeta, &allocator, dlMeta))
+	{
+		printf("Error executing demoProc\n");
+		goto endProc;
+	}
 
 #undef allocTest
 endProc:

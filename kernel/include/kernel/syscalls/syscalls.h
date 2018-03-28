@@ -8,6 +8,10 @@ extern void asm_setsyscall(
 
 extern void asm_syscall();
 
-void nvmos_syscall();
+uint32_t nvmos_syscall(
+	uint32_t paramsPtr,
+	uint32_t paramsSize,
+	uint32_t userESP,
+	uint32_t userRetAddr);
 
 #endif

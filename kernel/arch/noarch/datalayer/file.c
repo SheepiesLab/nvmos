@@ -181,7 +181,7 @@ size_t file_getMap(
     for (size_t i = 0; i < len; ++i)
     {
         buf[i] =
-            (nvmos_ptr_t)ptrBlks_getDataBlkAt(&ptrBlks, i);
+            (nvmos_ptr_t)ptrBlks_getDataBlkAt(&ptrBlks, fromBlk + i);
         if (buf[i] == NULL)
             return i;
     }

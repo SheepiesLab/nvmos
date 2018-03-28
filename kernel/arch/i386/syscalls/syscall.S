@@ -37,6 +37,9 @@ asm_syscall:
     push    %ecx
     push    %ebp
     mov     %esp,   %ebp
+    push    %edx
+    push    %ecx
+	push	%ebx
     push    %eax
     call    nvmos_syscall
     mov     %ebp,   %esp
