@@ -157,7 +157,7 @@ uint32_t nvmos_syscall(
 		// void *addr = paramsBuf[1];
 		size_t length = paramsBuf[2];
 		int fd = paramsBuf[5];
-		size_t offset = paramBuf[6];
+		size_t offset = paramsBuf[6];
 
 		nvmos_dl_datalayerMeta_t *dlmeta =
 			*(nvmos_dl_datalayerMeta_t **)(PROC_KSTACK_ADDR);
