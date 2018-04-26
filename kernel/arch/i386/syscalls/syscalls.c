@@ -50,9 +50,10 @@ uint32_t nvmos_syscall(
 	//int open(const char *pathname, int flags);
 	case 0x11:
 	{
-		nvmos_pagingOff();
+		uint8_t pathname[252];
+		memcpy(pathname, (void *)paramsBuf[1], 252);
 
-		uint8_t *pathname = (void *)paramsBuf[1];
+		nvmos_pagingOff();
 		int32_t flags = paramsBuf[2];
 		nvmos_dl_datalayerMeta_t *dlmeta =
 			*(nvmos_dl_datalayerMeta_t **)(PROC_KSTACK_ADDR);
@@ -86,9 +87,9 @@ uint32_t nvmos_syscall(
 			newFileMeta->_3rdPtrBlk = 0;
 			dir_addFileRef(urootMeta, pathname, newFile, allocator);
 			fdtable[*openedFiles].fileMeta = newFileMeta;
-			fdtable[*openedFiles].mmap_addr = 0;
-			fdtable[*openedFiles].mmapped_blks = 0;
 		}
+		fdtable[*openedFiles].mmap_addr = 0;
+		fdtable[*openedFiles].mmapped_blks = 0;
 
 		nvmos_pagingOn(proc->pageDir);
 		return (*openedFiles)++;
@@ -146,6 +147,9 @@ uint32_t nvmos_syscall(
 			else
 				RET(999)
 		}
+		else
+			file_discardTail(fileMeta, -off, allocator);
+		RET(0)
 		break;
 #undef RET
 	}
@@ -200,6 +204,40 @@ uint32_t nvmos_syscall(
 
 #undef RET
 	}
+	// int sys_munmap(void *addr, sze_t length);
+	case 0x15:
+		nvmos_pagingOff();
+
+		void *addr = paramsBuf[1];
+		size_t length = paramsBuf[2];
+
+		nvmos_dl_datalayerMeta_t *dlmeta =
+			*(nvmos_dl_datalayerMeta_t **)(PROC_KSTACK_ADDR);
+		proc_meta_t *proc = *(proc_meta_t **)(PROC_KSTACK_ADDR + 4);
+		nvmos_dl_allocator_t *allocator =
+			*(nvmos_dl_allocator_t **)(PROC_KSTACK_ADDR + 8);
+		uint32_t *openedFiles = PROC_KSTACK_ADDR + 12;
+		uint32_t *nextMmapAddr = PROC_KSTACK_ADDR + 16;
+		proc_fdtable_t *fdtable = PROC_KSTACK_ADDR + 20;
+
+#define RET(retres)                    \
+	{                                  \
+		nvmos_pagingOn(proc->pageDir); \
+		return retres;                 \
+	}
+		length = roundup(length, 0x1000);
+		length /= 0x1000;
+		if (proc_unmapFile(
+				proc,
+				addr,
+				length,
+				allocator))
+		{
+			RET(0)
+		}
+		RET(999)
+
+#undef RET
 	case 0xdeadbeef:
 		printf("HALT!\n");
 		asm("hlt");
