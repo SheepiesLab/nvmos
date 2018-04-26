@@ -87,9 +87,9 @@ uint32_t nvmos_syscall(
 			newFileMeta->_3rdPtrBlk = 0;
 			dir_addFileRef(urootMeta, pathname, newFile, allocator);
 			fdtable[*openedFiles].fileMeta = newFileMeta;
-			fdtable[*openedFiles].mmap_addr = 0;
-			fdtable[*openedFiles].mmapped_blks = 0;
 		}
+		fdtable[*openedFiles].mmap_addr = 0;
+		fdtable[*openedFiles].mmapped_blks = 0;
 
 		nvmos_pagingOn(proc->pageDir);
 		return (*openedFiles)++;
